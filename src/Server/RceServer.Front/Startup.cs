@@ -1,4 +1,4 @@
-#define HTTPS
+﻿#define HTTPS
 
 using System;
 using IdentityServer4.EntityFramework.Stores;
