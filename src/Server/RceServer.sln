@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RceServer.Front", "RceServer.Front\RceServer.Front.csproj", "{895C3501-4825-4E03-9AF6-3A0C2E4CC65C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Front", "RceServer.Front\RceServer.Front.csproj", "{895C3501-4825-4E03-9AF6-3A0C2E4CC65C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10 Presentation", "10 Presentation", "{E2C8577F-8CB0-4C51-BE0B-199CE3E2FF61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20 Business", "20 Business", "{1A94E7C4-08B3-4A93-BCDE-E636B4F32A63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "30 Domain", "30 Domain", "{D556984F-B4F6-4C94-B0DB-A31ED934EB1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "40 Data", "40 Data", "{B0AF878A-4D5E-4968-8A04-616FA4C11CE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +26,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{895C3501-4825-4E03-9AF6-3A0C2E4CC65C} = {E2C8577F-8CB0-4C51-BE0B-199CE3E2FF61}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8182B135-8D99-4FC2-BE1D-EA7C6938D946}

@@ -1,3 +1,5 @@
+#define HTTPS
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,61 +9,124 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RceServer.Front
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public IConfiguration Configuration { get; }
 
-        public IConfiguration Configuration { get; }
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
-        }
+			services.AddSingleton<IHttpClientService, HttpClientService>();
+			services.AddSingleton<IAzureKicker, AzureKicker>();
+			services.AddTransient<IEmailSender, EmailSender>();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-            }
+			services.AddDbContext<UsersDbContext>();
+			services.AddIdentity<IdentityUser, IdentityRole>()
+				.AddEntityFrameworkStores<UsersDbContext>()
+				.AddDefaultTokenProviders();
 
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+			services.AddIdentityServer()
+				.AddSigningCredential(new SigningCredentials(
+					new JsonWebKey(Configuration["IdentityJwk"]),
+					SecurityAlgorithms.RsaSha256Signature))
+				.AddOperationalStore(options =>
+					options.ConfigureDbContext = builder =>
+						builder.UseMySql(Configuration.GetConnectionString("UsersDbContext")))
+				.AddInMemoryIdentityResources(Config.GetIdentityResources())
+				.AddInMemoryApiResources(Config.GetApiResources())
+				.AddInMemoryClients(Config.GetClients(Configuration["ClientSecret"]))
+				.AddAspNetIdentity<IdentityUser>();
+			services.AddTransient<IProfileService, IdentityClaimsProfileService>();
+			services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
+			services.AddMvc();
 
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
+			services.AddAuthentication(options =>
+				{
+					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				})
+				.AddJwtBearer(options =>
+				{
+					options.Authority = Configuration["Authority"];
+					options.Audience = "rceserverapi";
+#if HTTPS
+					options.RequireHttpsMetadata = true;
+#else
+					options.RequireHttpsMetadata = false;
+#endif
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateAudience = true,
+						ValidateIssuer = true,
+						ValidateIssuerSigningKey = true,
+						ValidateLifetime = true,
+						ClockSkew = TimeSpan.Zero,
+					};
+				});
 
-                spa.Options.SourcePath = "ClientApp";
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy("RceServerApiAccess", policy => policy.RequireClaim("rce_server_api_access", "true"));
+			});
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
-        }
-    }
+			services.AddSpaStaticFiles(configuration =>
+			{
+				configuration.RootPath = "ClientApp/dist";
+			});
+
+			services.AddLogging(e =>
+			{
+				e.AddDebug();
+				e.AddAzureWebAppDiagnostics();
+			});
+		}
+
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+			IAzureKicker azureKicker)
+		{
+			if (env.IsDevelopment())
+			{
+				//app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Error");
+				app.UseHsts();
+			}
+
+#if HTTPS
+			app.UseHttpsRedirection();
+#endif
+			app.UseStaticFiles();
+			app.UseSpaStaticFiles();
+
+			app.UseIdentityServer();
+			app.UseAuthentication();
+			app.UseMvc(routes =>
+			{
+				routes.MapRoute(
+					name: "default",
+					template: "{controller}/{action=Index}/{id?}");
+			});
+
+			app.UseSpa(spa =>
+			{
+				spa.Options.SourcePath = "ClientApp";
+
+				if (env.IsDevelopment())
+				{
+					spa.UseAngularCliServer(npmScript: "start");
+				}
+			});
+
+			azureKicker.Start();
+		}
+	}
 }
