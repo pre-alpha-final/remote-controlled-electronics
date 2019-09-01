@@ -16,6 +16,9 @@ Settings needed for development, mirrored in secrets.json
 }
 ```
 
+# Registration
+Registration is commented out by default in the controller.
+
 License
 ----
 MIT

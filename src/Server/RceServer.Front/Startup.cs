@@ -1,6 +1,4 @@
-﻿#define HTTPS
-
-using System;
+﻿using System;
 using IdentityServer4.EntityFramework.Stores;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -69,7 +67,7 @@ namespace RceServer.Front
 				{
 					options.Authority = Configuration["Authority"];
 					options.Audience = "rceserverapi";
-#if HTTPS
+#if !DEBUG
 					options.RequireHttpsMetadata = true;
 #else
 					options.RequireHttpsMetadata = false;
@@ -114,7 +112,7 @@ namespace RceServer.Front
 				app.UseHsts();
 			}
 
-#if HTTPS
+#if !DEBUG
 			app.UseHttpsRedirection();
 #endif
 			app.UseStaticFiles();
