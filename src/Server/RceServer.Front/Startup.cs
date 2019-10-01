@@ -15,8 +15,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using RceServer.Core.Services;
 using RceServer.Core.Services.Implementation;
+using RceServer.Data;
 using RceServer.Data.Identity;
 using RceServer.Data.Identity.Models;
+using RceServer.Domain.Services;
 
 namespace RceServer.Front
 {
@@ -36,6 +38,8 @@ namespace RceServer.Front
 			services.AddSingleton<IHttpClientService, HttpClientService>();
 			services.AddSingleton<IAzureKicker, AzureKicker>();
 			services.AddTransient<IEmailSender, EmailSender>();
+			services.AddTransient<IClientService, ClientService>();
+			services.AddTransient<IWorkerRepository, InMemoryWorkerRepository>();
 
 			services.AddDbContext<UsersDbContext>();
 			services.AddIdentity<IdentityUser, IdentityRole>()

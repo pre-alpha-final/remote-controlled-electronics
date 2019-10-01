@@ -35,12 +35,12 @@
   <ItemGroup>
     <ProjectReference Include="..\RceServer.Core\RceServer.Core.csproj" />
     <ProjectReference Include="..\RceServer.Data.Identity\RceServer.Data.Identity.csproj" />
+    <ProjectReference Include="..\RceServer.Data\RceServer.Data.csproj" />
     <ProjectReference Include="..\RceServer.Domain\RceServer.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -20,13 +20,13 @@ namespace RceServer.Front.Controllers
 		private readonly IEmailSender _emailSender;
 
 		public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-			IHttpClientService httpClientService, IConfiguration configuration, IEmailSender _emailSender)
+			IHttpClientService httpClientService, IConfiguration configuration, IEmailSender emailSender)
 		{
 			_signInManager = signInManager;
 			_userManager = userManager;
 			_httpClientService = httpClientService;
 			_configuration = configuration;
-			this._emailSender = _emailSender;
+			_emailSender = emailSender;
 		}
 
 		//[HttpPost("register")]
