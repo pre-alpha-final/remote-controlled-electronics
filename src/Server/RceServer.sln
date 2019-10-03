@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Data.Identity", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Data.Migrations", "RceServer.Data.Migrations\RceServer.Data.Migrations.csproj", "{882E7855-1299-466D-857E-730C337CB22D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RceServer.Data", "RceServer.Data\RceServer.Data.csproj", "{CE977371-7FF1-4CC7-B7A7-465D72F1037E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Data", "RceServer.Data\RceServer.Data.csproj", "{CE977371-7FF1-4CC7-B7A7-465D72F1037E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RceServer.Tests", "RceServer.Tests\RceServer.Tests.csproj", "{C018A667-2FCA-408B-918B-4D613436317E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{CE977371-7FF1-4CC7-B7A7-465D72F1037E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE977371-7FF1-4CC7-B7A7-465D72F1037E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE977371-7FF1-4CC7-B7A7-465D72F1037E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C018A667-2FCA-408B-918B-4D613436317E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C018A667-2FCA-408B-918B-4D613436317E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C018A667-2FCA-408B-918B-4D613436317E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C018A667-2FCA-408B-918B-4D613436317E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{00E98E43-5C82-4AE3-A215-7C155466BFEA} = {B0AF878A-4D5E-4968-8A04-616FA4C11CE3}
 		{882E7855-1299-466D-857E-730C337CB22D} = {B0AF878A-4D5E-4968-8A04-616FA4C11CE3}
 		{CE977371-7FF1-4CC7-B7A7-465D72F1037E} = {B0AF878A-4D5E-4968-8A04-616FA4C11CE3}
+		{C018A667-2FCA-408B-918B-4D613436317E} = {1A94E7C4-08B3-4A93-BCDE-E636B4F32A63}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8182B135-8D99-4FC2-BE1D-EA7C6938D946}

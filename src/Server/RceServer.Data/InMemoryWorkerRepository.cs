@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RceServer.Domain.Models;
+using RceServer.Domain.Models.Messages;
 using RceServer.Domain.Services;
 
 namespace RceServer.Data
