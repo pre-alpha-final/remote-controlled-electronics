@@ -2,8 +2,8 @@
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class RemoveWorkerMessage : MessageBase, IRceMessage
+	public class RemoveWorkerMessage : MessageBase, IRceMessage, IHasWorkerId
 	{
-		public Guid Id { get; set; }
+		public Guid WorkerId { get; set; }
 	}
 }

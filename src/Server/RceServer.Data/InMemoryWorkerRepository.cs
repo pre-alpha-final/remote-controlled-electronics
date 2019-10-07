@@ -17,6 +17,7 @@ namespace RceServer.Data
 			throw new System.NotImplementedException();
 		}
 
+        // TODO return deep copy unil db is used
 		public Task<List<IRceMessage>> GetMessages(long timestamp)
 		{
 			throw new System.NotImplementedException();

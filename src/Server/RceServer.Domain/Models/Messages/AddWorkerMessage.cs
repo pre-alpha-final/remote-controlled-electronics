@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class AddWorkerMessage : MessageBase, IRceMessage
+	public class AddWorkerMessage : MessageBase, IRceMessage, IHasWorkerId
 	{
-		public Guid Id { get; set; }
+		public Guid WorkerId { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
         public string Base64Logo { get; set; }
