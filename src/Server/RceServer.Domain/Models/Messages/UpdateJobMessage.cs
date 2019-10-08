@@ -7,6 +7,6 @@ namespace RceServer.Domain.Models.Messages
 	{
 		public Guid JobId { get; set; }
 		public Guid WorkerId { get; set; }
-		public JObject Status { get; set; }
+		public JObject Output { get; set; }
 	}
 }

@@ -18,7 +18,7 @@ namespace RceServer.Core.Helpers
 				{
 					// Remove only if has corresponding AddWorkerMessage
 					var hasCorrespondingAddMessage = messages.Any(e =>
-						message is AddWorkerMessage addWorkerMessage &&
+						e is AddWorkerMessage addWorkerMessage &&
 						addWorkerMessage.WorkerId == removeWorkerMessage.WorkerId);
 					if (hasCorrespondingAddMessage)
 					{

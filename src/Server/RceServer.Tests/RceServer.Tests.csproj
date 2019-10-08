@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RceServer.Core\RceServer.Core.csproj" />
     <ProjectReference Include="..\RceServer.Domain\RceServer.Domain.csproj" />
   </ItemGroup>
 
