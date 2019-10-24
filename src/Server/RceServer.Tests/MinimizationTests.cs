@@ -81,10 +81,17 @@ namespace RceServer.Tests
 					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000003"),
 					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000003")
 				},
-				new RemoveWorkerMessage // Worker 2 Ends
+				new UpdateJobMessage // Update job 2 for worker 2
 				{
 					MessageId = new Guid("00000000-0000-0000-0000-000000000011"),
 					MessageTimestamp = 11,
+					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000002"),
+					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
+				},
+				new RemoveWorkerMessage // Worker 2 Ends
+				{
+					MessageId = new Guid("00000000-0000-0000-0000-000000000012"),
+					MessageTimestamp = 12,
 					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002"),
 					ConnectionStatus = RemoveWorkerMessage.Status.ClosedByWorker
 				}
@@ -133,9 +140,9 @@ namespace RceServer.Tests
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000006"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000007"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000008"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000009"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000011"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000012"), MessageList[index++].MessageId);
 		}
 	}
 }

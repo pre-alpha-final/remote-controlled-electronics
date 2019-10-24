@@ -9,14 +9,23 @@ namespace RceServer.Core.Helpers
 	{
 		public static void Minimize(List<IRceMessage> messages)
 		{
+			var redundantMessages = GetRedundantMessages(messages);
+			messages.RemoveAll(e => redundantMessages.Contains(e.MessageId));
+		}
+
+		public static IEnumerable<Guid> GetRedundantMessages(List<IRceMessage> messages)
+		{
 			var workerIdsToRemove = new HashSet<Guid>();
 			var messageIdsToRemove = new HashSet<Guid>();
+			var lastUpdate = new Dictionary<Guid, (Guid messageId, long timestamp)>();
 
+			// Mark messages for removal
 			foreach (var message in messages)
 			{
+				// Mark completed workers with all their messages for removal
 				if (message is RemoveWorkerMessage removeWorkerMessage)
 				{
-					// Remove only if has corresponding AddWorkerMessage
+					// Only if has corresponding AddWorkerMessage
 					var hasCorrespondingAddMessage = messages.Any(e =>
 						e is AddWorkerMessage addWorkerMessage &&
 						addWorkerMessage.WorkerId == removeWorkerMessage.WorkerId);
@@ -25,23 +34,34 @@ namespace RceServer.Core.Helpers
 						workerIdsToRemove.Add(removeWorkerMessage.WorkerId);
 					}
 				}
-			}
 
-			foreach (var message in messages)
-			{
-				if (message is IHasWorkerId hasWorkerIdMessage)
+				// Mark old update messages for removal
+				if (message is UpdateJobMessage updateJobMessage)
 				{
-					if (workerIdsToRemove.Contains(hasWorkerIdMessage.WorkerId))
+					if (lastUpdate.ContainsKey(updateJobMessage.WorkerId) == false)
 					{
-						messageIdsToRemove.Add((hasWorkerIdMessage as IRceMessage).MessageId);
+						lastUpdate.Add(updateJobMessage.WorkerId,
+							(updateJobMessage.MessageId, updateJobMessage.MessageTimestamp));
+						continue;
+					}
+
+					if (updateJobMessage.MessageTimestamp > lastUpdate[updateJobMessage.WorkerId].timestamp)
+					{
+						messageIdsToRemove.Add(lastUpdate[updateJobMessage.WorkerId].messageId);
+						lastUpdate[updateJobMessage.WorkerId] =
+							(updateJobMessage.MessageId, updateJobMessage.MessageTimestamp);
+					}
+					else
+					{
+						messageIdsToRemove.Add(updateJobMessage.MessageId);
 					}
 				}
 			}
 
-			foreach (var messageIdToRemove in messageIdsToRemove.Distinct())
-			{
-				messages.RemoveAll(e => e.MessageId == messageIdToRemove);
-			}
+			return messages.Where(e =>
+					workerIdsToRemove.Contains((e as IHasWorkerId)?.WorkerId ?? Guid.Empty) ||
+					messageIdsToRemove.Contains(e.MessageId))
+				.Select(e => e.MessageId);
 		}
 	}
 }
