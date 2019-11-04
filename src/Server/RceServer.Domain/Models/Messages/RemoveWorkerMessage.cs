@@ -4,7 +4,7 @@ namespace RceServer.Domain.Models.Messages
 {
 	public class RemoveWorkerMessage : MessageBase, IRceMessage, IHasWorkerId
 	{
-		public enum Status
+		public enum Statuses
 		{
 			Undefined,
 			ClosedByWorker,
@@ -13,6 +13,6 @@ namespace RceServer.Domain.Models.Messages
 		}
 
 		public Guid WorkerId { get; set; }
-		public Status ConnectionStatus { get; set; }
+		public Statuses ConnectionStatus { get; set; }
 	}
 }

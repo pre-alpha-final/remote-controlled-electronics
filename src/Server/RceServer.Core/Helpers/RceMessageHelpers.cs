@@ -18,6 +18,7 @@ namespace RceServer.Core.Helpers
 			var workerIdsToRemove = new HashSet<Guid>();
 			var messageIdsToRemove = new HashSet<Guid>();
 			var lastUpdate = new Dictionary<Guid, (Guid messageId, long timestamp)>();
+			var lastKeepAlive = new Dictionary<Guid, (Guid messageId, long timestamp)>();
 
 			// Mark messages for removal
 			foreach (var message in messages)
@@ -54,6 +55,28 @@ namespace RceServer.Core.Helpers
 					else
 					{
 						messageIdsToRemove.Add(updateJobMessage.MessageId);
+					}
+				}
+
+				// Mark old keep alive messages for removal
+				if (message is KeepAliveMessage keepAliveMessage)
+				{
+					if (lastKeepAlive.ContainsKey(keepAliveMessage.WorkerId) == false)
+					{
+						lastKeepAlive.Add(keepAliveMessage.WorkerId,
+							(keepAliveMessage.MessageId, keepAliveMessage.MessageTimestamp));
+						continue;
+					}
+
+					if (keepAliveMessage.MessageTimestamp > lastKeepAlive[keepAliveMessage.WorkerId].timestamp)
+					{
+						messageIdsToRemove.Add(lastKeepAlive[keepAliveMessage.WorkerId].messageId);
+						lastKeepAlive[keepAliveMessage.WorkerId] =
+							(keepAliveMessage.MessageId, keepAliveMessage.MessageTimestamp);
+					}
+					else
+					{
+						messageIdsToRemove.Add(keepAliveMessage.MessageId);
 					}
 				}
 			}

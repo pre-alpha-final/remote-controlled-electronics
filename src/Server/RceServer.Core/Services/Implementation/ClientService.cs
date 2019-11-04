@@ -10,8 +10,8 @@ namespace RceServer.Core.Services.Implementation
 {
 	public class ClientService : IClientService
 	{
-		private const int PollTicks = 60;
-		private const int PollDelay = 500;
+		private const int PollTimeSeconds = 60;
+		private const int PollDelaySeconds = 1;
 		private readonly IWorkerRepository _workerRepository;
 
 		public ClientService(IWorkerRepository workerRepository)
@@ -21,7 +21,7 @@ namespace RceServer.Core.Services.Implementation
 
 		public async Task<IList<IRceMessage>> GetFeed(long timestamp)
 		{
-			for (var i = 0; i < PollTicks; i++)
+			for (var i = 0; i < PollTimeSeconds / PollDelaySeconds; i++)
 			{
 				var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 				var messages = await _workerRepository.GetMessages(timestamp);
@@ -33,7 +33,7 @@ namespace RceServer.Core.Services.Implementation
 					RceMessageHelpers.Minimize(messages);
 					return messages;
 				}
-				await Task.Delay(PollDelay);
+				await Task.Delay(TimeSpan.FromSeconds(PollDelaySeconds));
 			}
 
 			return new List<IRceMessage>();

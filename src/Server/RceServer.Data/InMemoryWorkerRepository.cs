@@ -6,8 +6,8 @@ using RceServer.Domain.Services;
 namespace RceServer.Data
 {
 	// TODO make a persistent version
-    // TODO add pruning
-    // TODO add minimization
+	// TODO add pruning
+	// TODO add minimization
 	public class InMemoryWorkerRepository : IWorkerRepository
 	{
 		private List<IRceMessage> RceMessages { get; set; }
@@ -17,7 +17,7 @@ namespace RceServer.Data
 			throw new System.NotImplementedException();
 		}
 
-        // TODO return deep copy unil db is used
+		// TODO return deep copy unil db is used
 		public Task<List<IRceMessage>> GetMessages(long timestamp)
 		{
 			throw new System.NotImplementedException();
