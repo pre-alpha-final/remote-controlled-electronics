@@ -16,6 +16,7 @@ namespace RceServer.Core.Helpers
 		public static IEnumerable<Guid> GetRedundantMessages(List<IRceMessage> messages)
 		{
 			var workerIdsToRemove = new HashSet<Guid>();
+			var jobIdsToRemove = new HashSet<Guid>();
 			var messageIdsToRemove = new HashSet<Guid>();
 			var lastUpdate = new Dictionary<Guid, (Guid messageId, long timestamp)>();
 			var lastKeepAlive = new Dictionary<Guid, (Guid messageId, long timestamp)>();
@@ -33,6 +34,19 @@ namespace RceServer.Core.Helpers
 					if (hasCorrespondingAddMessage)
 					{
 						workerIdsToRemove.Add(removeWorkerMessage.WorkerId);
+					}
+				}
+
+				// Mark removed jobs with all their messages for removal
+				if (message is RemoveJobMessage removeJobMessage)
+				{
+					// Only if has corresponding AddJobMessage
+					var hasCorrespondingAddMessage = messages.Any(e =>
+						e is AddJobMessage addJobMessage &&
+						addJobMessage.JobId == removeJobMessage.JobId);
+					if (hasCorrespondingAddMessage)
+					{
+						jobIdsToRemove.Add(removeJobMessage.JobId);
 					}
 				}
 
@@ -83,6 +97,7 @@ namespace RceServer.Core.Helpers
 
 			return messages.Where(e =>
 					workerIdsToRemove.Contains((e as IHasWorkerId)?.WorkerId ?? Guid.Empty) ||
+					jobIdsToRemove.Contains((e as IHasJobId)?.JobId ?? Guid.Empty) ||
 					messageIdsToRemove.Contains(e.MessageId))
 				.Select(e => e.MessageId);
 		}

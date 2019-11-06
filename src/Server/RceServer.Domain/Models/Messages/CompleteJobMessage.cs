@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class CompleteJobMessage : MessageBase, IRceMessage, IHasWorkerId
+	public class CompleteJobMessage : MessageBase, IRceMessage, IHasWorkerId, IHasJobId
 	{
 		public enum Statuses
 		{

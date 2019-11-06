@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class AddJobMessage : MessageBase, IRceMessage, IHasWorkerId
+	public class AddJobMessage : MessageBase, IRceMessage, IHasWorkerId, IHasJobId
 	{
 		public Guid JobId { get; set; }
 		public Guid WorkerId { get; set; }
