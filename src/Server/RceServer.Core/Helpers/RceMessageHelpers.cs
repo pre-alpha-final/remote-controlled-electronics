@@ -101,5 +101,26 @@ namespace RceServer.Core.Helpers
 					messageIdsToRemove.Contains(e.MessageId))
 				.Select(e => e.MessageId);
 		}
+
+		public static IEnumerable<Guid> GetActiveWorkers(List<IRceMessage> messages)
+		{
+			var workers = new HashSet<Guid>();
+			var removedWorkers = new HashSet<Guid>();
+
+			foreach (var message in messages)
+			{
+				if (message is IHasWorkerId workerMessage)
+				{
+					workers.Add(message.MessageId);
+				}
+
+				if (message is RemoveWorkerMessage removeWorkerMessage)
+				{
+					removedWorkers.Add(message.MessageId);
+				}
+			}
+
+			return workers.Except(removedWorkers);
+		}
 	}
 }

@@ -12,11 +12,11 @@ namespace RceServer.Core.Services.Implementation
 	{
 		private const int PollTimeSeconds = 60;
 		private const int PollDelaySeconds = 1;
-		private readonly IWorkerRepository _workerRepository;
+		private readonly IMessageRepository _messageRepository;
 
-		public ClientService(IWorkerRepository workerRepository)
+		public ClientService(IMessageRepository messageRepository)
 		{
-			_workerRepository = workerRepository;
+			_messageRepository = messageRepository;
 		}
 
 		public async Task<IList<IRceMessage>> GetFeed(long timestamp)
@@ -24,7 +24,7 @@ namespace RceServer.Core.Services.Implementation
 			for (var i = 0; i < PollTimeSeconds / PollDelaySeconds; i++)
 			{
 				var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-				var messages = await _workerRepository.GetMessages(timestamp);
+				var messages = await _messageRepository.GetMessagesAfter(timestamp);
 				messages = messages // prevent possible racing with db reads/writes
 					.Where(e => e.MessageTimestamp < now - 100)
 					.ToList();
