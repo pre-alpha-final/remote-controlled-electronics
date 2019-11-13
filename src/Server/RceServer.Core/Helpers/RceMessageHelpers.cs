@@ -111,12 +111,12 @@ namespace RceServer.Core.Helpers
 			{
 				if (message is IHasWorkerId workerMessage)
 				{
-					workers.Add(message.MessageId);
+					workers.Add(workerMessage.WorkerId);
 				}
 
 				if (message is RemoveWorkerMessage removeWorkerMessage)
 				{
-					removedWorkers.Add(message.MessageId);
+					removedWorkers.Add(removeWorkerMessage.WorkerId);
 				}
 			}
 

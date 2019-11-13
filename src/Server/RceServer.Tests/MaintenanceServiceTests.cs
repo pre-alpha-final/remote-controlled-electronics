@@ -1,84 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
-using RceServer.Core.Helpers;
+using System.Linq;
+using System.Threading.Tasks;
+using NSubstitute;
+using RceServer.Core.Services.Implementation;
 using RceServer.Domain.Models.Messages;
+using RceServer.Domain.Services;
 using Xunit;
 
 namespace RceServer.Tests
 {
-	public class MinimizationTests
+	public class MaintenanceServiceTests
 	{
 		private List<IRceMessage> MessageList { get; }
+		private readonly IMessageRepository _messageRepositoryMock;
+		private readonly MaintenanceService _maintenanceService;
 
-		public MinimizationTests()
+		public MaintenanceServiceTests()
 		{
 			MessageList = GetMessageListStub();
+			_messageRepositoryMock = Substitute.For<IMessageRepository>();
+			_messageRepositoryMock.AddMessage(Arg.Any<IRceMessage>())
+				.Returns(Task.CompletedTask)
+				.AndDoes(e => MessageList.AddRange(e.Args().Cast<IRceMessage>()));
+			_messageRepositoryMock.RemoveMessages(Arg.Any<IEnumerable<Guid>>())
+				.Returns(Task.CompletedTask)
+				.AndDoes(e => MessageList.RemoveAll(f => ((IEnumerable<Guid>)e.Args().First()).Contains(f.MessageId)));
+			_maintenanceService = new MaintenanceService(_messageRepositoryMock);
 		}
 
 		[Fact]
-		public void RceMessageHelpers_WhenGivenFullList_MinimizesList()
+		public async Task RemoveOldActivity_WhenHasNoOldActivity_ShouldNotRemoveMessages()
 		{
-			RceMessageHelpers.Minimize(MessageList);
+			_messageRepositoryMock.GetMessagesBefore(Arg.Any<long>()).Returns(new List<IRceMessage>());
+			await _maintenanceService.RemoveOldActivity();
 
-			var index = 0;
+			Assert.Equal(16, MessageList.Count);
+		}
+
+		[Fact]
+		public async Task RemoveOldActivity_WhenHasOldActivities_ShouldRemoveOldActivities()
+		{
+			_messageRepositoryMock.GetMessagesBefore(Arg.Any<long>()).Returns(MessageList);
+			await _maintenanceService.RemoveOldActivity();
+
 			Assert.Equal(1, MessageList.Count);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000003"), MessageList[index++].MessageId);
+			Assert.Equal(nameof(AddWorkerMessage), MessageList.First().MessageType);
+			Assert.Equal(new Guid("00000000-FFFF-0000-0000-000000000003"), ((AddWorkerMessage)MessageList.First()).WorkerId);
 		}
 
 		[Fact]
-		public void RceMessageHelpers_WhenGivenListWithoutWorkerOneCreated_MinimizesList()
+		public async Task MarkDisconnectedWorkers_WhenHasNoDisconnectedWorkers_ShouldNotMarkDisconnectedWorkers()
 		{
-			MessageList.RemoveAt(0);
-			RceMessageHelpers.Minimize(MessageList);
+			_messageRepositoryMock.GetMessagesBefore(Arg.Any<long>()).Returns(new List<IRceMessage>());
+			_messageRepositoryMock.GetMessagesAfter(Arg.Any<long>()).Returns(MessageList);
+			await _maintenanceService.MarkDisconnectedWorkers();
 
-			var index = 0;
-			Assert.Equal(3, MessageList.Count);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000003"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000004"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
+			Assert.Equal(16, MessageList.Count);
 		}
 
 		[Fact]
-		public void RceMessageHelpers_WhenGivenListWithoutWorkersOneAndTwoCreated_MinimizesList()
+		public async Task MarkDisconnectedWorkers_WhenHasDisconnectedWorkers_ShouldMarkDisconnectedWorkers()
 		{
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			RceMessageHelpers.Minimize(MessageList);
+			_messageRepositoryMock.GetMessagesBefore(Arg.Any<long>()).Returns(MessageList);
+			_messageRepositoryMock.GetMessagesAfter(Arg.Any<long>()).Returns(new List<IRceMessage>());
+			await _maintenanceService.MarkDisconnectedWorkers();
 
-			var index = 0;
-			Assert.Equal(8, MessageList.Count);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000003"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000004"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000005"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000007"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000009"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000014"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000015"), MessageList[index++].MessageId);
-		}
-
-		[Fact]
-		public void RceMessageHelpers_WhenGivenListWithMissingMessages_MinimizesList()
-		{
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			MessageList.RemoveAt(0);
-			RceMessageHelpers.Minimize(MessageList);
-
-			var index = 0;
-			Assert.Equal(7, MessageList.Count);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000009"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000012"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000013"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000014"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000015"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000016"), MessageList[index++].MessageId);
+			Assert.Equal(17, MessageList.Count);
+			Assert.Equal(nameof(RemoveWorkerMessage), MessageList[16].MessageType);
+			Assert.Equal(RemoveWorkerMessage.Statuses.ConnectionLost, ((RemoveWorkerMessage) MessageList[16]).ConnectionStatus);
+			Assert.Equal(new Guid("00000000-FFFF-0000-0000-000000000003"), ((RemoveWorkerMessage) MessageList[16]).WorkerId);
 		}
 
 		private List<IRceMessage> GetMessageListStub()
