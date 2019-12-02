@@ -61,6 +61,8 @@ namespace RceServer.Front
 			services.AddTransient<IProfileService, IdentityClaimsProfileService>();
 			services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
 
+			services.AddApplicationInsightsTelemetry(Configuration["InstrumentationKey"]);
+
 			services.AddMvc();
 
 			services.AddAuthentication(options =>

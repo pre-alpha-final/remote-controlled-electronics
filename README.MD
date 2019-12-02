@@ -12,7 +12,8 @@ Settings needed for development, mirrored in secrets.json
   "ClientSecret":"",
   "Authority":"",
   "Domain":"",
-  "IdentityJwk":""
+  "IdentityJwk":"",
+  "InstrumentationKey":""
 }
 ```
 
