@@ -1,0 +1,45 @@
+<div class="container">
+  <h2>Log in</h2>
+  <hr />
+  <div class="col-md-4 align-self-center">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" class="form-control" formControlName="email" />
+        <div class="text-danger" *ngIf="form.controls.email.errors && form.controls.email.touched">
+          <div *ngIf="form.controls.email.errors.required">
+            Email is required
+          </div>
+          <div *ngIf="form.controls.email.errors.email">
+            Not a valid email
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" class="form-control" formControlName="password" />
+        <div class="text-danger" *ngIf="form.controls.password.errors && form.controls.password.touched">
+          <div *ngIf="form.controls.password.errors.required">
+            Password is required
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="text-danger" *ngIf="tokenResponse?.error">
+          {{(tokenResponse?.error | json | authError)}}
+        </div>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Log in</button>
+      </div>
+      <div>
+        <p>
+          <a routerLink="/auth/forgotpassword">Forgot your password?</a>
+        </p>
+        <p>
+          <a routerLink="/auth/register">Register as a new user</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

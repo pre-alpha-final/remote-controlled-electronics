@@ -1,0 +1,55 @@
+﻿/* Better look witch sketchy bootstrap */
+a, button:focus {
+    outline: 0;
+}
+
+/* Better look witch sketchy bootstrap */
+input[type=checkbox] {
+    outline: none;
+}
+
+/* tooltip color */
+.tooltip-inner {
+    background-color: #00acd6;
+}
+
+/* tooltip color */
+.bs-tooltip-auto[x-placement^=right] .arrow:before,
+.bs-tooltip-right .arrow:before {
+    border-right-color: #00acd6 !important;
+}
+
+/* tooltip color */
+.bs-tooltip-auto[x-placement^=left] .arrow:before,
+.bs-tooltip-left .arrow:before {
+    border-left-color: #00acd6 !important;
+}
+
+/* tooltip color */
+.bs-tooltip-auto[x-placement^=bottom] .arrow:before,
+.bs-tooltip-bottom .arrow:before {
+    border-bottom-color: #00acd6 !important;
+}
+
+/* tooltip color */
+.bs-tooltip-auto[x-placement^=top] .arrow:before,
+.bs-tooltip-top .arrow:before {
+    border-top-color: #00acd6 !important;
+}
+
+/* popper.js positioning fix */
+.tooltip {
+    top: 0;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {}
