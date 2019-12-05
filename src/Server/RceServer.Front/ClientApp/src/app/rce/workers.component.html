@@ -1,0 +1,11 @@
+<div class="container-fluid col-md-10 col-xl-8">
+  <div *ngFor='let worker of rceDataService.workers'>
+    <div class="card border-primary mb-3">
+      <div class="card-header">{{worker.name}}</div>
+      <div class="card-body">
+        <input type="text" />
+        <app-jobs [parentWorkerId]="worker.workerId"></app-jobs>
+      </div>
+    </div>
+  </div>
+</div>
