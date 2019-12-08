@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { Job } from '../shared/job';
+import { AuthService } from '../auth/auth.service';
 
 interface JobDescription {
   name: string;
@@ -27,10 +28,10 @@ export class RceDataService {
   workers: Worker[] = [];
   jobs$: BehaviorSubject<Job[]> = new BehaviorSubject(this.jobs);
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.foo();
     const connection: HubConnection = new HubConnectionBuilder()
-      .withUrl('/rce')
+      .withUrl('/rce', { accessTokenFactory: () => authService.accessToken })
       .build();
     connection.start().then(function () {
       console.log('connected');
