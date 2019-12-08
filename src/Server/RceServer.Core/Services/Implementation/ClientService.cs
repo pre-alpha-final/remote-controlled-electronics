@@ -10,8 +10,6 @@ namespace RceServer.Core.Services.Implementation
 {
 	public class ClientService : IClientService
 	{
-		private const int PollTimeSeconds = 60;
-		private const int PollDelaySeconds = 1;
 		private readonly IMessageRepository _messageRepository;
 
 		public ClientService(IMessageRepository messageRepository)
@@ -19,24 +17,9 @@ namespace RceServer.Core.Services.Implementation
 			_messageRepository = messageRepository;
 		}
 
-		public async Task<IList<IRceMessage>> GetFeed(long timestamp)
+		public Task<IList<IRceMessage>> GetState()
 		{
-			for (var i = 0; i < PollTimeSeconds / PollDelaySeconds; i++)
-			{
-				var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-				var messages = await _messageRepository.GetMessagesAfter(timestamp);
-				messages = messages // prevent possible racing with db reads/writes
-					.Where(e => e.MessageTimestamp < now - 100)
-					.ToList();
-				if (messages.Any())
-				{
-					RceMessageHelpers.Minimize(messages);
-					return messages;
-				}
-				await Task.Delay(TimeSpan.FromSeconds(PollDelaySeconds));
-			}
-
-			return new List<IRceMessage>();
+			return _messageRepository.GetMessagesAfter(0);
 		}
 	}
 }

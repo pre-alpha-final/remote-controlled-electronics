@@ -6,6 +6,6 @@ namespace RceServer.Domain.Services
 {
 	public interface IClientService
 	{
-		Task<IList<IRceMessage>> GetFeed(long timestamp);
+		Task<IList<IRceMessage>> GetState();
 	}
 }
