@@ -19,6 +19,7 @@ using RceServer.Data;
 using RceServer.Data.Identity;
 using RceServer.Data.Identity.Models;
 using RceServer.Domain.Services;
+using RceServer.Front.Hubs;
 
 namespace RceServer.Front
 {
@@ -64,6 +65,8 @@ namespace RceServer.Front
 			services.AddApplicationInsightsTelemetry(Configuration["InstrumentationKey"]);
 
 			services.AddMvc();
+
+			services.AddSignalR().AddAzureSignalR(Configuration.GetConnectionString("SignalR"));
 
 			services.AddAuthentication(options =>
 				{
@@ -122,7 +125,11 @@ namespace RceServer.Front
 #if !DEBUG
 			app.UseHttpsRedirection();
 #endif
-			app.UseStaticFiles();
+			app.UseFileServer();
+			app.UseAzureSignalR(routes =>
+			{
+				routes.MapHub<RceHub>("/rce");
+			});
 			app.UseSpaStaticFiles();
 
 			app.UseIdentityServer();

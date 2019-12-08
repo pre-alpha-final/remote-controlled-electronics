@@ -8,8 +8,8 @@ namespace RceServer.Domain.Services
 	public interface IMessageRepository
 	{
 		Task AddMessage(IRceMessage message);
-		Task<List<IRceMessage>> GetMessagesBefore(long timestamp);
-		Task<List<IRceMessage>> GetMessagesAfter(long timestamp);
+		Task<IList<IRceMessage>> GetMessagesBefore(long timestamp);
+		Task<IList<IRceMessage>> GetMessagesAfter(long timestamp);
 		Task RemoveMessages(IEnumerable<Guid> messages);
 	}
 }
