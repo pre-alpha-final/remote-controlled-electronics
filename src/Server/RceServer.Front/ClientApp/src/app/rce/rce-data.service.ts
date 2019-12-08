@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { Job } from '../shared/job';
 
@@ -28,6 +29,16 @@ export class RceDataService {
 
   constructor() {
     this.foo();
+    const connection: HubConnection = new HubConnectionBuilder()
+      .withUrl('/rce')
+      .build();
+    connection.start().then(function () {
+      console.log('connected');
+    })
+      .catch(function (error) {
+        console.error(error.message);
+      });
+    connection.on('foo', e => console.log(e));
   }
 
   foo(): void {

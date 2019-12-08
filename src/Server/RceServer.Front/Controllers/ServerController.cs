@@ -28,7 +28,8 @@ namespace RceServer.Front.Controllers
 			return Ok(messages);
 		}
 
-		[HttpGet("signalrtest")]
+		[AllowAnonymous]
+		[HttpGet("/signalrtest")]
 		public async Task<IActionResult> SignalRTest()
 		{
 			await _rceHubContext.Clients.All.SendAsync("foo", "bar");
