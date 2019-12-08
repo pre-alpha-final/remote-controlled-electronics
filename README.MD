@@ -6,6 +6,7 @@ Settings needed for development, mirrored in secrets.json
 ```
 {  
   "ConnectionStrings":{
+    "SignalR":"",
     "UsersDbContext":""
   },
   "SendGridApiKey":"",

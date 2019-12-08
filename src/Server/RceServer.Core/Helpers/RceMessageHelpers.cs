@@ -13,7 +13,7 @@ namespace RceServer.Core.Helpers
 			messages.RemoveAll(e => redundantMessages.Contains(e.MessageId));
 		}
 
-		public static IEnumerable<Guid> GetRedundantMessages(List<IRceMessage> messages)
+		public static IEnumerable<Guid> GetRedundantMessages(IList<IRceMessage> messages)
 		{
 			var workerIdsToRemove = new HashSet<Guid>();
 			var jobIdsToRemove = new HashSet<Guid>();
@@ -102,7 +102,7 @@ namespace RceServer.Core.Helpers
 				.Select(e => e.MessageId);
 		}
 
-		public static IEnumerable<Guid> GetActiveWorkers(List<IRceMessage> messages)
+		public static IEnumerable<Guid> GetActiveWorkers(IList<IRceMessage> messages)
 		{
 			var workers = new HashSet<Guid>();
 			var removedWorkers = new HashSet<Guid>();

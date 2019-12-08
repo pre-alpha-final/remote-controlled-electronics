@@ -13,19 +13,19 @@ namespace RceServer.Data
 
 		public Task AddMessage(IRceMessage message)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		// TODO return deep copy until db is used
-		public Task<List<IRceMessage>> GetMessagesBefore(long timestamp)
+		public Task<IList<IRceMessage>> GetMessagesBefore(long timestamp)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		// TODO return deep copy until db is used
-		public Task<List<IRceMessage>> GetMessagesAfter(long timestamp)
+		public Task<IList<IRceMessage>> GetMessagesAfter(long timestamp)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public Task RemoveMessages(IEnumerable<Guid> messages)
