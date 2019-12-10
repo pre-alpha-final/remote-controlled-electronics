@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class AddWorkerMessage : MessageBase, IRceMessage, IHasWorkerId
+	public class WorkerAddedMessage : MessageBase, IRceMessage, IHasWorkerId
 	{
 		public Guid WorkerId { get; set; }
 		public string Name { get; set; }

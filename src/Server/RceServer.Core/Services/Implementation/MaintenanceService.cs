@@ -48,10 +48,10 @@ namespace RceServer.Core.Services.Implementation
 
 			foreach (var disconnectedWorkerId in previouslyActiveWorkers.Except(currentlyActiveWorkers))
 			{
-				await _messageRepository.AddMessage(new RemoveWorkerMessage
+				await _messageRepository.AddMessage(new WorkerRemovedMessage
 				{
 					WorkerId = disconnectedWorkerId,
-					ConnectionStatus = RemoveWorkerMessage.Statuses.ConnectionLost
+					ConnectionStatus = WorkerRemovedMessage.Statuses.ConnectionLost
 				});
 			}
 		}

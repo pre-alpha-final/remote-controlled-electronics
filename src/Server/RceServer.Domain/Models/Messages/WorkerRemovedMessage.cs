@@ -2,7 +2,7 @@
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class RemoveWorkerMessage : MessageBase, IRceMessage, IHasWorkerId
+	public class WorkerRemovedMessage : MessageBase, IRceMessage, IHasWorkerId
 	{
 		public enum Statuses
 		{

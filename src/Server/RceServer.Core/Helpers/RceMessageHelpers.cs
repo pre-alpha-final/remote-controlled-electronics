@@ -25,11 +25,11 @@ namespace RceServer.Core.Helpers
 			foreach (var message in messages)
 			{
 				// Mark completed workers with all their messages for removal
-				if (message is RemoveWorkerMessage removeWorkerMessage)
+				if (message is WorkerRemovedMessage removeWorkerMessage)
 				{
-					// Only if has corresponding AddWorkerMessage
+					// Only if has corresponding WorkerAddedMessage
 					var hasCorrespondingAddMessage = messages.Any(e =>
-						e is AddWorkerMessage addWorkerMessage &&
+						e is WorkerAddedMessage addWorkerMessage &&
 						addWorkerMessage.WorkerId == removeWorkerMessage.WorkerId);
 					if (hasCorrespondingAddMessage)
 					{
@@ -38,11 +38,11 @@ namespace RceServer.Core.Helpers
 				}
 
 				// Mark removed jobs with all their messages for removal
-				if (message is RemoveJobMessage removeJobMessage)
+				if (message is JobRemovedMessage removeJobMessage)
 				{
-					// Only if has corresponding AddJobMessage
+					// Only if has corresponding JobAddedMessage
 					var hasCorrespondingAddMessage = messages.Any(e =>
-						e is AddJobMessage addJobMessage &&
+						e is JobAddedMessage addJobMessage &&
 						addJobMessage.JobId == removeJobMessage.JobId);
 					if (hasCorrespondingAddMessage)
 					{
@@ -51,7 +51,7 @@ namespace RceServer.Core.Helpers
 				}
 
 				// Mark old update messages for removal
-				if (message is UpdateJobMessage updateJobMessage)
+				if (message is JobUpdatedMessage updateJobMessage)
 				{
 					if (lastUpdate.ContainsKey(updateJobMessage.WorkerId) == false)
 					{
@@ -73,7 +73,7 @@ namespace RceServer.Core.Helpers
 				}
 
 				// Mark old keep alive messages for removal
-				if (message is KeepAliveMessage keepAliveMessage)
+				if (message is KeepAliveAssumedMessage keepAliveMessage)
 				{
 					if (lastKeepAlive.ContainsKey(keepAliveMessage.WorkerId) == false)
 					{
@@ -114,7 +114,7 @@ namespace RceServer.Core.Helpers
 					workers.Add(workerMessage.WorkerId);
 				}
 
-				if (message is RemoveWorkerMessage removeWorkerMessage)
+				if (message is WorkerRemovedMessage removeWorkerMessage)
 				{
 					removedWorkers.Add(removeWorkerMessage.WorkerId);
 				}
