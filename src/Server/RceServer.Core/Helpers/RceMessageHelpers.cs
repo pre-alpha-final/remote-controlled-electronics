@@ -73,7 +73,7 @@ namespace RceServer.Core.Helpers
 				}
 
 				// Mark old keep alive messages for removal
-				if (message is KeepAliveAssumedMessage keepAliveMessage)
+				if (message is KeepAliveSentMessage keepAliveMessage)
 				{
 					if (lastKeepAlive.ContainsKey(keepAliveMessage.WorkerId) == false)
 					{

@@ -12,7 +12,7 @@ namespace RceServer.Tests
 
 		public MinimizationTests()
 		{
-			MessageList = GetMessageListStub();
+			MessageList = MessageListStub.Get();
 		}
 
 		[Fact]
@@ -32,10 +32,11 @@ namespace RceServer.Tests
 			RceMessageHelpers.Minimize(MessageList);
 
 			var index = 0;
-			Assert.Equal(3, MessageList.Count);
+			Assert.Equal(4, MessageList.Count);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000003"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000004"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000006"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000012"), MessageList[index++].MessageId);
 		}
 
 		[Fact]
@@ -46,15 +47,17 @@ namespace RceServer.Tests
 			RceMessageHelpers.Minimize(MessageList);
 
 			var index = 0;
-			Assert.Equal(8, MessageList.Count);
+			Assert.Equal(10, MessageList.Count);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000003"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000004"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000005"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000006"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000007"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000009"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000014"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000015"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000011"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000012"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000016"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000017"), MessageList[index++].MessageId);
 		}
 
 		[Fact]
@@ -68,131 +71,19 @@ namespace RceServer.Tests
 			MessageList.RemoveAt(0);
 			MessageList.RemoveAt(0);
 			MessageList.RemoveAt(0);
+			MessageList.RemoveAt(0);
+			MessageList.RemoveAt(0);
 			RceMessageHelpers.Minimize(MessageList);
 
 			var index = 0;
 			Assert.Equal(7, MessageList.Count);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000009"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000010"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000011"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000012"), MessageList[index++].MessageId);
-			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000013"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000014"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000015"), MessageList[index++].MessageId);
 			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000016"), MessageList[index++].MessageId);
-		}
-
-		private List<IRceMessage> GetMessageListStub()
-		{
-			return new List<IRceMessage>
-			{
-				new WorkerAddedMessage // Create worker 1
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000001"),
-					MessageTimestamp = 1,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000001")
-				},
-				new WorkerAddedMessage // Create worker 2
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000002"),
-					MessageTimestamp = 2,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new WorkerAddedMessage // Create worker 3
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000003"),
-					MessageTimestamp = 3,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000003")
-				},
-				new JobAddedMessage // Create job 1 for worker 1
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000004"),
-					MessageTimestamp = 4,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000001"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000001")
-				},
-				new JobAddedMessage // Create job 2 for worker 2
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000005"),
-					MessageTimestamp = 5,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000002"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new KeepAliveAssumedMessage // Worker 2 Keep Alive
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000006"),
-					MessageTimestamp = 6,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new KeepAliveAssumedMessage // Worker 2 Keep Alive
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000007"),
-					MessageTimestamp = 7,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new JobAddedMessage // Create job 3 for worker 3
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000008"),
-					MessageTimestamp = 8,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000003"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000003")
-				},
-				new JobAddedMessage // Create job 4 for worker 2
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000009"),
-					MessageTimestamp = 9,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000004"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new WorkerRemovedMessage // Worker 1 fails
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000010"),
-					MessageTimestamp = 10,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000001"),
-					ConnectionStatus = WorkerRemovedMessage.Statuses.ConnectionLost
-				},
-				new JobUpdatedMessage // Update job 2 for worker 2
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000011"),
-					MessageTimestamp = 11,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000002"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new JobUpdatedMessage // Update job 3 for worker 3
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000012"),
-					MessageTimestamp = 12,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000003"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000003")
-				},
-				new JobCompletedMessage // Complete job 3 for worker 3
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000013"),
-					MessageTimestamp = 13,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000003"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000003")
-				},
-				new JobUpdatedMessage // Update job 2 for worker 2
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000014"),
-					MessageTimestamp = 14,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000002"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002")
-				},
-				new WorkerRemovedMessage // Worker 2 Ends
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000015"),
-					MessageTimestamp = 15,
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000002"),
-					ConnectionStatus = WorkerRemovedMessage.Statuses.ClosedByWorker
-				},
-				new JobRemovedMessage // Remove job 3 for worker 3
-				{
-					MessageId = new Guid("00000000-0000-0000-0000-000000000016"),
-					MessageTimestamp = 16,
-					JobId = new Guid("FFFFFFFF-0000-0000-0000-000000000003"),
-					WorkerId = new Guid("00000000-FFFF-0000-0000-000000000003")
-				},
-			};
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000017"), MessageList[index++].MessageId);
+			Assert.Equal(new Guid("00000000-0000-0000-0000-000000000018"), MessageList[index++].MessageId);
 		}
 	}
 }
