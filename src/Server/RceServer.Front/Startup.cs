@@ -28,6 +28,8 @@ namespace RceServer.Front
 {
 	public class Startup
 	{
+		private const int SignalRKeepAlive = 10;
+
 		public IConfiguration Configuration { get; }
 
 		public Startup(IConfiguration configuration)
@@ -69,7 +71,9 @@ namespace RceServer.Front
 
 			services.AddMvc();
 
-			services.AddSignalR().AddAzureSignalR(Configuration.GetConnectionString("SignalR"));
+			services
+				.AddSignalR(e => e.KeepAliveInterval = TimeSpan.FromSeconds(SignalRKeepAlive))
+				.AddAzureSignalR(Configuration.GetConnectionString("SignalR"));
 			services.AddSingleton<IUserIdProvider, UsernameIdProvider>();
 
 			services.AddAuthentication(options =>
