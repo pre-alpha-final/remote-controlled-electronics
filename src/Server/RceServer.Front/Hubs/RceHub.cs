@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.SignalR;
 namespace RceServer.Front.Hubs
 {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public class RceHub : Hub
+	[Authorize(Policy = "RceServerApiAccess")]
+	public class RceHub : Hub<IRceHub>
 	{
 	}
 }
