@@ -29,7 +29,9 @@ interface RceMessage {
   providedIn: 'root'
 })
 export class RceDataService {
-  private KeepAlive = 15000;
+  private readonly KeepAlive = 15000;
+  private running = false;
+  private connection: HubConnection;
   private messages: RceMessage[] = [];
   private jobs: Job[] = [];
 
@@ -37,35 +39,47 @@ export class RceDataService {
   jobs$: BehaviorSubject<Job[]> = new BehaviorSubject(this.jobs);
 
   constructor(private authService: AuthService, private httpClient: HttpClient) {
-    const connection: HubConnection = new HubConnectionBuilder()
+    this.connection = new HubConnectionBuilder()
       .withUrl('/rce', { accessTokenFactory: () => this.authService.accessToken })
       .build();
-    connection.keepAliveIntervalInMilliseconds = this.KeepAlive;
-    connection.on('messageReceived', e => this.messages.push(e));
-    connection.onclose(() => this.reconnectSignalR(connection));
-    this.connectSignalR(connection);
+    this.connection.keepAliveIntervalInMilliseconds = this.KeepAlive;
+    this.connection.on('messageReceived', e => this.messages.push(e));
+    this.connection.onclose(() => {
+      if (this.running) {
+        this.reconnectToRceServer(this.connection);
+      }
+    });
   }
 
-  private connectSignalR(connection: HubConnection): void {
-    connection.start()
-      .then(() => {
-        this.httpClient.get<RceMessage[]>('/api/server')
-          .subscribe(e => {
-            this.messages.unshift(...e);
-            this.runMessageProcessor();
-          });
-      })
-      .catch(e => {
-        console.error('Connection error: ' + e.message);
-        this.reconnectSignalR(connection);
-      });
+  connect(): void {
+    this.connectToRceServer(this.connection);
   }
 
-  private reconnectSignalR(connection: HubConnection): void {
-    setTimeout(() => this.connectSignalR(connection), 3000);
+  private connectToRceServer(connection: HubConnection): void {
+    this.running = false;
+    this.connection.stop().then(() => {
+      connection.start()
+        .then(() => {
+          this.running = true;
+          this.httpClient.get<RceMessage[]>('/api/server')
+            .subscribe(e => {
+              this.messages.unshift(...e);
+              this.runMessageProcessor();
+            });
+        })
+        .catch(e => console.error('Connection error: ' + e.message));
+    });
+  }
+
+  private reconnectToRceServer(connection: HubConnection): void {
+    setTimeout(() => this.connectToRceServer(connection), 3000);
   }
 
   private runMessageProcessor(): void {
+    if (this.running === false) {
+      return;
+    }
+
     const message = this.messages.shift();
     if (message != null) {
       this.processMessage(message);

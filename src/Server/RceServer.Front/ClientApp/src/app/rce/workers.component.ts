@@ -9,6 +9,6 @@ export class WorkersComponent implements OnInit {
   constructor(public rceDataService: RceDataService) { }
 
   ngOnInit() {
+    this.rceDataService.connect();
   }
-
 }
