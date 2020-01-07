@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace RceServer.Front.Hubs
+namespace RceServer.Core.Hubs
 {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Authorize(Policy = "RceServerApiAccess")]

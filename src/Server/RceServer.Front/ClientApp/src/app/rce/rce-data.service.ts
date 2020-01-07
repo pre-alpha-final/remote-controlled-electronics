@@ -1,28 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { BehaviorSubject } from 'rxjs';
-import { Job } from '../shared/job';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { JobDescription, RceMessage, WorkerAddedMessage, JobAddedMessage, JobRemovedMessage } from '../shared/rce-message-intefaces';
+import { Job } from '../shared/job';
 
-interface JobDescription {
-  name: string;
-  description: string[];
-  defaultPayload: any;
+enum MessageTypes {
+  JobAddedMessage = 'JobAddedMessage',
+  JobCompletedMessage = 'JobCompletedMessage',
+  JobPickedUpMessage = 'JobPickedUpMessage',
+  JobRemovedMessage = 'JobRemovedMessage',
+  JobUpdatedMessage = 'JobUpdatedMessage',
+  KeepAliveSentMessage = 'KeepAliveSentMessage',
+  WorkerAddedMessage = 'WorkerAddedMessage',
+  WorkerRemovedMessage = 'WorkerRemovedMessage'
 }
 
-interface Worker {
+class Worker {
   workerId: string;
   name: string;
   description: string;
   base64Logo: string;
   jobDescriptions: JobDescription[];
-}
-
-interface RceMessage {
-  messageId: string;
-  messageTimestamp: number;
-  messageType: string;
 }
 
 @Injectable({
@@ -89,6 +89,48 @@ export class RceDataService {
   }
 
   private processMessage(message: RceMessage): void {
-    console.log(message.messageType);
+    switch (message.messageType) {
+
+      case MessageTypes.WorkerAddedMessage: {
+        const workerAddedMessage = (message as WorkerAddedMessage);
+        if (this.workers.some(e => e.workerId === workerAddedMessage.workerId)) {
+          break;
+        }
+        this.workers.push(<Worker>{
+          workerId: workerAddedMessage.workerId,
+          name: workerAddedMessage.name,
+          description: workerAddedMessage.description,
+          base64Logo: workerAddedMessage.base64Logo,
+          jobDescriptions: workerAddedMessage.jobDescriptions
+        });
+        break;
+      }
+
+      case MessageTypes.WorkerRemovedMessage: {
+        break;
+      }
+
+      case MessageTypes.JobAddedMessage: {
+        const jobAddedMessage = (message as JobAddedMessage);
+        if (this.jobs.some(e => e.jobId === jobAddedMessage.jobId)) {
+          break;
+        }
+        this.jobs.push(<Job> {
+          jobId: jobAddedMessage.jobId,
+          workerId: jobAddedMessage.workerId,
+          name: jobAddedMessage.name,
+          payload: jobAddedMessage.payload,
+        });
+        this.jobs$.next(this.jobs);
+        break;
+      }
+
+      case MessageTypes.JobRemovedMessage: {
+        const jobRemovedMessage = (message as JobRemovedMessage);
+        this.jobs = this.jobs.filter(e => e.jobId !== jobRemovedMessage.jobId);
+        this.jobs$.next(this.jobs);
+        break;
+      }
+    }
   }
 }

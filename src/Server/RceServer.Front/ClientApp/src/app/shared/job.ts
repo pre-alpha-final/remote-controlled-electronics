@@ -1,4 +1,4 @@
-export interface Job {
+export class Job {
     jobId: string;
     workerId: string;
     name: string;

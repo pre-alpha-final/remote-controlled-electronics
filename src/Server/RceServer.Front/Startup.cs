@@ -15,13 +15,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using RceServer.Core.Hubs;
 using RceServer.Core.Services;
 using RceServer.Core.Services.Implementation;
 using RceServer.Data;
 using RceServer.Data.Identity;
 using RceServer.Data.Identity.Models;
 using RceServer.Domain.Services;
-using RceServer.Front.Hubs;
 using RceServer.Front.Infrastructure;
 
 namespace RceServer.Front
@@ -45,7 +45,7 @@ namespace RceServer.Front
 			services.AddSingleton<IAzureKicker, AzureKicker>();
 			services.AddSingleton<IMaintenanceService, MaintenanceService>();
 			services.AddTransient<IEmailSender, EmailSender>();
-			services.AddTransient<IClientService, ClientService>();
+			services.AddTransient<IClientService, ClientServiceMock>();
 			services.AddTransient<IMessageRepository, InMemoryMessageRepository>();
 
 			services.AddDbContext<UsersDbContext>();

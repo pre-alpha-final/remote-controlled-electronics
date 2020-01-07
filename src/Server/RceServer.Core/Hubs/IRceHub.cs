@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using RceServer.Domain.Models.Messages;
 
-namespace RceServer.Front.Hubs
+namespace RceServer.Core.Hubs
 {
 	public interface IRceHub
 	{

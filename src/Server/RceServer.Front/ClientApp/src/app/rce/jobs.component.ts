@@ -17,7 +17,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   constructor(public rceDataService: RceDataService) { }
 
   ngOnInit() {
-    this.jobsSubscription = this.rceDataService.jobs$.subscribe(e => this.workerJobs = e.filter(f => f.jobId === this.parentWorkerId));
+    this.jobsSubscription = this.rceDataService.jobs$.subscribe(e => this.workerJobs = e.filter(f => f.workerId === this.parentWorkerId));
   }
 
   ngOnDestroy(): void {

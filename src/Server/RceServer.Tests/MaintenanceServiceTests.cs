@@ -46,7 +46,7 @@ namespace RceServer.Tests
 
 			Assert.Equal(1, MessageList.Count);
 			Assert.Equal(nameof(WorkerAddedMessage), MessageList.First().MessageType);
-			Assert.Equal(new Guid("00000000-FFFF-0000-0000-000000000003"), ((WorkerAddedMessage)MessageList.First()).WorkerId);
+			Assert.Equal(new Guid("00000003-0000-0000-0000-000000000000"), ((WorkerAddedMessage)MessageList.First()).WorkerId);
 		}
 
 		[Fact]
@@ -69,7 +69,7 @@ namespace RceServer.Tests
 			Assert.Equal(19, MessageList.Count);
 			Assert.Equal(nameof(WorkerRemovedMessage), MessageList[18].MessageType);
 			Assert.Equal(WorkerRemovedMessage.Statuses.ConnectionLost, ((WorkerRemovedMessage) MessageList[18]).ConnectionStatus);
-			Assert.Equal(new Guid("00000000-FFFF-0000-0000-000000000003"), ((WorkerRemovedMessage) MessageList[18]).WorkerId);
+			Assert.Equal(new Guid("00000003-0000-0000-0000-000000000000"), ((WorkerRemovedMessage) MessageList[18]).WorkerId);
 		}
 	}
 }
