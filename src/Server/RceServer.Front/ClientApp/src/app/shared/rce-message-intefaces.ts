@@ -17,10 +17,17 @@ export interface JobAddedMessage extends RceMessage {
     payload: any;
 }
 
+export enum Statuses {
+    Undefined,
+    Success,
+    Warning,
+    Failure,
+}
+
 export interface JobCompletedMessage extends RceMessage {
     jobId: string;
     workerId: string;
-    jobStatus: string;
+    jobStatus: Statuses;
     output: any;
 }
 

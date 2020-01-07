@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { JobDescription, RceMessage, WorkerAddedMessage, JobAddedMessage, JobRemovedMessage } from '../shared/rce-message-intefaces';
-import { Job } from '../shared/job';
+import { JobDescription, RceMessage, WorkerAddedMessage, JobAddedMessage, JobRemovedMessage, JobPickedUpMessage,
+  JobUpdatedMessage, JobCompletedMessage, Statuses } from '../shared/rce-message-intefaces';
+import { Job, JobStates } from '../shared/job';
 
 enum MessageTypes {
   JobAddedMessage = 'JobAddedMessage',
@@ -89,7 +90,6 @@ export class RceDataService {
 
   private processMessage(message: RceMessage): void {
     switch (message.messageType) {
-
       case MessageTypes.WorkerAddedMessage: {
         const workerAddedMessage = (message as WorkerAddedMessage);
         if (this.workers.find(e => e.workerId === workerAddedMessage.workerId)) {
@@ -121,7 +121,67 @@ export class RceDataService {
           workerId: jobAddedMessage.workerId,
           name: jobAddedMessage.name,
           payload: jobAddedMessage.payload,
+          jobState: JobStates.Added,
         });
+        break;
+      }
+
+      case MessageTypes.JobRemovedMessage: {
+        const jobRemovedMessage = (message as JobRemovedMessage);
+        const parentWorker = this.workers.find(e => e.workerId === jobRemovedMessage.workerId);
+        if (parentWorker == null) {
+          break;
+        }
+        parentWorker.jobs = parentWorker.jobs.filter(e => e.jobId !== jobRemovedMessage.jobId);
+        break;
+      }
+
+      case MessageTypes.JobPickedUpMessage: {
+        const jobPickedUpMessage = (message as JobPickedUpMessage);
+        const parentWorker = this.workers.find(e => e.workerId === jobPickedUpMessage.workerId);
+        if (parentWorker == null) {
+          break;
+        }
+        const job = parentWorker.jobs.find(e => e.jobId === jobPickedUpMessage.jobId);
+        if (job) {
+          job.jobState = JobStates.PickedUp;
+        }
+        break;
+      }
+
+      case MessageTypes.JobUpdatedMessage: {
+        const jobUpdatedMessage = (message as JobUpdatedMessage);
+        const parentWorker = this.workers.find(e => e.workerId === jobUpdatedMessage.workerId);
+        if (parentWorker == null) {
+          break;
+        }
+        const job = parentWorker.jobs.find(e => e.jobId === jobUpdatedMessage.jobId);
+        if (job) {
+          job.output = jobUpdatedMessage.output;
+          job.jobState = JobStates.Updated;
+        }
+        break;
+      }
+
+      case MessageTypes.JobCompletedMessage: {
+        const jobCompletedMessage = (message as JobCompletedMessage);
+        const parentWorker = this.workers.find(e => e.workerId === jobCompletedMessage.workerId);
+        if (parentWorker == null) {
+          break;
+        }
+        const job = parentWorker.jobs.find(e => e.jobId === jobCompletedMessage.jobId);
+        if (job) {
+          job.output = jobCompletedMessage.output;
+          if (jobCompletedMessage.jobStatus === Statuses.Success) {
+            job.jobState = JobStates.Success;
+          }
+          if (jobCompletedMessage.jobStatus === Statuses.Warning || jobCompletedMessage.jobStatus === Statuses.Undefined) {
+            job.jobState = JobStates.Warning;
+          }
+          if (jobCompletedMessage.jobStatus === Statuses.Failure) {
+            job.jobState = JobStates.Failure;
+          }
+        }
         break;
       }
 
