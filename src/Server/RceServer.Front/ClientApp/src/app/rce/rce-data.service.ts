@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
-import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { JobDescription, RceMessage, WorkerAddedMessage, JobAddedMessage, JobRemovedMessage } from '../shared/rce-message-intefaces';
@@ -23,6 +22,7 @@ class Worker {
   description: string;
   base64Logo: string;
   jobDescriptions: JobDescription[];
+  jobs: Job[];
 }
 
 @Injectable({
@@ -33,10 +33,8 @@ export class RceDataService {
   private running = false;
   private connection: HubConnection;
   private messages: RceMessage[] = [];
-  private jobs: Job[] = [];
 
   workers: Worker[] = [];
-  jobs$: BehaviorSubject<Job[]> = new BehaviorSubject(this.jobs);
 
   constructor(private authService: AuthService, private httpClient: HttpClient) {
     this.connection = new HubConnectionBuilder()
@@ -57,6 +55,7 @@ export class RceDataService {
 
   private connectToRceServer(connection: HubConnection): void {
     this.running = false;
+    this.workers = [];
     this.connection.stop().then(() => {
       connection.start()
         .then(() => {
@@ -93,7 +92,7 @@ export class RceDataService {
 
       case MessageTypes.WorkerAddedMessage: {
         const workerAddedMessage = (message as WorkerAddedMessage);
-        if (this.workers.some(e => e.workerId === workerAddedMessage.workerId)) {
+        if (this.workers.find(e => e.workerId === workerAddedMessage.workerId)) {
           break;
         }
         this.workers.push(<Worker>{
@@ -101,7 +100,8 @@ export class RceDataService {
           name: workerAddedMessage.name,
           description: workerAddedMessage.description,
           base64Logo: workerAddedMessage.base64Logo,
-          jobDescriptions: workerAddedMessage.jobDescriptions
+          jobDescriptions: workerAddedMessage.jobDescriptions,
+          jobs: []
         });
         break;
       }
@@ -112,23 +112,26 @@ export class RceDataService {
 
       case MessageTypes.JobAddedMessage: {
         const jobAddedMessage = (message as JobAddedMessage);
-        if (this.jobs.some(e => e.jobId === jobAddedMessage.jobId)) {
+        const parentWorker = this.workers.find(e => e.workerId === jobAddedMessage.workerId);
+        if (parentWorker == null || parentWorker.jobs.find(e => e.jobId === jobAddedMessage.jobId)) {
           break;
         }
-        this.jobs.push(<Job> {
+        parentWorker.jobs.push(<Job>{
           jobId: jobAddedMessage.jobId,
           workerId: jobAddedMessage.workerId,
           name: jobAddedMessage.name,
           payload: jobAddedMessage.payload,
         });
-        this.jobs$.next(this.jobs);
         break;
       }
 
       case MessageTypes.JobRemovedMessage: {
         const jobRemovedMessage = (message as JobRemovedMessage);
-        this.jobs = this.jobs.filter(e => e.jobId !== jobRemovedMessage.jobId);
-        this.jobs$.next(this.jobs);
+        const parentWorker = this.workers.find(e => e.workerId === jobRemovedMessage.workerId);
+        if (parentWorker == null) {
+          break;
+        }
+        parentWorker.jobs = parentWorker.jobs.filter(e => e.jobId !== jobRemovedMessage.jobId);
         break;
       }
     }
