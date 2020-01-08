@@ -1,0 +1,12 @@
+.logo {
+    max-width: 4rem;
+    max-height: 4rem;
+}
+
+.inline {
+    display: inline;
+}
+
+.red-background {
+    background: red;
+}

@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div *ngFor='let job of jobs'>
     <div class="card border-primary mb-3">
-      <div class="card-header">{{job.name}} - {{job.jobState}}</div>
+      <div class="card-header">{{job.name}}<span class="ml-2">({{job.jobState}})</span></div>
       <div class="card-body">
         <input type="text" />
       </div>

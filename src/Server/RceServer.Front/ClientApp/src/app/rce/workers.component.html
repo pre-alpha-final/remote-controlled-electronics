@@ -1,9 +1,13 @@
 <div class="container-fluid col-md-10 col-xl-8">
   <div *ngFor='let worker of rceDataService.workers'>
     <div class="card border-primary mb-3">
-      <div class="card-header">{{worker.name}}</div>
+      <div class="card-header" [ngClass]="{'red-background': worker.error != null}">
+        <img class="logo" [src]="getBase64Image(worker.base64Logo)" />
+        <h3 class="inline ml-3">{{worker.name}}<span *ngIf="worker.error != null" class="ml-3">({{worker.error}})</span></h3>
+      </div>
       <div class="card-body">
-        <input type="text" />
+        <p class="text-primary">{{worker.description}}</p>
+        <app-available-jobs></app-available-jobs>
         <app-jobs [jobs]="worker.jobs"></app-jobs>
       </div>
     </div>
