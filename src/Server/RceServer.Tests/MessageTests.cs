@@ -10,7 +10,7 @@ namespace RceServer.Tests
 		[Fact]
 		public void Message_WhenCreated_HasMessageIdSet()
 		{
-			var testMessage = new AddWorkerMessage();
+			var testMessage = new WorkerAddedMessage();
 
 			Assert.NotEqual(Guid.Empty, testMessage.MessageId);
 		}
@@ -18,7 +18,7 @@ namespace RceServer.Tests
 		[Fact]
 		public void Message_WhenCreated_HasMessageTimestampSet()
 		{
-			var testMessage = new AddWorkerMessage();
+			var testMessage = new WorkerAddedMessage();
 
 			Assert.True(testMessage.MessageTimestamp > 0);
 		}
@@ -26,18 +26,18 @@ namespace RceServer.Tests
 		[Fact]
 		public void Message_WhenCreated_HasMessageTypeSet()
 		{
-			var testMessage = new AddWorkerMessage();
+			var testMessage = new WorkerAddedMessage();
 
-			Assert.Equal("AddWorkerMessage", testMessage.MessageType);
+			Assert.Equal("WorkerAddedMessage", testMessage.MessageType);
 		}
 
 		[Fact]
 		public void Message_WhenSerializedDeserialized_RetainsMessageId()
 		{
-			var testMessage = new AddWorkerMessage();
+			var testMessage = new WorkerAddedMessage();
 			var originalValue = testMessage.MessageId;
 			var serializedMessage = JsonConvert.SerializeObject(testMessage);
-			var deserializedMessage = JsonConvert.DeserializeObject<AddWorkerMessage>(serializedMessage);
+			var deserializedMessage = JsonConvert.DeserializeObject<WorkerAddedMessage>(serializedMessage);
 
 			Assert.Equal(originalValue, deserializedMessage.MessageId);
 		}
@@ -45,10 +45,10 @@ namespace RceServer.Tests
 		[Fact]
 		public void Message_WhenSerializedDeserialized_RetainsMessageTimestamp()
 		{
-			var testMessage = new AddWorkerMessage();
+			var testMessage = new WorkerAddedMessage();
 			var originalValue = testMessage.MessageTimestamp;
 			var serializedMessage = JsonConvert.SerializeObject(testMessage);
-			var deserializedMessage = JsonConvert.DeserializeObject<AddWorkerMessage>(serializedMessage);
+			var deserializedMessage = JsonConvert.DeserializeObject<WorkerAddedMessage>(serializedMessage);
 
 			Assert.Equal(originalValue, deserializedMessage.MessageTimestamp);
 		}
@@ -56,10 +56,10 @@ namespace RceServer.Tests
 		[Fact]
 		public void Message_WhenSerializedDeserialized_RetainsMessageType()
 		{
-			var testMessage = new AddWorkerMessage();
+			var testMessage = new WorkerAddedMessage();
 			var originalValue = testMessage.MessageType;
 			var serializedMessage = JsonConvert.SerializeObject(testMessage);
-			var deserializedMessage = JsonConvert.DeserializeObject<AddWorkerMessage>(serializedMessage);
+			var deserializedMessage = JsonConvert.DeserializeObject<WorkerAddedMessage>(serializedMessage);
 
 			Assert.Equal(originalValue, deserializedMessage.MessageType);
 		}

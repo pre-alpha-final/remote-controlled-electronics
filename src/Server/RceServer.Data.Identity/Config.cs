@@ -29,17 +29,12 @@ namespace RceServer.Data.Identity
 				{
 					ClientId = "rceserver",
 					AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-					ClientSecrets =
-					{
-						new Secret(clientSecret.Sha256())
-					},
+					ClientSecrets = { new Secret(clientSecret.Sha256()) },
 					AccessTokenLifetime = (int) TimeSpan.FromHours(1).TotalSeconds,
 					AllowOfflineAccess = true,
 					RefreshTokenExpiration = TokenExpiration.Sliding,
 					SlidingRefreshTokenLifetime = (int) TimeSpan.FromHours(24).TotalSeconds,
-					AllowedScopes = {
-						"rceserverapi"
-					}
+					AllowedScopes = { "rceserverapi" }
 				}
 			};
 		}

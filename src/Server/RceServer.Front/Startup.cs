@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.Stores;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -7,24 +8,28 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using RceServer.Core.Hubs;
 using RceServer.Core.Services;
 using RceServer.Core.Services.Implementation;
 using RceServer.Data;
 using RceServer.Data.Identity;
 using RceServer.Data.Identity.Models;
 using RceServer.Domain.Services;
-using RceServer.Front.Hubs;
+using RceServer.Front.Infrastructure;
 
 namespace RceServer.Front
 {
 	public class Startup
 	{
+		private const int SignalRKeepAlive = 10;
+
 		public IConfiguration Configuration { get; }
 
 		public Startup(IConfiguration configuration)
@@ -40,7 +45,7 @@ namespace RceServer.Front
 			services.AddSingleton<IAzureKicker, AzureKicker>();
 			services.AddSingleton<IMaintenanceService, MaintenanceService>();
 			services.AddTransient<IEmailSender, EmailSender>();
-			services.AddTransient<IClientService, ClientService>();
+			services.AddTransient<IClientService, ClientServiceMock>();
 			services.AddTransient<IMessageRepository, InMemoryMessageRepository>();
 
 			services.AddDbContext<UsersDbContext>();
@@ -66,7 +71,10 @@ namespace RceServer.Front
 
 			services.AddMvc();
 
-			services.AddSignalR().AddAzureSignalR(Configuration.GetConnectionString("SignalR"));
+			services
+				.AddSignalR(e => e.KeepAliveInterval = TimeSpan.FromSeconds(SignalRKeepAlive))
+				.AddAzureSignalR(Configuration.GetConnectionString("SignalR"));
+			services.AddSingleton<IUserIdProvider, UsernameIdProvider>();
 
 			services.AddAuthentication(options =>
 				{
@@ -89,6 +97,23 @@ namespace RceServer.Front
 						ValidateIssuerSigningKey = true,
 						ValidateLifetime = true,
 						ClockSkew = TimeSpan.Zero,
+					};
+
+					options.Events = new JwtBearerEvents
+					{
+						OnMessageReceived = context =>
+						{
+							var accessToken = context.Request.Query["access_token"];
+
+							var path = context.HttpContext.Request.Path;
+							if (string.IsNullOrEmpty(accessToken) == false &&
+								path.StartsWithSegments("/hubs/rce"))
+							{
+								context.Token = accessToken;
+							}
+
+							return Task.CompletedTask;
+						}
 					};
 				});
 

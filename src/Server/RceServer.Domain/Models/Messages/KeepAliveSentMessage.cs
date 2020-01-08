@@ -2,7 +2,7 @@
 
 namespace RceServer.Domain.Models.Messages
 {
-	public class KeepAliveMessage : MessageBase, IRceMessage, IHasWorkerId
+	public class KeepAliveSentMessage : MessageBase, IRceMessage, IHasWorkerId
 	{
 		public enum Reasons
 		{
