@@ -1,4 +1,4 @@
-<div class="container-fluid col-md-10 col-xl-8">
+<div class="container-fluid row">
   <div *ngFor='let worker of rceDataService.workers'>
     <div class="card border-primary mb-3">
       <div class="card-header" [ngClass]="{'red-background': worker.error != null}">
@@ -7,9 +7,9 @@
       </div>
       <div class="card-body">
         <p class="text-primary">{{worker.description}}</p>
-        <app-available-jobs></app-available-jobs>
+        <app-job-descriptions [jobDescriptions]="worker.jobDescriptions" [workerId]="worker.workerId"></app-job-descriptions>
         <app-jobs [jobs]="worker.jobs"></app-jobs>
       </div>
     </div>
-  </div>
+  </div >
 </div>

@@ -122,6 +122,12 @@ namespace RceServer.Core.Services.Implementation
 							Name = "test job w1",
 							Description = new List<string>{ "test job w1 description", "some details" },
 							DefaultPayload = JObject.Parse(@"{""foo"":""bar""}")
+						},
+						new JobDescription
+						{
+							Name = "test job w2",
+							Description = new List<string>{ "test job w2 description", "some details" },
+							DefaultPayload = JObject.Parse(@"{""foo"":""bar""}")
 						}
 					}
 				},
