@@ -7,14 +7,21 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./workers.component.css']
 })
 export class WorkersComponent implements OnInit {
+  updateMasonryLayout: boolean;
 
   constructor(public rceDataService: RceDataService, private domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.rceDataService.connect();
+    this.recalculateMasonry();
   }
 
   getBase64Image(base64Image: string): SafeResourceUrl {
     return this.domSanitizer.bypassSecurityTrustResourceUrl(base64Image);
+  }
+
+  recalculateMasonry(): void {
+    this.updateMasonryLayout = !this.updateMasonryLayout;
+    setTimeout(() => this.recalculateMasonry(), 200);
   }
 }
