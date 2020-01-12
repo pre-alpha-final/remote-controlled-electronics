@@ -1,9 +1,36 @@
-<div class="container-fluid">
-  <div *ngFor='let job of jobs'>
-    <div class="card border-primary mb-3">
-      <div class="card-header">{{job.name}}<span class="ml-2">({{job.jobState}})</span></div>
-      <div class="card-body">
-        <input type="text" />
+<div class="card m-1">
+  <div class="card-header">
+    <a data-toggle="collapse" href="#jobs-{{workerId}}">
+      <h5 class="mb-0">Job log</h5>
+    </a>
+  </div>
+  <div id="jobs-{{workerId}}" class="collapse">
+    <div class="card-body p-2">
+      <div class="position-relative jumbotron d-flex p-3 m-2" *ngFor='let job of jobs' [ngClass]="{
+        'bg-rce-added': job.jobState == 'Added',
+        'bg-rce-picked-up': job.jobState == 'PickedUp',
+        'bg-rce-updated': job.jobState == 'Updated',
+        'bg-rce-success': job.jobState == 'Success',
+        'bg-rce-warning': job.jobState == 'Warning',
+        'bg-rce-failure': job.jobState == 'Failure'
+        }">
+        <button class="close top-right" type="button" (click)="jobClose($event, job)"></button>
+        <div class="d-flex flex-column col-5">
+          <div class="m-1">
+            <p class="m-0">{{job.name}} - {{job.jobState}}</p>
+            <small>Run with:</small>
+            <pre class="align-self-center">{{job.payload | json}}</pre>
+          </div>
+        </div>
+        <div class="d-flex col-7">
+          <div class="d-flex alert alert-secondary m-0 full-size">
+            <pre *ngIf="job.output == null && job.jobState == 'Added'"
+              class="align-self-center">Waiting for pickup...</pre>
+            <pre *ngIf="job.output == null && job.jobState == 'PickedUp'"
+              class="align-self-center">Waiting for output...</pre>
+            <pre *ngIf="job.output != null" class="align-self-center">{{job.output | json}}</pre>
+          </div>
+        </div>
       </div>
     </div>
   </div>

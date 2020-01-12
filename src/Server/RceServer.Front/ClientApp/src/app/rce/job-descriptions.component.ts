@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { JobDescription } from '../shared/rce-message-intefaces';
 
 @Component({
@@ -6,13 +6,9 @@ import { JobDescription } from '../shared/rce-message-intefaces';
   templateUrl: './job-descriptions.component.html',
   styleUrls: ['./job-descriptions.component.css']
 })
-export class JobDescriptionsComponent implements OnInit {
+export class JobDescriptionsComponent {
   @Input() jobDescriptions: JobDescription[];
   @Input() workerId: string;
 
   constructor() { }
-
-  ngOnInit() {
-  }
-
 }
