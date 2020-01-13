@@ -1,3 +1,21 @@
+<div class="modal fade" id="removeJob-{{workerId}}" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">REMOVE JOB</h5>
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to remove this job?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="jobClose($event)">Yes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="card m-1">
   <div class="card-header">
     <a data-toggle="collapse" href="#jobs-{{workerId}}">
@@ -14,12 +32,12 @@
         'bg-rce-warning': job.jobState == 'Warning',
         'bg-rce-failure': job.jobState == 'Failure'
         }">
-        <button class="close top-right" type="button" (click)="jobClose($event, job)"></button>
+        <button class="close close-top-right" type="button" data-toggle="modal" [attr.data-target]="'#removeJob-'+workerId" (click)="setModalVarRemoveJob(job)"></button>
         <div class="d-flex flex-column col-5">
           <div class="m-1">
             <p class="m-0">{{job.name}} - {{job.jobState}}</p>
             <small>Run with:</small>
-            <pre class="align-self-center">{{job.payload | json}}</pre>
+            <small><pre class="align-self-center">{{job.payload | json}}</pre></small>
           </div>
         </div>
         <div class="d-flex col-7">
