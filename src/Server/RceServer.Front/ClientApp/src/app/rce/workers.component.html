@@ -9,9 +9,9 @@
         </div>
         <div class="card-body" [ngClass]="{'red-background': worker.error != null}">
           <p class="text-primary">{{worker.description}}</p>
-          <app-job-descriptions [jobDescriptions]="worker.jobDescriptions" [workerId]="worker.workerId">
+          <app-job-descriptions [jobDescriptions]="worker.jobDescriptions" [workerId]="worker.workerId" (redrawMasonryRequested)="redrawMasonry()">
           </app-job-descriptions>
-          <app-jobs [jobs]="worker.jobs" [workerId]="worker.workerId"></app-jobs>
+          <app-jobs [jobs]="worker.jobs" [workerId]="worker.workerId" (redrawMasonryRequested)="redrawMasonry()"></app-jobs>
         </div>
       </div>
     </div>

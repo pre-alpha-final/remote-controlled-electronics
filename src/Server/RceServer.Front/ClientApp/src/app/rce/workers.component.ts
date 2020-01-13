@@ -13,15 +13,13 @@ export class WorkersComponent implements OnInit {
 
   ngOnInit() {
     this.rceDataService.connect();
-    this.recalculateMasonry();
   }
 
   getBase64Image(base64Image: string): SafeResourceUrl {
     return this.domSanitizer.bypassSecurityTrustResourceUrl(base64Image);
   }
 
-  recalculateMasonry(): void {
+  redrawMasonry(): void {
     this.updateMasonryLayout = !this.updateMasonryLayout;
-    setTimeout(() => this.recalculateMasonry(), 200);
   }
 }
