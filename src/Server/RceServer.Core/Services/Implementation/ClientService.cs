@@ -14,7 +14,7 @@ namespace RceServer.Core.Services.Implementation
 			_messageRepository = messageRepository;
 		}
 
-		public Task<IList<IRceMessage>> GetState()
+		public Task<IList<IRceMessage>> GetMessages()
 		{
 			return _messageRepository.GetMessagesAfter(0);
 		}

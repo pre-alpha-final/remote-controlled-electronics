@@ -2,6 +2,10 @@ import { Component, Input, Output, EventEmitter, Inject, OnInit, ViewChild, Elem
 import { JobDescription } from '../shared/rce-message-intefaces';
 import { JQ_TOKEN } from '../shared/jquery.service';
 import { JsonPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-job-descriptions',
@@ -16,7 +20,8 @@ export class JobDescriptionsComponent implements OnInit {
   @ViewChild('jobName') jobNameRef: ElementRef;
   @ViewChild('jobTextArea') jobTextAreaRef: ElementRef;
 
-  constructor(@Inject(JQ_TOKEN) private $: any, private jsonPipe: JsonPipe) {}
+  constructor(@Inject(JQ_TOKEN) private $: any, private jsonPipe: JsonPipe,
+    private httpClient: HttpClient, private authService: AuthService) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -26,7 +31,12 @@ export class JobDescriptionsComponent implements OnInit {
   }
 
   runJob(): void {
-    // todo run job
+    const jobName = this.jobNameRef.nativeElement.innerText;
+    const jobPayload = this.jobTextAreaRef.nativeElement.value;
+
+    this.httpClient.post<void>('/api/server/workers/' + this.workerId + '/runjob', { jobName, jobPayload })
+      .pipe(catchError(e => EMPTY))
+      .subscribe();
   }
 
   private fillModal(jobDescription: JobDescription): void {

@@ -6,6 +6,6 @@ namespace RceServer.Domain.Services
 {
 	public interface IClientService
 	{
-		Task<IList<IRceMessage>> GetState();
+		Task<IList<IRceMessage>> GetMessages();
 	}
 }
