@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Job } from '../shared/job';
 import { JQ_TOKEN } from '../shared/jquery.service';
 
@@ -12,7 +12,7 @@ export class JobsComponent implements OnInit {
   @Input() workerId: string;
   @Output() redrawMasonryRequested: EventEmitter<any> = new EventEmitter();
 
-  private modalVarRemoveJob: Job;
+  @ViewChild('jobId') jobIdRef: ElementRef;
 
   constructor(@Inject(JQ_TOKEN) private $: any) {}
 
@@ -23,11 +23,11 @@ export class JobsComponent implements OnInit {
     }, 1);
   }
 
-  jobClose($event: MouseEvent) {
+  private removeJob(): void {
     // todo send remove job to server
   }
 
-  private setModalVarRemoveJob(job: Job) {
-    this.modalVarRemoveJob = job;
+  private fillModal(job: Job): void {
+    this.jobIdRef.nativeElement.value = job.jobId;
   }
 }

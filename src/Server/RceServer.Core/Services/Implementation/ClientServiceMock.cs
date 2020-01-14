@@ -65,7 +65,7 @@ namespace RceServer.Core.Services.Implementation
 					{
 						new JobDescription
 						{
-							Name = "test job w3",
+							Name = "test job 4",
 							Description = new List<string>{ "test job w3 description", "some details" },
 							DefaultPayload = JObject.Parse(@"{""foo"":""bar""}")
 						}
@@ -119,13 +119,13 @@ namespace RceServer.Core.Services.Implementation
 					{
 						new JobDescription
 						{
-							Name = "test job w1",
+							Name = "test job 1",
 							Description = new List<string>{ "test job w1 description", "some details" },
 							DefaultPayload = JObject.Parse(@"{""foo"":""bar""}")
 						},
 						new JobDescription
 						{
-							Name = "test job w2",
+							Name = "test job 2",
 							Description = new List<string>{ "test job w2 description", "some details" },
 							DefaultPayload = JObject.Parse(@"{""foo"":""bar""}")
 						}
@@ -141,7 +141,7 @@ namespace RceServer.Core.Services.Implementation
 					{
 						new JobDescription
 						{
-							Name = "test job w2",
+							Name = "test job 3",
 							Description = new List<string>{ "test job w2 description", "some details" },
 							DefaultPayload = JObject.Parse(@"{""foo"":""bar""}")
 						}
