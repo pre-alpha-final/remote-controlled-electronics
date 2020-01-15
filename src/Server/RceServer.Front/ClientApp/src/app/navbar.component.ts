@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from './store/state/app.state';
 import { accessToken } from './store/selectors/user.selectors';
 import { AuthApiWrapperService } from './auth/auth-api-wrapper.service';
+import { RceDataService } from './rce/rce-data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,8 @@ export class NavBarComponent implements OnDestroy {
   private userSubscription: Subscription;
   loggedIn: boolean;
 
-  constructor(private store: Store<AppState>, private authApiWrapperService: AuthApiWrapperService) {
+  constructor(private store: Store<AppState>, private authApiWrapperService: AuthApiWrapperService,
+    private rceDataService: RceDataService) {
     this.userSubscription = this.store.select(accessToken).subscribe(e => this.loggedIn = !!e && e !== 'n/a');
   }
 
@@ -22,6 +24,7 @@ export class NavBarComponent implements OnDestroy {
   }
 
   logOut(): void {
+    this.rceDataService.disconnect();
     this.authApiWrapperService.logOut();
   }
 }

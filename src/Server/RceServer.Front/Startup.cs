@@ -45,7 +45,7 @@ namespace RceServer.Front
 			services.AddSingleton<IAzureKicker, AzureKicker>();
 			services.AddSingleton<IMaintenanceService, MaintenanceService>();
 			services.AddTransient<IEmailSender, EmailSender>();
-			services.AddTransient<IClientService, ClientServiceMock>();
+			services.AddTransient<IServerService, ServerServiceMock>();
 			services.AddTransient<IMessageRepository, InMemoryMessageRepository>();
 
 			services.AddDbContext<UsersDbContext>();

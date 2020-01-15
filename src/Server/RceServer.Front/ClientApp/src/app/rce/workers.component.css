@@ -1,0 +1,73 @@
+.logo {
+    max-width: 4rem;
+    max-height: 4rem;
+}
+
+.inline {
+    display: inline;
+}
+
+.red-background {
+    background: red;
+}
+
+#masonry {
+    margin: 0 auto;
+}
+
+/* masonry workaround */
+@media (min-width: 0px) {
+    #worker {
+        width: auto;
+    }
+}
+
+/* masonry workaround */
+@media (min-width: 450px) {
+    #worker {
+        width: 350px;
+    }
+}
+
+/* masonry workaround */
+@media (min-width: 500px) {
+    #worker {
+        width: 400px;
+    }
+}
+
+/* masonry workaround */
+@media (min-width: 550px) {
+    #worker {
+        width: 450px;
+    }
+}
+
+/* masonry workaround */
+@media (min-width: 600px) {
+    #worker {
+        width: 500px;
+    }
+}
+
+/* masonry workaround */
+@media (min-width: 650px) {
+    #worker {
+        width: 550px;
+    }
+}
+
+/* masonry workaround */
+@media (min-width: 700px) {
+    #worker {
+        width: 600px;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    #worker {
+        width: auto;
+        min-width: 600px;
+    }
+}

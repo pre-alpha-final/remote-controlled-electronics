@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { JobDescription, RceMessage, WorkerAddedMessage, JobAddedMessage, JobRemovedMessage, JobPickedUpMessage,
-  JobUpdatedMessage, JobCompletedMessage, Statuses } from '../shared/rce-message-intefaces';
+import {
+  JobDescription, RceMessage, WorkerAddedMessage, JobAddedMessage, JobRemovedMessage, JobPickedUpMessage,
+  JobUpdatedMessage, JobCompletedMessage, Statuses, WorkerRemovedMessage
+} from '../shared/rce-message-intefaces';
 import { Job, JobStates } from '../shared/job';
+import { catchError } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 enum MessageTypes {
   JobAddedMessage = 'JobAddedMessage',
@@ -17,6 +21,13 @@ enum MessageTypes {
   WorkerRemovedMessage = 'WorkerRemovedMessage'
 }
 
+enum ConnectionStatuses {
+  Undefined,
+  ClosedByWorker,
+  ClosedByServer,
+  ConnectionLost
+}
+
 class Worker {
   workerId: string;
   name: string;
@@ -24,6 +35,7 @@ class Worker {
   base64Logo: string;
   jobDescriptions: JobDescription[];
   jobs: Job[];
+  error: string;
 }
 
 @Injectable({
@@ -54,20 +66,30 @@ export class RceDataService {
     this.connectToRceServer(this.connection);
   }
 
-  private connectToRceServer(connection: HubConnection): void {
+  disconnect(): void {
     this.running = false;
+    this.connection.stop();
+  }
+
+  private connectToRceServer(connection: HubConnection): void {
     this.workers = [];
     this.connection.stop().then(() => {
       connection.start()
         .then(() => {
           this.running = true;
           this.httpClient.get<RceMessage[]>('/api/server')
+            .pipe(catchError(e => EMPTY))
             .subscribe(e => {
               this.messages.unshift(...e);
               this.runMessageProcessor();
             });
         })
-        .catch(e => console.error('Connection error: ' + e.message));
+        .catch(e => {
+          console.error('Connection error: ' + e.message);
+          if (this.running) {
+            this.reconnectToRceServer(this.connection);
+          }
+        });
     });
   }
 
@@ -107,6 +129,12 @@ export class RceDataService {
       }
 
       case MessageTypes.WorkerRemovedMessage: {
+        const workerRemovedMessage = (message as WorkerRemovedMessage);
+        const worker = this.workers.find(e => e.workerId === workerRemovedMessage.workerId);
+        if (worker == null) {
+          break;
+        }
+        worker.error = ConnectionStatuses[workerRemovedMessage.connectionStatus];
         break;
       }
 

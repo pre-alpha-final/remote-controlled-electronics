@@ -1,0 +1,46 @@
+<div class="modal fade" id="runJob-{{workerId}}" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">RUN JOB</h5>
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <p class="m-2">Running <i #jobName></i>. Enter payload:</p>
+        <textarea class="form-control job-textarea" #jobTextArea></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-block btn-info" data-dismiss="modal" (click)="runJob()">RUN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card m-1">
+  <div class="card-header">
+    <a data-toggle="collapse" href="#jobDescriptions-{{workerId}}">
+      <h5 class="mb-0">Available jobs</h5>
+    </a>
+  </div>
+  <div id="jobDescriptions-{{workerId}}" class="collapse">
+    <div class="card-body p-2">
+      <div class="jumbotron d-flex p-3 m-2" *ngFor='let jobDescription of jobDescriptions'>
+        <div class="d-flex flex-column col-5">
+          <div class="m-1">
+            <p class="m-0">{{jobDescription.name}}</p>
+            <p class="m-0" *ngFor='let descriptionLine of jobDescription.description'>
+              <small>{{descriptionLine}}</small>
+            </p>
+          </div>
+          <button type="button" class="btn btn-info m-1" data-toggle="modal" [attr.data-target]="'#runJob-'+workerId"
+            (click)="fillModal(jobDescription)">Run</button>
+        </div>
+        <div class="d-flex col-7">
+          <div class="d-flex alert alert-secondary m-0 full-size">
+            <pre class="align-self-center">{{jobDescription.defaultPayload | json}}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

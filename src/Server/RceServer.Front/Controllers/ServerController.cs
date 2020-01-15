@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RceServer.Domain.Services;
+using RceServer.Front.Controllers.Models;
 
 namespace RceServer.Front.Controllers
 {
@@ -9,19 +11,35 @@ namespace RceServer.Front.Controllers
 	[Route("api/server/")]
 	public class ServerController : Controller
 	{
-		private readonly IClientService _clientService;
+		private readonly IServerService _serverService;
 
-		public ServerController(IClientService clientService)
+		public ServerController(IServerService serverService)
 		{
-			_clientService = clientService;
+			_serverService = serverService;
 		}
 
 		[HttpGet("")]
 		public async Task<IActionResult> GetState()
 		{
-			var messages = await _clientService.GetState();
+			var messages = await _serverService.GetMessages();
 
 			return Ok(messages);
+		}
+
+		[HttpPost("workers/{workerId}/runjob")]
+		public async Task<IActionResult> RunJob(Guid workerId, [FromBody] RunJobModel runJobModel)
+		{
+			await _serverService.RunJob(workerId, runJobModel.JobName, runJobModel.JobPayload);
+
+			return Ok();
+		}
+
+		[HttpPost("workers/{workerId}/jobs/{jobId}/remove")]
+		public async Task<IActionResult> RemoveJob(Guid workerId, Guid jobId)
+		{
+			await _serverService.RemoveJob(workerId, jobId);
+
+			return Ok();
 		}
 	}
 }

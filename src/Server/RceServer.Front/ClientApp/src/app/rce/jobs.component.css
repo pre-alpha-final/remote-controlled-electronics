@@ -1,0 +1,47 @@
+a {
+    text-decoration: none !important
+}
+
+pre {
+    border: 0;
+    margin: 0;
+}
+
+.full-size {
+    width: 100%;
+    height: 100%;
+}
+
+.close-top-right {
+    position : absolute;
+    top : 0px;
+    right : 0px;
+    padding: 0 0.75rem 1.5rem 0;
+    width: 2rem;
+    height: 2.5rem;
+    z-index: 999;
+}
+
+.bg-rce-added {
+    background: white;
+}
+
+.bg-rce-picked-up {
+    background: cyan;
+}
+
+.bg-rce-updated {
+    background: dodgerblue;
+}
+
+.bg-rce-success {
+    background: greenyellow;
+}
+
+.bg-rce-warning {
+    background: yellow;
+}
+
+.bg-rce-failure {
+    background: red;
+}

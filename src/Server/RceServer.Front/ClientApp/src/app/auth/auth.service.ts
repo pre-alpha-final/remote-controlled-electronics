@@ -43,6 +43,8 @@ export class AuthService implements OnDestroy {
         refreshToken: this.authData.refreshToken,
       }));
     }
+
+    this.keepTokenValid();
   }
 
   ngOnDestroy(): void {
@@ -82,5 +84,13 @@ export class AuthService implements OnDestroy {
         resolve();
       }).catch(e => resolve());
     });
+  }
+
+  private keepTokenValid(): void {
+    if (this.authData.accessToken && this.isTokenValid(300) === false) {
+      this.refreshToken();
+    }
+
+    setTimeout(() => this.keepTokenValid(), 60000);
   }
 }
