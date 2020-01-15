@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RceServer.Domain.Models.Messages;
 using RceServer.Domain.Services;
 
 namespace RceServer.Core.Services.Implementation
 {
-	public class ClientService : IClientService
+	public class ServerService : IServerService
 	{
 		private readonly IMessageRepository _messageRepository;
 
-		public ClientService(IMessageRepository messageRepository)
+		public ServerService(IMessageRepository messageRepository)
 		{
 			_messageRepository = messageRepository;
 		}
@@ -17,6 +18,16 @@ namespace RceServer.Core.Services.Implementation
 		public Task<IList<IRceMessage>> GetMessages()
 		{
 			return _messageRepository.GetMessagesAfter(0);
+		}
+
+		public Task RunJob(Guid workerId, string jobName, string jobPayload)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task RemoveJob(Guid workerId, Guid jobId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -10,11 +10,11 @@ using RceServer.Domain.Services;
 
 namespace RceServer.Core.Services.Implementation
 {
-	public class ClientServiceMock : IClientService
+	public class ServerServiceMock : IServerService
 	{
 		private readonly IHubContext<RceHub, IRceHub> _rceHubContext;
 
-		public ClientServiceMock(IHubContext<RceHub, IRceHub> rceHubContext)
+		public ServerServiceMock(IHubContext<RceHub, IRceHub> rceHubContext)
 		{
 			_rceHubContext = rceHubContext;
 		}
@@ -179,6 +179,48 @@ namespace RceServer.Core.Services.Implementation
 					Payload = JObject.Parse(@"{""foo"":""bar""}")
 				},
 			};
+		}
+
+		public async Task RunJob(Guid workerId, string jobName, string jobPayload)
+		{
+			var jobId = Guid.NewGuid();
+
+			await _rceHubContext.Clients.All.MessageReceived(new JobAddedMessage
+			{
+				JobId = jobId,
+				WorkerId = workerId,
+				Name = jobName,
+				Payload = JObject.Parse(jobPayload)
+			});
+
+			_ = Task.Run(async () =>
+			{
+				await Task.Delay(500);
+				await _rceHubContext.Clients.All.MessageReceived(new JobUpdatedMessage
+				{
+					JobId = jobId,
+					WorkerId = workerId,
+					Output = JObject.Parse(@"{""foo"":""updated""}")
+				});
+
+				await Task.Delay(500);
+				await _rceHubContext.Clients.All.MessageReceived(new JobCompletedMessage
+				{
+					JobId = jobId,
+					WorkerId = workerId,
+					JobStatus = (JobCompletedMessage.Statuses) Enum.GetValues(typeof(JobCompletedMessage.Statuses)).GetValue(new Random().Next(4)),
+					Output = JObject.Parse(@"{""foo"":""completed""}")
+				});
+			});
+		}
+
+		public async Task RemoveJob(Guid workerId, Guid jobId)
+		{
+			await _rceHubContext.Clients.All.MessageReceived(new JobRemovedMessage
+			{
+				JobId = jobId,
+				WorkerId = workerId,
+			});
 		}
 	}
 }
