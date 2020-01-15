@@ -7,10 +7,12 @@ namespace RceServer.Core.Helpers
 {
 	public static class RceMessageHelpers
 	{
-		public static void Minimize(List<IRceMessage> messages)
+		public static List<IRceMessage> Minimize(List<IRceMessage> messages)
 		{
 			var redundantMessages = GetRedundantMessages(messages);
 			messages.RemoveAll(e => redundantMessages.Contains(e.MessageId));
+
+			return messages;
 		}
 
 		public static IEnumerable<Guid> GetRedundantMessages(IList<IRceMessage> messages)

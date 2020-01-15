@@ -45,7 +45,8 @@ namespace RceServer.Front
 			services.AddSingleton<IAzureKicker, AzureKicker>();
 			services.AddSingleton<IMaintenanceService, MaintenanceService>();
 			services.AddTransient<IEmailSender, EmailSender>();
-			services.AddTransient<IServerService, ServerServiceMock>();
+			services.AddTransient<IServerService, ServerService>();
+			services.AddTransient<IWorkerService, WorkerService>();
 			services.AddTransient<IMessageRepository, InMemoryMessageRepository>();
 
 			services.AddDbContext<UsersDbContext>();
@@ -135,7 +136,7 @@ namespace RceServer.Front
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-			IAzureKicker azureKicker, IMaintenanceService maintenanceService)
+			IServiceProvider serviceProvider)
 		{
 			if (env.IsDevelopment())
 			{
@@ -176,8 +177,8 @@ namespace RceServer.Front
 				}
 			});
 
-			azureKicker.Start();
-			maintenanceService.Start();
+			serviceProvider.GetService<IAzureKicker>().Start();
+			serviceProvider.GetService<IMaintenanceService>().Start();
 		}
 	}
 }

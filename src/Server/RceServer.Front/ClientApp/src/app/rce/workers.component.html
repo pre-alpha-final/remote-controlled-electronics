@@ -1,4 +1,7 @@
 <div class="container-fluid">
+  <div *ngIf="rceDataService.workers.length == 0">
+    <h5>No workers available</h5>
+  </div>
   <ngx-masonry id="masonry" [options]="{fitWidth: true}" [updateLayout]="updateMasonryLayout">
     <div ngxMasonryItem *ngFor='let worker of rceDataService.workers'>
       <div id="worker" class="card border-primary m-3">

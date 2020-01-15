@@ -16,7 +16,9 @@ export class WorkersComponent implements OnInit {
   }
 
   getBase64Image(base64Image: string): SafeResourceUrl {
-    return this.domSanitizer.bypassSecurityTrustResourceUrl(base64Image);
+    if (base64Image) {
+      return this.domSanitizer.bypassSecurityTrustResourceUrl(base64Image);
+    }
   }
 
   redrawMasonry(): void {

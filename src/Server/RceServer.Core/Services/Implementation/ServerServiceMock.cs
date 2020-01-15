@@ -27,7 +27,7 @@ namespace RceServer.Core.Services.Implementation
 				await _rceHubContext.Clients.All.MessageReceived(new KeepAliveSentMessage
 				{
 					WorkerId = Guid.Parse("00000001-0000-0000-0000-000000000000"),
-					Reason = KeepAliveSentMessage.Reasons.GetFeed
+					Reason = KeepAliveSentMessage.Reasons.GetJobs
 				});
 
 				await Task.Delay(500);
@@ -150,7 +150,7 @@ namespace RceServer.Core.Services.Implementation
 				new KeepAliveSentMessage
 				{
 					WorkerId = Guid.Parse("00000001-0000-0000-0000-000000000000"),
-					Reason = KeepAliveSentMessage.Reasons.GetFeed
+					Reason = KeepAliveSentMessage.Reasons.GetJobs
 				},
 				new JobAddedMessage
 				{

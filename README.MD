@@ -1,10 +1,10 @@
 # Remote controlled electronics
-A new spin on a standard "command and control" scheme. A web hosted (azure) command server controlling net core workers on raspberry pi in turn controlling whatever (an at home, local wi-fi IOT for instance).
+Remote control any device that is programmable and supports http connections. Pc, laptop, console, mobile, tv and more. Here's an idea: remote control a raspberry pi in turn controlling an at home, local Wi-Fi IOT.
 
 # Development
 Settings needed for development, mirrored in secrets.json
 ```
-{  
+{
   "ConnectionStrings":{
     "SignalR":"",
     "UsersDbContext":""

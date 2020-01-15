@@ -77,7 +77,7 @@ export class RceDataService {
       connection.start()
         .then(() => {
           this.running = true;
-          this.httpClient.get<RceMessage[]>('/api/server')
+          this.httpClient.get<RceMessage[]>('/api/server/messages')
             .pipe(catchError(e => EMPTY))
             .subscribe(e => {
               this.messages.unshift(...e);
