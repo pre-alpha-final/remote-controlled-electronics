@@ -78,7 +78,7 @@ namespace RceServer.Data
 			var database = _mongoClient.GetDatabase(DatabaseName);
 			var messagesCollection = database.GetCollection<dynamic>(CollectionName);
 			await messagesCollection.DeleteManyAsync(
-				Builders<dynamic>.Filter.In("MessageId", messages));
+				Builders<dynamic>.Filter.In("MessageId", messages.Select(e => e.ToString())));
 		}
 
 		public async Task<bool> IsDisconnected(Guid workerId)
