@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using RceServer.Core.Hubs;
 using RceServer.Core.Services;
 using RceServer.Core.Services.Implementation;
@@ -47,12 +48,18 @@ namespace RceServer.Front
 			services.AddTransient<IEmailSender, EmailSender>();
 			services.AddTransient<IServerService, ServerService>();
 			services.AddTransient<IWorkerService, WorkerService>();
-			services.AddTransient<IMessageRepository, InMemoryMessageRepository>();
+			services.AddTransient<IMessageRepository, MessageRepository>();
 
 			services.AddDbContext<UsersDbContext>();
 			services.AddIdentity<IdentityUser, IdentityRole>()
 				.AddEntityFrameworkStores<UsersDbContext>()
 				.AddDefaultTokenProviders();
+
+			services.AddSingleton<IMongoClient>(e =>
+			{
+				var configuration = e.GetService<IConfiguration>();
+				return new MongoClient(configuration.GetConnectionString("RceMessagesDb"));
+			});
 
 			services.AddIdentityServer()
 				.AddSigningCredential(new SigningCredentials(

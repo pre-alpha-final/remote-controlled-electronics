@@ -9,7 +9,6 @@ using RceServer.Domain.Services;
 
 namespace RceServer.Data
 {
-	// TODO make a persistent version
 	public class InMemoryMessageRepository : IMessageRepository
 	{
 		private static readonly object RceMessagesLock = new object();
