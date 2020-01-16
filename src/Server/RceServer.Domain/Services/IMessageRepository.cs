@@ -12,5 +12,6 @@ namespace RceServer.Domain.Services
 		Task<IList<IRceMessage>> GetMessagesAfter(long timestamp);
 		Task<IList<IRceMessage>> GetWorkerMessages(Guid workerId);
 		Task RemoveMessages(IEnumerable<Guid> messages);
+		Task<bool> IsDisconnected(Guid workerId);
 	}
 }

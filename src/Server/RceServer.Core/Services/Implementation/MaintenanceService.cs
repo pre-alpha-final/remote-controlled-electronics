@@ -28,31 +28,50 @@ namespace RceServer.Core.Services.Implementation
 
 		public async Task RemoveOldActivity()
 		{
-			var pastTimestamp =
-				DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() -
-				(long)TimeSpan.FromMinutes(DeclareOldAfterMinutes).TotalMilliseconds;
-			var messages = await _messageRepository.GetMessagesBefore(pastTimestamp);
-			var redundantMessages = RceMessageHelpers.GetRedundantMessages(messages);
-			await _messageRepository.RemoveMessages(redundantMessages);
+			try
+			{
+				var pastTimestamp =
+					DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() -
+					(long)TimeSpan.FromMinutes(DeclareOldAfterMinutes).TotalMilliseconds;
+				var messages = await _messageRepository.GetMessagesBefore(pastTimestamp);
+				var redundantMessages = RceMessageHelpers.GetRedundantMessages(messages);
+				await _messageRepository.RemoveMessages(redundantMessages);
+			}
+			catch (Exception e)
+			{
+				// ignore
+			}
 		}
 
 		public async Task MarkDisconnectedWorkers()
 		{
-			var pastTimestamp =
-				DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() -
-				(long)TimeSpan.FromMinutes(DeclareDisconnectedAfterMinutes).TotalMilliseconds;
-			var oldMessages = await _messageRepository.GetMessagesBefore(pastTimestamp);
-			var newMessages = await _messageRepository.GetMessagesAfter(pastTimestamp);
-			var previouslyActiveWorkers = RceMessageHelpers.GetActiveWorkers(oldMessages).ToList();
-			var currentlyActiveWorkers = RceMessageHelpers.GetActiveWorkers(newMessages).ToList();
-
-			foreach (var disconnectedWorkerId in previouslyActiveWorkers.Except(currentlyActiveWorkers))
+			try
 			{
-				await _messageRepository.AddMessage(new WorkerRemovedMessage
+				var pastTimestamp =
+					DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() -
+					(long)TimeSpan.FromMinutes(DeclareDisconnectedAfterMinutes).TotalMilliseconds;
+				var oldMessages = await _messageRepository.GetMessagesBefore(pastTimestamp);
+				var newMessages = await _messageRepository.GetMessagesAfter(pastTimestamp);
+				var previouslyActiveWorkers = RceMessageHelpers.GetActiveWorkers(oldMessages).ToList();
+				var currentlyActiveWorkers = RceMessageHelpers.GetActiveWorkers(newMessages).ToList();
+
+				foreach (var disconnectedWorkerId in previouslyActiveWorkers.Except(currentlyActiveWorkers))
 				{
-					WorkerId = disconnectedWorkerId,
-					ConnectionStatus = WorkerRemovedMessage.Statuses.ConnectionLost
-				});
+					if (await _messageRepository.IsDisconnected(disconnectedWorkerId))
+					{
+						continue;
+					}
+
+					await _messageRepository.AddMessage(new WorkerRemovedMessage
+					{
+						WorkerId = disconnectedWorkerId,
+						ConnectionStatus = WorkerRemovedMessage.Statuses.ConnectionLost
+					});
+				}
+			}
+			catch (Exception e)
+			{
+				// ignore
 			}
 		}
 

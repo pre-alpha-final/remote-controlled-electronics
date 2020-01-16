@@ -24,13 +24,19 @@ namespace RceServer.Front.Controllers
 		{
 			try
 			{
+				if (string.IsNullOrWhiteSpace(registerWorkerModel.Base64Logo) == false &&
+					registerWorkerModel.Base64Logo.Length > 30000)
+				{
+					throw new Exception("Image too large");
+				}
+
 				var workerId = await _workerService.Register(registerWorkerModel.Name, registerWorkerModel.Description,
 					registerWorkerModel.Base64Logo, registerWorkerModel.JobDescriptions);
 				return Ok(workerId);
 			}
 			catch (Exception e)
 			{
-				return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
 
@@ -50,7 +56,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
-				return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
 
@@ -64,7 +70,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
-				return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
 
@@ -78,7 +84,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
-				return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
 	}

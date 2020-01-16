@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "6ceb354c-a697-4194-b56d-4c4cbe73f87e",
+		"name": "RceWorker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6164a24-6f55-46ec-8fd4-6a3ce3438731",
+						"exec": [
+							"pm.collectionVariables.set(\"workerId\", responseBody.substring(0, responseBody.length - 1).substring(1));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Postman worker\",\n    \"description\": \"Worker from postman\",\n    \"base64Logo\": \" data:image/png;base64,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\",\n    \"jobDescriptions\": [\n        {\n            \"name\": \"postman job 1\",\n            \"description\": [\n                \"postman job 1 description\"\n            ],\n            \"defaultPayload\": {\n                \"message\": \"foo\"\n            }\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3140/api/workers/register/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3140",
+					"path": [
+						"api",
+						"workers",
+						"register",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetJobs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "358a8daa-56a9-457a-96c7-6ecb111df95f",
+						"exec": [
+							"const json = JSON.parse(responseBody);",
+							"pm.collectionVariables.set(\"jobId\", json[0].jobId)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3140/api/workers/{{workerId}}/jobs/1/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3140",
+					"path": [
+						"api",
+						"workers",
+						"{{workerId}}",
+						"jobs",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6164a24-6f55-46ec-8fd4-6a3ce3438731",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"someResults\": \"foo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3140/api/workers/{{workerId}}/jobs/{{jobId}}/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3140",
+					"path": [
+						"api",
+						"workers",
+						"{{workerId}}",
+						"jobs",
+						"{{jobId}}",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Complete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6164a24-6f55-46ec-8fd4-6a3ce3438731",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jobStatus\": \"Success\",\n    \"someResults\": \"bar\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3140/api/workers/{{workerId}}/jobs/{{jobId}}/complete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3140",
+					"path": [
+						"api",
+						"workers",
+						"{{workerId}}",
+						"jobs",
+						"{{jobId}}",
+						"complete"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "81a424f7-d68e-45ea-8a29-42b6454d0a49",
+			"key": "workerId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "00bb40b4-3819-4cd6-aeed-f1044a749d12",
+			"key": "jobId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

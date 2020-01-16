@@ -21,17 +21,19 @@ namespace RceServer.Data
 			_rceHubContext = rceHubContext;
 		}
 
-		public Task AddMessage(IRceMessage message)
+		public async Task AddMessage(IRceMessage message)
 		{
-			lock (RceMessagesLock)
+			if (message is IHasWorkerId hasWorkerId &&
+				await IsDisconnected(hasWorkerId.WorkerId))
 			{
-				CheckActive(message as IHasWorkerId);
-
-				RceMessages.Add(message);
-				_rceHubContext.Clients.All.MessageReceived(message);
+				throw new Exception("Worker disconnected");
 			}
 
-			return Task.CompletedTask;
+			lock (RceMessagesLock)
+			{
+				RceMessages.Add(message);
+				var _ = _rceHubContext.Clients.All.MessageReceived(message);
+			}
 		}
 
 		public async Task<IList<IRceMessage>> GetMessagesBefore(long timestamp)
@@ -72,20 +74,13 @@ namespace RceServer.Data
 			return Task.CompletedTask;
 		}
 
-		private void CheckActive(IHasWorkerId message)
+		public async Task<bool> IsDisconnected(Guid workerId)
 		{
-			if (message == null)
-			{
-				return;
-			}
-
 			var workerMessages = RceMessages.Where(e =>
 				e is IHasWorkerId hasWorkerId &&
-				hasWorkerId.WorkerId == message.WorkerId).ToList();
-			if (workerMessages.Any(e => e is WorkerRemovedMessage))
-			{
-				throw new Exception("Worker disconnected");
-			}
+				hasWorkerId.WorkerId == workerId).ToList();
+
+			return workerMessages.Any(e => e is WorkerRemovedMessage);
 		}
 	}
 }

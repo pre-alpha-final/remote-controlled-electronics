@@ -11,6 +11,8 @@ namespace RceServer.Core.Services.Implementation
 {
 	public class WorkerService : IWorkerService
 	{
+		private const int GetJobInterval = 500;
+		private const int GetJobTime = 30000;
 		private readonly IMessageRepository _messageRepository;
 
 		public WorkerService(IMessageRepository messageRepository)
@@ -44,33 +46,45 @@ namespace RceServer.Core.Services.Implementation
 				Reason = KeepAliveSentMessage.Reasons.GetJobs
 			});
 
-			var workerMessages = await _messageRepository.GetWorkerMessages(workerId);
-
-			if (workerMessages.Any(e => e is WorkerRemovedMessage))
+			for (var i = 0; i < GetJobTime / GetJobInterval; i++)
 			{
-				throw new Exception("Worker disconnected");
-			}
+				var workerMessages = await _messageRepository.GetWorkerMessages(workerId);
 
-			var irrelevantJobs = workerMessages
-				.Where(e => e is JobCompletedMessage || e is JobRemovedMessage)
-				.Select(e => (IHasJobId)e);
-
-			var jobs = workerMessages
-				.OfType<JobAddedMessage>()
-				.Where(e => irrelevantJobs.Any(f => f.JobId == e.JobId) == false)
-				.Take(maxCount ?? 10)
-				.ToList();
-
-			foreach (var jobAddedMessage in jobs)
-			{
-				await _messageRepository.AddMessage(new JobPickedUpMessage
+				if (workerMessages.Any(e => e is WorkerRemovedMessage))
 				{
-					JobId = jobAddedMessage.JobId,
-					WorkerId = jobAddedMessage.WorkerId
-				});
+					throw new Exception("Worker disconnected");
+				}
+
+				var irrelevantJobs = workerMessages
+					.Where(e => e is JobPickedUpMessage ||
+								e is JobCompletedMessage ||
+								e is JobRemovedMessage)
+					.Select(e => (IHasJobId)e);
+
+				var jobs = workerMessages
+					.OfType<JobAddedMessage>()
+					.Where(e => irrelevantJobs.Any(f => f.JobId == e.JobId) == false)
+					.Take(maxCount ?? 10)
+					.ToList();
+
+				foreach (var jobAddedMessage in jobs)
+				{
+					await _messageRepository.AddMessage(new JobPickedUpMessage
+					{
+						JobId = jobAddedMessage.JobId,
+						WorkerId = jobAddedMessage.WorkerId
+					});
+				}
+
+				if (jobs.Count > 0)
+				{
+					return jobs;
+				}
+
+				await Task.Delay(GetJobInterval);
 			}
 
-			return jobs;
+			return new List<JobAddedMessage>();
 		}
 
 		public async Task UpdateJob(Guid workerId, Guid jobId, JObject output)
@@ -85,10 +99,15 @@ namespace RceServer.Core.Services.Implementation
 
 		public async Task CompleteJob(Guid workerId, Guid jobId, JObject output)
 		{
+			var jobStatus = output.SelectToken("$.jobStatus")?.ToString();
+
 			await _messageRepository.AddMessage(new JobCompletedMessage
 			{
 				WorkerId = workerId,
 				JobId = jobId,
+				JobStatus = string.IsNullOrWhiteSpace(jobStatus)
+					? JobCompletedMessage.Statuses.Undefined
+					: Enum.Parse<JobCompletedMessage.Statuses>(jobStatus),
 				Output = output
 			});
 		}
