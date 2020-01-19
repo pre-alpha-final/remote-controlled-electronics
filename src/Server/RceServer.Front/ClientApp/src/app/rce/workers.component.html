@@ -1,4 +1,10 @@
 <div class="container-fluid">
+  <div *ngIf="rceDataService.forbidden">
+    <h5>You don't have access to this resource</h5>
+  </div>
+  <div *ngIf="rceDataService.forbidden === false && rceDataService.queueEmpty">
+    <h5>No workers available</h5>
+  </div>
   <ngx-masonry id="masonry" [options]="{fitWidth: true}" [updateLayout]="updateMasonryLayout">
     <div ngxMasonryItem *ngFor='let worker of rceDataService.workers'>
       <div id="worker" class="card border-primary m-3">

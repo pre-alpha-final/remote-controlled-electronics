@@ -46,6 +46,8 @@ export class RceDataService {
   private running = false;
   private connection: HubConnection;
   private messages: RceMessage[] = [];
+  queueEmpty: boolean;
+  forbidden: boolean;
 
   workers: Worker[] = [];
 
@@ -73,11 +75,14 @@ export class RceDataService {
 
   private connectToRceServer(connection: HubConnection): void {
     this.workers = [];
+    this.forbidden = false;
+    this.queueEmpty = false;
     this.connection.stop().then(() => {
       connection.start()
         .then(() => {
           this.running = true;
-          this.httpClient.get<RceMessage[]>('/api/server')
+          this.forbidden = false;
+          this.httpClient.get<RceMessage[]>('/api/server/messages')
             .pipe(catchError(e => EMPTY))
             .subscribe(e => {
               this.messages.unshift(...e);
@@ -86,6 +91,10 @@ export class RceDataService {
         })
         .catch(e => {
           console.error('Connection error: ' + e.message);
+          if (e.message === 'Forbidden') {
+            this.forbidden = true;
+            return;
+          }
           if (this.running) {
             this.reconnectToRceServer(this.connection);
           }
@@ -102,12 +111,16 @@ export class RceDataService {
       return;
     }
 
-    const message = this.messages.shift();
-    if (message != null) {
+    while (true) {
+      const message = this.messages.shift();
+      if (message == null) {
+        this.queueEmpty = this.workers.length === 0;
+        break;
+      }
       this.processMessage(message);
     }
 
-    setTimeout(() => this.runMessageProcessor(), this.messages.length ? 0 : 100);
+    setTimeout(() => this.runMessageProcessor(), 100);
   }
 
   private processMessage(message: RceMessage): void {

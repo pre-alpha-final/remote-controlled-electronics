@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace RceServer.Front.Controllers.Models
+﻿namespace RceServer.Front.Controllers.Models
 {
 	public class RunJobModel
 	{

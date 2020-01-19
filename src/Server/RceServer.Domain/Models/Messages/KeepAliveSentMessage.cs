@@ -7,7 +7,7 @@ namespace RceServer.Domain.Models.Messages
 		public enum Reasons
 		{
 			Undefined,
-			GetFeed,
+			GetJobs
 		}
 
 		public Guid WorkerId { get; set; }

@@ -76,21 +76,24 @@ export class AuthService implements OnDestroy {
       }
       this.httpClient.post<TokenResponse>('/api/auth/refresh', {
         refreshToken: this.authData.refreshToken,
-      }).toPromise().then(e => {
-        this.store.dispatch(new UpdateUser({
-          accessToken: e && e.access_token || '',
-          refreshToken: e && e.refresh_token || '',
-        }));
-        resolve();
-      }).catch(e => resolve());
+      }).toPromise()
+        .then(e => {
+          this.store.dispatch(new UpdateUser({
+            accessToken: e && e.access_token || '',
+            refreshToken: e && e.refresh_token || '',
+          }));
+          resolve();
+        })
+        .catch(e => resolve());
     });
   }
 
   private keepTokenValid(): void {
-    if (this.authData.accessToken && this.isTokenValid(300) === false) {
-      this.refreshToken();
-    }
-
-    setTimeout(() => this.keepTokenValid(), 60000);
+    setTimeout(() => {
+      if (this.authData.accessToken && this.isTokenValid(300) === false) {
+        this.refreshToken();
+      }
+      this.keepTokenValid();
+    }, 60000);
   }
 }

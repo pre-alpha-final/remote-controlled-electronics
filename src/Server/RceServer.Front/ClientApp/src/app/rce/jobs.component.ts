@@ -27,7 +27,7 @@ export class JobsComponent implements OnInit {
     }, 1);
   }
 
-  private removeJob(): void {
+  removeJob(): void {
     const jobId = this.jobIdRef.nativeElement.value;
 
     this.httpClient.post<void>('api/server/workers/' + this.workerId + '/jobs/' + jobId + '/remove', {})
@@ -35,7 +35,7 @@ export class JobsComponent implements OnInit {
       .subscribe();
   }
 
-  private fillModal(job: Job): void {
+  fillModal(job: Job): void {
     this.jobIdRef.nativeElement.value = job.jobId;
   }
 }
