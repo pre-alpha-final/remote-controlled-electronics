@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -40,7 +40,8 @@ namespace RceServer.Front
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddControllersWithViews().AddNewtonsoftJson(); ;
+			services.AddRazorPages().AddNewtonsoftJson(); ;
 
 			services.AddSingleton<IHttpClientService, HttpClientService>();
 			services.AddSingleton<IAzureKicker, AzureKicker>();
@@ -64,7 +65,7 @@ namespace RceServer.Front
 			services.AddIdentityServer()
 				.AddSigningCredential(new SigningCredentials(
 					new JsonWebKey(Configuration["IdentityJwk"]),
-					SecurityAlgorithms.RsaSha256Signature))
+					SecurityAlgorithms.RsaSha256))
 				.AddOperationalStore(options =>
 					options.ConfigureDbContext = builder =>
 						builder.UseMySql(Configuration.GetConnectionString("UsersDbContext")))
@@ -77,11 +78,12 @@ namespace RceServer.Front
 
 			services.AddApplicationInsightsTelemetry(Configuration["InstrumentationKey"]);
 
-			services.AddMvc();
+			services.AddMvc().AddNewtonsoftJson();
 
 			services
 				.AddSignalR(e => e.KeepAliveInterval = TimeSpan.FromSeconds(SignalRKeepAlive))
-				.AddAzureSignalR(Configuration.GetConnectionString("SignalR"));
+				.AddAzureSignalR(Configuration.GetConnectionString("SignalR"))
+				.AddNewtonsoftJsonProtocol();
 			services.AddSingleton<IUserIdProvider, UsernameIdProvider>();
 
 			services.AddAuthentication(options =>
@@ -142,7 +144,7 @@ namespace RceServer.Front
 			});
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
 			IServiceProvider serviceProvider)
 		{
 			if (env.IsDevelopment())
@@ -159,19 +161,18 @@ namespace RceServer.Front
 			app.UseHttpsRedirection();
 #endif
 			app.UseFileServer();
-			app.UseAzureSignalR(routes =>
-			{
-				routes.MapHub<RceHub>("/rce");
-			});
 			app.UseSpaStaticFiles();
 
 			app.UseIdentityServer();
+			app.UseRouting();
 			app.UseAuthentication();
-			app.UseMvc(routes =>
+			app.UseAuthorization();
+			app.UseEndpoints(endpoints =>
 			{
-				routes.MapRoute(
+				endpoints.MapHub<RceHub>("/rce");
+				endpoints.MapControllerRoute(
 					name: "default",
-					template: "{controller}/{action=Index}/{id?}");
+					pattern: "{controller}/{action=Index}/{id?}");
 			});
 
 			app.UseSpa(spa =>

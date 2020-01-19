@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
+import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 import {

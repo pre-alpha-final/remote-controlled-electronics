@@ -25,7 +25,7 @@ namespace RceServer.Front.Controllers
 			try
 			{
 				if (string.IsNullOrWhiteSpace(registerWorkerModel.Base64Logo) == false &&
-					registerWorkerModel.Base64Logo.Length > 30000)
+					registerWorkerModel.Base64Logo.Length > 50000 * 1.37)
 				{
 					throw new Exception("Image too large");
 				}
