@@ -28,10 +28,18 @@ namespace RceServer.Data
 
 		public async Task AddMessage(IRceMessage message)
 		{
-			if (message is IHasWorkerId hasWorkerId &&
-				await IsDisconnected(hasWorkerId.WorkerId))
+			if (message is IHasWorkerId hasWorkerId)
 			{
-				throw new Exception("Worker disconnected");
+				if (await IsDisconnected(hasWorkerId.WorkerId))
+				{
+					throw new Exception("Worker disconnected");
+				}
+
+				if (await IsRegistered(hasWorkerId.WorkerId) == false &&
+					message is WorkerAddedMessage == false)
+				{
+					throw new Exception("Specified worker does not exist");
+				}
 			}
 
 			var database = _mongoClient.GetDatabase(DatabaseName);
@@ -85,6 +93,12 @@ namespace RceServer.Data
 		{
 			var workerMessages = await GetWorkerMessages(workerId);
 			return workerMessages.Any(e => e is WorkerRemovedMessage);
+		}
+
+		public async Task<bool> IsRegistered(Guid workerId)
+		{
+			var workerMessages = await GetWorkerMessages(workerId);
+			return workerMessages.Count != 0;
 		}
 
 		private IRceMessage Deserialize(dynamic message)
