@@ -1,0 +1,15 @@
+<div class="container">
+  <h2>Email Confirmation</h2>
+  <hr />
+  <div class="col-md-4 align-self-center">
+    <div *ngIf="checkEmailResponse == null">
+      Confirming email...
+    </div>
+    <div *ngIf="checkEmailResponse && checkEmailResponse.error == null">
+      Thank you for confirming your email
+    </div>
+    <div class="text-danger" *ngIf="checkEmailResponse?.error">
+      {{checkEmailResponse.error}}
+    </div>
+  </div>
+</div>
