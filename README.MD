@@ -9,9 +9,14 @@ Remote control any device that is programmable and supports HTTP connections. PC
 	- control interface is web based meaning it can be accessed from anywhere
 - Workers
 	- are quick and easy to write
-	- can be written in anything that supports HTTP connections
+	- can be written in any language that supports HTTP connections
 	- are minimalistic, they just connect to the server and get/update/complete jobs
 	- can be multi or single threaded doing all jobs at once or one at a time
+
+# Architecture
+There is no direct connection between server and workers. Server pushes new jobs to the cloud and workers pull them from the cloud. Also no connection is made to the workers at any point. All worker communication is done with http requests which they themselves initiate. This means that as long as the worker has internet access no NAT or firewall will interfere with the communication.
+
+![](/docs/rcearch.png)
 
 # Worker Loop
 Workers are very simple by design, as the whole idea is to allow adding a remote control capability quickly and easily to any device. Below are loops for single and multi threaded workers. Blue boxes represent http requests.
