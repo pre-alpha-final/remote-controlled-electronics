@@ -11,6 +11,10 @@
     background: red;
 }
 
+.inline-grid {
+    display: inline-grid;
+}
+
 #masonry {
     margin: 0 auto;
 }

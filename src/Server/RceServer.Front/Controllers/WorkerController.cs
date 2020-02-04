@@ -87,5 +87,19 @@ namespace RceServer.Front.Controllers
 				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
+
+		[HttpPost("workers/{workerId}/close")]
+		public async Task<IActionResult> CloseWorker(Guid workerId)
+		{
+			try
+			{
+				await _workerService.CloseWorker(workerId);
+				return Ok();
+			}
+			catch (Exception e)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+			}
+		}
 	}
 }

@@ -9,9 +9,11 @@
     <div ngxMasonryItem *ngFor='let worker of rceDataService.workers'>
       <div id="worker" class="card border-primary m-3">
         <div class="card-header" [ngClass]="{'red-background': worker.error != null}">
-          <img class="logo" [src]="getBase64Image(worker.base64Logo)" />
-          <h3 class="inline ml-3">{{worker.name}}<span *ngIf="worker.error != null"
-              class="ml-3">({{worker.error}})</span></h3>
+          <span><img class="logo" [src]="getBase64Image(worker.base64Logo)" /></span>
+          <span class="inline-grid">
+            <h3 class="ml-3">{{worker.name}}</h3>
+            <h5 class="ml-3" *ngIf="worker.error != null">({{worker.error}})</h5>
+          </span>
         </div>
         <div class="card-body" [ngClass]="{'red-background': worker.error != null}">
           <p class="text-primary">{{worker.description}}</p>

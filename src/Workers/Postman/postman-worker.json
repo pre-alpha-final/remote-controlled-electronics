@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5f1ac2e5-8da0-4e38-97b5-bed954a41f19",
+		"_postman_id": "4ad1b8c8-d8df-49c9-bfc4-89e5a34d68e4",
 		"name": "RceWorker",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -93,7 +93,7 @@
 			"response": []
 		},
 		{
-			"name": "Update",
+			"name": "UpdateJob",
 			"event": [
 				{
 					"listen": "test",
@@ -145,7 +145,7 @@
 			"response": []
 		},
 		{
-			"name": "Complete",
+			"name": "CompleteJob",
 			"event": [
 				{
 					"listen": "test",
@@ -191,6 +191,56 @@
 						"jobs",
 						"{{jobId}}",
 						"complete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CloseWorker",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6164a24-6f55-46ec-8fd4-6a3ce3438731",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "text/plain",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3140/api/workers/{{workerId}}/close",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3140",
+					"path": [
+						"api",
+						"workers",
+						"{{workerId}}",
+						"close"
 					]
 				}
 			},

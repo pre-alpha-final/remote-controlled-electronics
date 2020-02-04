@@ -112,8 +112,22 @@ namespace RceServer.Core.Services.Implementation
 			});
 		}
 
-		private void VerifyJobNamesUnique(List<JobDescription> jobDescriptions)
+		public async Task CloseWorker(Guid workerId)
 		{
+			await _messageRepository.AddMessage(new WorkerRemovedMessage
+			{
+				WorkerId = workerId,
+				ConnectionStatus = WorkerRemovedMessage.Statuses.ClosedByWorker
+			});
+		}
+
+		private static void VerifyJobNamesUnique(List<JobDescription> jobDescriptions)
+		{
+			if (jobDescriptions == null)
+			{
+				throw new Exception("Job descriptions must be provided");
+			}
+
 			if (jobDescriptions.Select(e => e.Name).Distinct().Count() !=
 				jobDescriptions.Count)
 			{

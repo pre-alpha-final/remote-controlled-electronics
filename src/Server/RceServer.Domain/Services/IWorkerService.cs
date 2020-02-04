@@ -14,5 +14,6 @@ namespace RceServer.Domain.Services
 		Task<List<JobAddedMessage>> GetJobs(Guid workerId, int? maxCount);
 		Task UpdateJob(Guid workerId, Guid jobId, JObject output);
 		Task CompleteJob(Guid workerId, Guid jobId, JObject output);
+		Task CloseWorker(Guid workerId);
 	}
 }
