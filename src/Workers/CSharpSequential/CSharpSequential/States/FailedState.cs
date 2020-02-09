@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CSharpSingleThreaded.States
+namespace CSharpSequential.States
 {
 	public class FailedState : IState
 	{

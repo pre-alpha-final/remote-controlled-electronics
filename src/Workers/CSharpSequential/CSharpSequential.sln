@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSingleThreaded", "CSharpSingleThreaded\CSharpSingleThreaded.csproj", "{51D82839-70D4-46D0-B4F9-CABA6EC59A72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSequential", "CSharpSequential\CSharpSequential.csproj", "{51D82839-70D4-46D0-B4F9-CABA6EC59A72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

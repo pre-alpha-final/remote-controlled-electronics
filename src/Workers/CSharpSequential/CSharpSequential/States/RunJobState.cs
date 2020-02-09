@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CSharpSingleThreaded.JobRunners;
+using CSharpSequential.JobRunners;
 
-namespace CSharpSingleThreaded.States
+namespace CSharpSequential.States
 {
 	public class RunJobState : IState
 	{

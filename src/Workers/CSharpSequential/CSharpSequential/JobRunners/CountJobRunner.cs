@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CSharpSingleThreaded.JobRunners
+namespace CSharpSequential.JobRunners
 {
 	public class CountJobRunner : JobRunnerBase
 	{

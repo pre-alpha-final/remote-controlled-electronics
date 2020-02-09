@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace CSharpSingleThreaded.JobRunners
+namespace CSharpSequential.JobRunners
 {
 	public class JobRunnerBase
 	{

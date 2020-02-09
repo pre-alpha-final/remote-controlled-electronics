@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CSharpSingleThreaded
+namespace CSharpSequential
 {
 	class Program
 	{

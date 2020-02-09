@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 
-namespace CSharpSingleThreaded
+namespace CSharpSequential
 {
 	public class Job
 	{

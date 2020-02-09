@@ -1,4 +1,4 @@
-﻿namespace CSharpSingleThreaded
+﻿namespace CSharpSequential
 {
 	public class Consts
 	{
