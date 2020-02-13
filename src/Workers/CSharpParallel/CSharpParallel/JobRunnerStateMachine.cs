@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CSharpSequential.States;
+using CSharpParallel.States;
 
-namespace CSharpSequential
+namespace CSharpParallel
 {
 	public class JobRunnerStateMachine
 	{
