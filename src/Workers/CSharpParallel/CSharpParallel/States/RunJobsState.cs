@@ -4,11 +4,11 @@ using CSharpParallel.JobRunners;
 
 namespace CSharpParallel.States
 {
-	public class RunJobState : IState
+	public class RunJobsState : IState
 	{
 		private readonly List<Job> _jobs;
 
-		public RunJobState(List<Job> jobs)
+		public RunJobsState(List<Job> jobs)
 		{
 			_jobs = jobs;
 		}

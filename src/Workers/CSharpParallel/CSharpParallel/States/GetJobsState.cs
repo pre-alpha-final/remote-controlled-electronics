@@ -53,7 +53,7 @@ namespace CSharpParallel.States
 
 				var jobs = jobsJson.ToObject<List<Job>>();
 				jobs.ForEach(e => e.WorkerId = _jobRunnerStateMachine.WorkerId);
-				_jobRunnerStateMachine.State = new RunJobState(jobs);
+				_jobRunnerStateMachine.State = new RunJobsState(jobs);
 			}
 		}
 	}

@@ -11,13 +11,10 @@ namespace CSharpParallel
 		public IState State { get; set; }
 		public Guid WorkerId { get; set; }
 
-		public JobRunnerStateMachine()
-		{
-			State = new RegistrationState();
-		}
-
 		public async Task Start()
 		{
+			Stopped = false;
+			State = new RegistrationState();
 			while (Stopped == false)
 			{
 				await State.Handle(this);
