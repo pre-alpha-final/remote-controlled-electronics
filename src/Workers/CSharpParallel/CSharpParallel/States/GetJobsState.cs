@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,7 +18,7 @@ namespace CSharpParallel.States
 			_jobRunnerStateMachine = jobRunnerStateMachine;
 			try
 			{
-				var getJobAddressSuffix = Consts.GetJobAddressSuffix.Replace("WORKER_ID", jobRunnerStateMachine.WorkerId.ToString());
+				var getJobAddressSuffix = Consts.GetJobsAddressSuffix.Replace("WORKER_ID", jobRunnerStateMachine.WorkerId.ToString());
 				var requestUri = $"{Program.UrlBase}{getJobAddressSuffix}";
 				using (var client = new HttpClient())
 				using (var response = await client.GetAsync(requestUri))

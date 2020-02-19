@@ -15,15 +15,33 @@ namespace CSharpParallel.JobRunners
 			_job = job;
 		}
 
-		public Task FailJob(string reason)
+		public async Task FailJob(string reason)
 		{
 			Console.WriteLine($"Job failed: '{_job.JobName}' '{_job.JobId}' '{reason}'");
 
-			return CompleteJob(new
+			try
 			{
-				failure = reason,
-				jobStatus = Statuses.Failure.ToString()
-			});
+				var completeJobAddressSuffix = Consts.CompleteJobAddressSuffix
+					.Replace("WORKER_ID", _job.WorkerId.ToString())
+					.Replace("JOB_ID", _job.JobId.ToString());
+				var requestUri = $"{Program.UrlBase}{completeJobAddressSuffix}";
+
+				using (var client = new HttpClient())
+				using (await client.PostAsync(requestUri, new StringContent(
+					JsonConvert.SerializeObject(new
+					{
+						failure = reason,
+						jobStatus = Statuses.Failure.ToString()
+					}),
+					Encoding.UTF8,
+					"application/json")))
+				{
+				}
+			}
+			catch (Exception e)
+			{
+				// ignore
+			}
 		}
 
 		protected async Task UpdateJob(object payload)
