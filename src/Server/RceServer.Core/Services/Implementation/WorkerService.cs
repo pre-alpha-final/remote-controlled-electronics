@@ -20,8 +20,8 @@ namespace RceServer.Core.Services.Implementation
 			_messageRepository = messageRepository;
 		}
 
-		public async Task<Guid> Register(string name, string description,
-			string base64Logo, List<JobDescription> jobDescriptions)
+		public async Task<Guid> Register(string name, string description, string base64Logo,
+			List<JobDescription> jobDescriptions, List<string> owners)
 		{
 			VerifyJobNamesUnique(jobDescriptions);
 
@@ -32,7 +32,8 @@ namespace RceServer.Core.Services.Implementation
 				Name = name,
 				Description = description,
 				Base64Logo = base64Logo,
-				JobDescriptions = jobDescriptions
+				JobDescriptions = jobDescriptions,
+				Owners = owners
 			});
 
 			return workerId;

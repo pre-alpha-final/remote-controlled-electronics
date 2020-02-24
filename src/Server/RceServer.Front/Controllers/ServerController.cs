@@ -26,7 +26,7 @@ namespace RceServer.Front.Controllers
 		{
 			try
 			{
-				var messages = await _serverService.GetMessages();
+				var messages = await _serverService.GetMyMessages();
 				return Ok(RceMessageHelpers.Minimize(messages.ToList()));
 			}
 			catch (Exception e)

@@ -31,7 +31,7 @@ namespace RceServer.Front.Controllers
 				}
 
 				var workerId = await _workerService.Register(registerWorkerModel.Name, registerWorkerModel.Description,
-					registerWorkerModel.Base64Logo, registerWorkerModel.JobDescriptions);
+					registerWorkerModel.Base64Logo, registerWorkerModel.JobDescriptions, registerWorkerModel.Owners);
 				return Ok(workerId);
 			}
 			catch (Exception e)

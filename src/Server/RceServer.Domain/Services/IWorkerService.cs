@@ -9,8 +9,8 @@ namespace RceServer.Domain.Services
 {
 	public interface IWorkerService
 	{
-		Task<Guid> Register(string name, string description,
-			string base64Logo, List<JobDescription> jobDescriptions);
+		Task<Guid> Register(string name, string description, string base64Logo,
+			List<JobDescription> jobDescriptions, List<string> owners);
 		Task<List<JobAddedMessage>> GetJobs(Guid workerId, int? maxCount);
 		Task UpdateJob(Guid workerId, Guid jobId, JObject output);
 		Task CompleteJob(Guid workerId, Guid jobId, JObject output);

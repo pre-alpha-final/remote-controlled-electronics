@@ -34,8 +34,12 @@ namespace RceServer.Core.Services.Implementation
 					DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() -
 					(long)TimeSpan.FromMinutes(DeclareOldAfterMinutes).TotalMilliseconds;
 				var messages = await _messageRepository.GetMessagesBefore(pastTimestamp);
-				var redundantMessages = RceMessageHelpers.GetRedundantMessages(messages);
-				await _messageRepository.RemoveMessages(redundantMessages);
+				var redundantMessages = RceMessageHelpers.GetRedundantMessages(messages).ToList();
+				await _messageRepository.RemoveMessages(redundantMessages.Select(e => e.MessageId));
+				await _messageRepository.RemoveOwnership(redundantMessages
+					.Where(e => e is WorkerRemovedMessage)
+					.Select(e => ((WorkerRemovedMessage)e).WorkerId)
+					.Distinct());
 			}
 			catch (Exception e)
 			{
@@ -52,8 +56,8 @@ namespace RceServer.Core.Services.Implementation
 					(long)TimeSpan.FromMinutes(DeclareDisconnectedAfterMinutes).TotalMilliseconds;
 				var oldMessages = await _messageRepository.GetMessagesBefore(pastTimestamp);
 				var newMessages = await _messageRepository.GetMessagesAfter(pastTimestamp);
-				var previouslyActiveWorkers = RceMessageHelpers.GetActiveWorkers(oldMessages).ToList();
-				var currentlyActiveWorkers = RceMessageHelpers.GetActiveWorkers(newMessages).ToList();
+				var previouslyActiveWorkers = RceMessageHelpers.GetActiveWorkerIds(oldMessages).ToList();
+				var currentlyActiveWorkers = RceMessageHelpers.GetActiveWorkerIds(newMessages).ToList();
 
 				foreach (var disconnectedWorkerId in previouslyActiveWorkers.Except(currentlyActiveWorkers))
 				{

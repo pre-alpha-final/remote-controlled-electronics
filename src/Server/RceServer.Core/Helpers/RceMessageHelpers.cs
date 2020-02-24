@@ -10,12 +10,12 @@ namespace RceServer.Core.Helpers
 		public static List<IRceMessage> Minimize(List<IRceMessage> messages)
 		{
 			var redundantMessages = GetRedundantMessages(messages);
-			messages.RemoveAll(e => redundantMessages.Contains(e.MessageId));
+			messages.RemoveAll(e => redundantMessages.Any(f => e.MessageId == f.MessageId));
 
 			return messages;
 		}
 
-		public static IEnumerable<Guid> GetRedundantMessages(IList<IRceMessage> messages)
+		public static IEnumerable<IRceMessage> GetRedundantMessages(IList<IRceMessage> messages)
 		{
 			var workerIdsToRemove = new HashSet<Guid>();
 			var jobIdsToRemove = new HashSet<Guid>();
@@ -100,11 +100,10 @@ namespace RceServer.Core.Helpers
 			return messages.Where(e =>
 					workerIdsToRemove.Contains((e as IHasWorkerId)?.WorkerId ?? Guid.Empty) ||
 					jobIdsToRemove.Contains((e as IHasJobId)?.JobId ?? Guid.Empty) ||
-					messageIdsToRemove.Contains(e.MessageId))
-				.Select(e => e.MessageId);
+					messageIdsToRemove.Contains(e.MessageId));
 		}
 
-		public static IEnumerable<Guid> GetActiveWorkers(IList<IRceMessage> messages)
+		public static IEnumerable<Guid> GetActiveWorkerIds(IList<IRceMessage> messages)
 		{
 			var workers = new HashSet<Guid>();
 			var removedWorkers = new HashSet<Guid>();
