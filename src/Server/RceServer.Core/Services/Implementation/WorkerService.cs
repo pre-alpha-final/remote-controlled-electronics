@@ -24,6 +24,7 @@ namespace RceServer.Core.Services.Implementation
 			List<JobDescription> jobDescriptions, List<string> owners)
 		{
 			VerifyJobNamesUnique(jobDescriptions);
+			VerifyOwners(owners);
 
 			var workerId = Guid.NewGuid();
 			await _messageRepository.AddMessage(new WorkerAddedMessage
@@ -133,6 +134,14 @@ namespace RceServer.Core.Services.Implementation
 				jobDescriptions.Count)
 			{
 				throw new Exception("Job names must be unique");
+			}
+		}
+
+		private void VerifyOwners(List<string> owners)
+		{
+			if (owners == null || owners.Count == 0)
+			{
+				throw new Exception("Owners must be provided");
 			}
 		}
 	}
