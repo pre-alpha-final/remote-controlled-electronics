@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RceServer.Core.Helpers;
 using RceServer.Domain.Services;
 using RceServer.Front.Controllers.Models;
+using RceServer.Front.Infrastructure;
 
 namespace RceServer.Front.Controllers
 {
@@ -15,10 +18,12 @@ namespace RceServer.Front.Controllers
 	public class ServerController : Controller
 	{
 		private readonly IServerService _serverService;
+		private readonly TelemetryClient _telemetryClient;
 
-		public ServerController(IServerService serverService)
+		public ServerController(IServerService serverService, TelemetryClient telemetryClient)
 		{
 			_serverService = serverService;
+			_telemetryClient = telemetryClient;
 		}
 
 		[HttpGet("messages")]
@@ -40,6 +45,13 @@ namespace RceServer.Front.Controllers
 		{
 			try
 			{
+				_telemetryClient.TrackEvent(TelemetryEvents.SchedulingJob, new Dictionary<string, string>
+				{
+					{ nameof(workerId), workerId.ToString() },
+					{ nameof(runJobModel.JobName), runJobModel.JobName },
+					{ nameof(runJobModel.JobPayload), runJobModel.JobPayload },
+				});
+
 				await _serverService.RunJob(workerId, runJobModel.JobName, runJobModel.JobPayload);
 				return Ok();
 			}
