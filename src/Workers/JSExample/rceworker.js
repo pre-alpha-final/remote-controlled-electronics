@@ -1,6 +1,9 @@
 var rceWorker = {};
 (async _rceWorker => {
-  let baseUrl = "";
+  let baseUrl = "https://rceserver.azurewebsites.net";
+  let owners = [
+    "demo@example.com"
+  ];
 
   class UrlSuffixes {
     static get registerAddressSuffix() {
@@ -90,7 +93,8 @@ var rceWorker = {};
             to: 5
           }
         }
-      ]
+      ],
+      owners: owners
     };
 
     async handle(jobRunnerStateMachine) {
