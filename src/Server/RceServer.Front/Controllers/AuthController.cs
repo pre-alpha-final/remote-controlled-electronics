@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RceServer.Core.Services;
 using RceServer.Front.Controllers.Models;
+using RceServer.Front.Infrastructure;
 
 namespace RceServer.Front.Controllers
 {
@@ -18,15 +20,18 @@ namespace RceServer.Front.Controllers
 		private readonly IHttpClientService _httpClientService;
 		private readonly IConfiguration _configuration;
 		private readonly IEmailSender _emailSender;
+		private readonly TelemetryClient _telemetryClient;
 
 		public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-			IHttpClientService httpClientService, IConfiguration configuration, IEmailSender emailSender)
+			IHttpClientService httpClientService, IConfiguration configuration, IEmailSender emailSender,
+			TelemetryClient telemetryClient)
 		{
 			_signInManager = signInManager;
 			_userManager = userManager;
 			_httpClientService = httpClientService;
 			_configuration = configuration;
 			_emailSender = emailSender;
+			_telemetryClient = telemetryClient;
 		}
 
 		//[HttpPost("register")]
@@ -80,6 +85,11 @@ namespace RceServer.Front.Controllers
 					{ "client_id", "rceserver" },
 					{ "client_secret", clientSecret },
 				}));
+
+			_telemetryClient.TrackEvent(TelemetryEvents.UserLoggingIn, new Dictionary<string, string>
+			{
+				{ nameof(model.Login), model.Login },
+			});
 
 			return StatusCode((int)httpResponseMessage.StatusCode,
 				await httpResponseMessage.Content.ReadAsStringAsync());

@@ -19,7 +19,7 @@ namespace RceServer.Core.Services.Implementation
 			_rceHubContext = rceHubContext;
 		}
 
-		public async Task<IList<IRceMessage>> GetMessages()
+		public async Task<IList<IRceMessage>> GetMyMessages()
 		{
 			_ = Task.Run(async () =>
 			{

@@ -15,19 +15,34 @@ namespace RceServer.Tests
 				{
 					MessageId = new Guid("00000000-0000-0000-0000-000000000001"),
 					MessageTimestamp = index++,
-					WorkerId = new Guid("00000001-0000-0000-0000-000000000000")
+					WorkerId = new Guid("00000001-0000-0000-0000-000000000000"),
+					Owners = new List<string>
+					{
+						"owner1",
+						"owner2"
+					}
 				},
 				new WorkerAddedMessage // Create worker 2
 				{
 					MessageId = new Guid("00000000-0000-0000-0000-000000000002"),
 					MessageTimestamp = index++,
-					WorkerId = new Guid("00000002-0000-0000-0000-000000000000")
+					WorkerId = new Guid("00000002-0000-0000-0000-000000000000"),
+					Owners = new List<string>
+					{
+						"owner2",
+						"owner3"
+					}
 				},
 				new WorkerAddedMessage // Create worker 3
 				{
 					MessageId = new Guid("00000000-0000-0000-0000-000000000003"),
 					MessageTimestamp = index++,
-					WorkerId = new Guid("00000003-0000-0000-0000-000000000000")
+					WorkerId = new Guid("00000003-0000-0000-0000-000000000000"),
+					Owners = new List<string>
+					{
+						"owner3",
+						"owner1"
+					}
 				},
 				new JobAddedMessage // Create job 1 for worker 1
 				{

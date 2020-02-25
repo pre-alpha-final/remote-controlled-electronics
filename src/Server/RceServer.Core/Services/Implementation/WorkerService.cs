@@ -20,10 +20,11 @@ namespace RceServer.Core.Services.Implementation
 			_messageRepository = messageRepository;
 		}
 
-		public async Task<Guid> Register(string name, string description,
-			string base64Logo, List<JobDescription> jobDescriptions)
+		public async Task<Guid> Register(string name, string description, string base64Logo,
+			List<JobDescription> jobDescriptions, List<string> owners)
 		{
 			VerifyJobNamesUnique(jobDescriptions);
+			VerifyOwners(owners);
 
 			var workerId = Guid.NewGuid();
 			await _messageRepository.AddMessage(new WorkerAddedMessage
@@ -32,7 +33,8 @@ namespace RceServer.Core.Services.Implementation
 				Name = name,
 				Description = description,
 				Base64Logo = base64Logo,
-				JobDescriptions = jobDescriptions
+				JobDescriptions = jobDescriptions,
+				Owners = owners
 			});
 
 			return workerId;
@@ -132,6 +134,14 @@ namespace RceServer.Core.Services.Implementation
 				jobDescriptions.Count)
 			{
 				throw new Exception("Job names must be unique");
+			}
+		}
+
+		private void VerifyOwners(List<string> owners)
+		{
+			if (owners == null || owners.Count == 0)
+			{
+				throw new Exception("Owners must be provided");
 			}
 		}
 	}

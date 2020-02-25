@@ -50,6 +50,20 @@ namespace RceServer.Tests
 		}
 
 		[Fact]
+		public async Task RemoveOldActivity_WhenHasOldActivities_ShouldRemoveOwnershipOfRemovedActivities()
+		{
+			_messageRepositoryMock.GetMessagesBefore(Arg.Any<long>()).Returns(MessageList);
+			await _maintenanceService.RemoveOldActivity();
+
+			await _messageRepositoryMock.Received().RemoveOwnership(
+				Arg.Is<IEnumerable<Guid>>(e => e.SequenceEqual(new List<Guid>
+				{
+					Guid.Parse("00000001-0000-0000-0000-000000000000"),
+					Guid.Parse("00000002-0000-0000-0000-000000000000")
+				})));
+		}
+
+		[Fact]
 		public async Task MarkDisconnectedWorkers_WhenHasNoDisconnectedWorkers_ShouldNotMarkDisconnectedWorkers()
 		{
 			_messageRepositoryMock.GetMessagesBefore(Arg.Any<long>()).Returns(new List<IRceMessage>());
@@ -68,8 +82,8 @@ namespace RceServer.Tests
 
 			Assert.Equal(19, MessageList.Count);
 			Assert.Equal(nameof(WorkerRemovedMessage), MessageList[18].MessageType);
-			Assert.Equal(WorkerRemovedMessage.Statuses.ConnectionLost, ((WorkerRemovedMessage) MessageList[18]).ConnectionStatus);
-			Assert.Equal(new Guid("00000003-0000-0000-0000-000000000000"), ((WorkerRemovedMessage) MessageList[18]).WorkerId);
+			Assert.Equal(WorkerRemovedMessage.Statuses.ConnectionLost, ((WorkerRemovedMessage)MessageList[18]).ConnectionStatus);
+			Assert.Equal(new Guid("00000003-0000-0000-0000-000000000000"), ((WorkerRemovedMessage)MessageList[18]).WorkerId);
 		}
 	}
 }

@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RceServer.Domain.Services;
 using RceServer.Front.Controllers.Models;
+using RceServer.Front.Infrastructure;
 
 namespace RceServer.Front.Controllers
 {
@@ -13,10 +17,12 @@ namespace RceServer.Front.Controllers
 	public class WorkerController : Controller
 	{
 		private readonly IWorkerService _workerService;
+		private readonly TelemetryClient _telemetryClient;
 
-		public WorkerController(IWorkerService workerService)
+		public WorkerController(IWorkerService workerService, TelemetryClient telemetryClient)
 		{
 			_workerService = workerService;
+			_telemetryClient = telemetryClient;
 		}
 
 		[HttpPost("workers/register")]
@@ -31,7 +37,17 @@ namespace RceServer.Front.Controllers
 				}
 
 				var workerId = await _workerService.Register(registerWorkerModel.Name, registerWorkerModel.Description,
-					registerWorkerModel.Base64Logo, registerWorkerModel.JobDescriptions);
+					registerWorkerModel.Base64Logo, registerWorkerModel.JobDescriptions, registerWorkerModel.Owners);
+
+				_telemetryClient.TrackEvent(TelemetryEvents.RegisteringWorker, new Dictionary<string, string>
+				{
+					{ nameof(workerId), workerId.ToString() },
+					{ nameof(registerWorkerModel.Name), registerWorkerModel.Name },
+					{ nameof(registerWorkerModel.Description), registerWorkerModel.Description },
+					{ nameof(registerWorkerModel.JobDescriptions), JsonConvert.SerializeObject(registerWorkerModel.JobDescriptions) },
+					{ nameof(registerWorkerModel.Owners), JsonConvert.SerializeObject(registerWorkerModel.Owners) },
+				});
+
 				return Ok(workerId);
 			}
 			catch (Exception e)
@@ -46,6 +62,12 @@ namespace RceServer.Front.Controllers
 			try
 			{
 				var jobAddedMessages = await _workerService.GetJobs(workerId, maxCount);
+
+				_telemetryClient.TrackEvent(TelemetryEvents.WorkerTakingJob, new Dictionary<string, string>
+				{
+					{ nameof(workerId), workerId.ToString() },
+					{ nameof(jobAddedMessages), JsonConvert.SerializeObject(jobAddedMessages) },
+				});
 
 				return Ok(jobAddedMessages.Select(e => new JobDto
 				{

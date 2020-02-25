@@ -40,6 +40,7 @@ namespace RceServer.Front
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddHttpContextAccessor();
 			services.AddControllersWithViews().AddNewtonsoftJson(); ;
 			services.AddRazorPages().AddNewtonsoftJson(); ;
 

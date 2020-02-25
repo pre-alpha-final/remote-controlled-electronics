@@ -16,9 +16,9 @@ namespace RceServer.Core.Services.Implementation
 			_messageRepository = messageRepository;
 		}
 
-		public Task<IList<IRceMessage>> GetMessages()
+		public Task<IList<IRceMessage>> GetMyMessages()
 		{
-			return _messageRepository.GetMessagesAfter(0);
+			return _messageRepository.GetMyMessages();
 		}
 
 		public Task RunJob(Guid workerId, string jobName, string jobPayload)

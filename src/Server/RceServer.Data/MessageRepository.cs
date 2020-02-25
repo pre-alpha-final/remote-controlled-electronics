@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using RceServer.Core.Hubs;
@@ -15,19 +17,29 @@ namespace RceServer.Data
 	public class MessageRepository : IMessageRepository
 	{
 		private const string DatabaseName = "mo10097_rce";
-		private const string CollectionName = "messages";
+		private const string OwnersCollectionName = "owners";
+		private const string MessagesCollectionName = "messages";
+		private const string OwnerFieldName = "Owner";
+		private const string MessageIdFieldName = "MessageId";
+		private const string WorkerIdFieldName = "WorkerId";
+		private const string MessageTimestampFieldName = "MessageTimestamp";
 
 		private readonly IMongoClient _mongoClient;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly IHubContext<RceHub, IRceHub> _rceHubContext;
 
-		public MessageRepository(IMongoClient mongoClient, IHubContext<RceHub, IRceHub> rceHubContext)
+		public MessageRepository(IMongoClient mongoClient, IHttpContextAccessor httpContextAccessor,
+			IHubContext<RceHub, IRceHub> rceHubContext)
 		{
 			_mongoClient = mongoClient;
+			_httpContextAccessor = httpContextAccessor;
 			_rceHubContext = rceHubContext;
 		}
 
 		public async Task AddMessage(IRceMessage message)
 		{
+			var database = _mongoClient.GetDatabase(DatabaseName);
+
 			if (message is IHasWorkerId hasWorkerId)
 			{
 				if (await IsDisconnected(hasWorkerId.WorkerId))
@@ -40,20 +52,51 @@ namespace RceServer.Data
 				{
 					throw new Exception("Specified worker does not exist");
 				}
+
+				if (message is WorkerAddedMessage workerAddedMessage)
+				{
+					var ownersCollection = database.GetCollection<BsonDocument>(OwnersCollectionName);
+					await ownersCollection.InsertManyAsync(workerAddedMessage.Owners.Select(e =>
+						new BsonDocument
+						{
+							{ OwnerFieldName, e },
+							{ WorkerIdFieldName, workerAddedMessage.WorkerId.ToString() }
+						}));
+				}
+
+				var owners = await GetOwners(hasWorkerId.WorkerId) ?? new List<string>();
+				await _rceHubContext.Clients.Users(owners).MessageReceived(message);
+			}
+
+			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
+			await messagesCollection.InsertOneAsync(message.ToExpandoObject());
+		}
+
+		public async Task<IList<IRceMessage>> GetMyMessages()
+		{
+			var username = _httpContextAccessor.HttpContext.User.Claims
+				.FirstOrDefault(e => e.Type == "username")?.Value;
+			if (string.IsNullOrWhiteSpace(username))
+			{
+				throw new Exception("Username not specified");
 			}
 
 			var database = _mongoClient.GetDatabase(DatabaseName);
-			var messagesCollection = database.GetCollection<dynamic>(CollectionName);
-			await messagesCollection.InsertOneAsync(message.ToExpandoObject());
-			await _rceHubContext.Clients.All.MessageReceived(message);
+			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
+			var workerIds = await GetOwnedWorkerIds(username);
+			var messages = await messagesCollection
+				.Find(Builders<dynamic>.Filter.In(WorkerIdFieldName, workerIds))
+				.ToListAsync();
+
+			return messages.Select(Deserialize).ToList();
 		}
 
 		public async Task<IList<IRceMessage>> GetMessagesBefore(long timestamp)
 		{
 			var database = _mongoClient.GetDatabase(DatabaseName);
-			var messagesCollection = database.GetCollection<dynamic>(CollectionName);
+			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
 			var messages = await messagesCollection
-				.Find(Builders<dynamic>.Filter.Lt("MessageTimestamp", timestamp))
+				.Find(Builders<dynamic>.Filter.Lt(MessageTimestampFieldName, timestamp))
 				.ToListAsync();
 
 			return messages.Select(Deserialize).ToList();
@@ -62,9 +105,9 @@ namespace RceServer.Data
 		public async Task<IList<IRceMessage>> GetMessagesAfter(long timestamp)
 		{
 			var database = _mongoClient.GetDatabase(DatabaseName);
-			var messagesCollection = database.GetCollection<dynamic>(CollectionName);
+			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
 			var messages = await messagesCollection
-				.Find(Builders<dynamic>.Filter.Gte("MessageTimestamp", timestamp))
+				.Find(Builders<dynamic>.Filter.Gte(MessageTimestampFieldName, timestamp))
 				.ToListAsync();
 
 			return messages.Select(Deserialize).ToList();
@@ -73,20 +116,28 @@ namespace RceServer.Data
 		public async Task<IList<IRceMessage>> GetWorkerMessages(Guid workerId)
 		{
 			var database = _mongoClient.GetDatabase(DatabaseName);
-			var messagesCollection = database.GetCollection<dynamic>(CollectionName);
+			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
 			var messages = await messagesCollection
-				.Find(Builders<dynamic>.Filter.Eq("WorkerId", workerId.ToString()))
+				.Find(Builders<dynamic>.Filter.Eq(WorkerIdFieldName, workerId.ToString()))
 				.ToListAsync();
 
 			return messages.Select(Deserialize).ToList();
 		}
 
-		public async Task RemoveMessages(IEnumerable<Guid> messages)
+		public async Task RemoveMessages(IEnumerable<Guid> messageIds)
 		{
 			var database = _mongoClient.GetDatabase(DatabaseName);
-			var messagesCollection = database.GetCollection<dynamic>(CollectionName);
+			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
 			await messagesCollection.DeleteManyAsync(
-				Builders<dynamic>.Filter.In("MessageId", messages.Select(e => e.ToString())));
+				Builders<dynamic>.Filter.In(MessageIdFieldName, messageIds.Select(e => e.ToString())));
+		}
+
+		public async Task RemoveOwnership(IEnumerable<Guid> workerIds)
+		{
+			var database = _mongoClient.GetDatabase(DatabaseName);
+			var ownersCollection = database.GetCollection<dynamic>(OwnersCollectionName);
+			await ownersCollection.DeleteManyAsync(
+				Builders<dynamic>.Filter.In(WorkerIdFieldName, workerIds.Select(e => e.ToString())));
 		}
 
 		public async Task<bool> IsDisconnected(Guid workerId)
@@ -99,6 +150,30 @@ namespace RceServer.Data
 		{
 			var workerMessages = await GetWorkerMessages(workerId);
 			return workerMessages.Count != 0;
+		}
+
+		private async Task<IReadOnlyList<string>> GetOwners(Guid workerId)
+		{
+			var database = _mongoClient.GetDatabase(DatabaseName);
+			var ownersCollection = database.GetCollection<dynamic>(OwnersCollectionName);
+
+			var workerOwners = await ownersCollection
+				.Find(Builders<dynamic>.Filter.Eq(WorkerIdFieldName, workerId.ToString()))
+				.ToListAsync();
+
+			return workerOwners.Select(e => (string)e.Owner).ToList();
+		}
+
+		private async Task<List<string>> GetOwnedWorkerIds(string username)
+		{
+			var database = _mongoClient.GetDatabase(DatabaseName);
+			var ownersCollection = database.GetCollection<dynamic>(OwnersCollectionName);
+
+			var workerOwners = await ownersCollection
+				.Find(Builders<dynamic>.Filter.Eq(OwnerFieldName, username))
+				.ToListAsync();
+
+			return workerOwners.Select(e => (string)e.WorkerId).ToList();
 		}
 
 		private IRceMessage Deserialize(dynamic message)

@@ -79,6 +79,7 @@ namespace CSharpSequential.States
 				DefaultPayload = JObject.Parse("{\"from\":0,\"to\":5}")
 			}
 		};
+		public List<string> Owners => Program.Owners;
 	}
 
 	public class JobDescription
