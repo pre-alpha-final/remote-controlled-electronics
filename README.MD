@@ -32,7 +32,7 @@ There are a few worker examples included with the project:
 - CSharpParallel - .net core 3.1 showing the parallel flow
 - CSharpSequential - .net core 3.1 showing the sequential flow
 - JS - javascript easily embeddable in any webpage as iife
-- PowerShellHappyPath - (in development) simplified example in powershell without error checks and retries
+- PowerShellHappyPath - simplified example in PowerShell without error checks and retries
 - BashHappyPath - (in development) simplified example in bash without error checks and retries
 - XamarinForms - (in development) Xamarin Forms android app example (based on CSharpParallel)
 - CSharpMono - (in development) C# app runnable with mono (based on CSharpParallel)
