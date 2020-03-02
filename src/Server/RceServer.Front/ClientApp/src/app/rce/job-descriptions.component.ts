@@ -30,6 +30,11 @@ export class JobDescriptionsComponent implements OnInit {
     }, 1);
   }
 
+  fillModal(jobDescription: JobDescription): void {
+    this.jobNameRef.nativeElement.innerText = jobDescription.name;
+    this.jobTextAreaRef.nativeElement.value = this.jsonPipe.transform(jobDescription.defaultPayload);
+  }
+
   runJob(): void {
     const jobName = this.jobNameRef.nativeElement.innerText;
     const jobPayload = this.jobTextAreaRef.nativeElement.value;
@@ -39,8 +44,12 @@ export class JobDescriptionsComponent implements OnInit {
       .subscribe();
   }
 
-  private fillModal(jobDescription: JobDescription): void {
-    this.jobNameRef.nativeElement.innerText = jobDescription.name;
-    this.jobTextAreaRef.nativeElement.value = this.jsonPipe.transform(jobDescription.defaultPayload);
+  runJobWithDefaults(jobDescription: JobDescription): void {
+    const jobName = jobDescription.name;
+    const jobPayload = this.jsonPipe.transform(jobDescription.defaultPayload);
+
+    this.httpClient.post<void>('/api/server/workers/' + this.workerId + '/runjob', { jobName, jobPayload })
+      .pipe(catchError(e => EMPTY))
+      .subscribe();
   }
 }
