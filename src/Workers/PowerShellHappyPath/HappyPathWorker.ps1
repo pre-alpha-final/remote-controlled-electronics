@@ -49,13 +49,13 @@ function GetJob() {
 }
 
 function UpdateJob($job, $payload) {
-    Write-Host "Updating job '$job.jobName' '$job.jobId'"
+    Write-Host "Updating job '$($job.jobName)' '$($job.jobId)'"
     $url = $baseUrl + $updateJobsAddressSuffix -replace 'WORKER_ID', $global:workerId -replace 'JOB_ID', $job.jobId
     $_ = Invoke-WebRequest -Uri $url -Method Post -ContentType 'application/json' -Body ($payload | ConvertTo-Json -Depth 10)
 }
 
 function CompleteJob($job, $payload) {
-    Write-Host "Completing job '$job.jobName' '$job.jobId'"
+    Write-Host "Completing job '$($job.jobName)' '$($job.jobId)'"
     $url = $baseUrl + $completeJobAddressSuffix -replace 'WORKER_ID', $global:workerId -replace 'JOB_ID', $job.jobId
     $_ = Invoke-WebRequest -Uri $url -Method Post -ContentType 'application/json' -Body ($payload | ConvertTo-Json -Depth 10)
 }
@@ -66,7 +66,7 @@ function FailJob($job, $reason) {
         jobStatus = $jobFailure
     }
 
-    Write-Host "Job failed '$job.jobName' '$job.jobId'"
+    Write-Host "Job failed '$($job.jobName)' '$($job.jobId)'"
     $url = $baseUrl + $completeJobAddressSuffix -replace 'WORKER_ID', $global:workerId -replace 'JOB_ID', $job.jobId
     $_ = Invoke-WebRequest -Uri $url -Method Post -ContentType 'application/json' -Body ($payload | ConvertTo-Json -Depth 10)
 }
