@@ -20,49 +20,7 @@
 }
 
 /* masonry workaround */
-@media (min-width: 0px) {
-    #worker {
-        width: auto;
-    }
-}
-
-/* masonry workaround */
-@media (min-width: 450px) {
-    #worker {
-        width: 350px;
-    }
-}
-
-/* masonry workaround */
-@media (min-width: 500px) {
-    #worker {
-        width: 400px;
-    }
-}
-
-/* masonry workaround */
-@media (min-width: 550px) {
-    #worker {
-        width: 450px;
-    }
-}
-
-/* masonry workaround */
-@media (min-width: 600px) {
-    #worker {
-        width: 500px;
-    }
-}
-
-/* masonry workaround */
-@media (min-width: 650px) {
-    #worker {
-        width: 550px;
-    }
-}
-
-/* masonry workaround */
-@media (min-width: 700px) {
+@media (min-width: 0px) { 
     #worker {
         width: 600px;
     }
