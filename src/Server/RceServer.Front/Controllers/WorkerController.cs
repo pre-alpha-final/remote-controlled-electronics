@@ -16,6 +16,7 @@ namespace RceServer.Front.Controllers
 	[Route("api/")]
 	public class WorkerController : Controller
 	{
+		private const int ErrorTimeoutMilliseconds = 3000; // to prevent badly written workers from spamming requests
 		private readonly IWorkerService _workerService;
 		private readonly TelemetryClient _telemetryClient;
 
@@ -52,6 +53,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
+				await Task.Delay(ErrorTimeoutMilliseconds);
 				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
@@ -78,6 +80,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
+				await Task.Delay(ErrorTimeoutMilliseconds);
 				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
@@ -92,6 +95,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
+				await Task.Delay(ErrorTimeoutMilliseconds);
 				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
@@ -106,6 +110,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
+				await Task.Delay(ErrorTimeoutMilliseconds);
 				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
@@ -120,6 +125,7 @@ namespace RceServer.Front.Controllers
 			}
 			catch (Exception e)
 			{
+				await Task.Delay(ErrorTimeoutMilliseconds);
 				return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 			}
 		}
