@@ -7,6 +7,6 @@ namespace RceSharpLib
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public string Base64Logo { get; set; }
-		public List<RceJobDescription> JobDescriptions { get; set; }
+		public List<JobDescription> JobDescriptions { get; set; }
 	}
 }

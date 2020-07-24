@@ -6,12 +6,12 @@ namespace RceSharpLib.JobExecutors
 {
 	public class TestJobExecutor : JobExecutorBase
 	{
-		public TestJobExecutor(string baseUrl, RceJob rceJob)
+		public TestJobExecutor(string baseUrl, Job rceJob)
 			: base(baseUrl, rceJob)
 		{
 		}
 
-		protected override RceJobDescription RceJobDescription => new RceJobDescription
+		protected override JobDescription JobDescription => new JobDescription
 		{
 			Name = "_TEST_JOB",
 			Description = new List<string>

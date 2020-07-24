@@ -9,11 +9,11 @@ namespace RceSharpLib.JobExecutors
 	public abstract class JobExecutorBase
 	{
 		protected string BaseUrl { get; set; }
-		protected RceJob RceJob { get; set; }
-		protected abstract RceJobDescription RceJobDescription { get; }
+		protected Job RceJob { get; set; }
+		protected abstract JobDescription JobDescription { get; }
 		public abstract Task Execute();
 
-		public JobExecutorBase(string baseUrl, RceJob rceJob)
+		public JobExecutorBase(string baseUrl, Job rceJob)
 		{
 			BaseUrl = baseUrl;
 			RceJob = rceJob;

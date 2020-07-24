@@ -50,7 +50,7 @@ namespace RceSharpLib.States
 				return;
 			}
 
-			var jobs = jobsJson.ToObject<List<RceJob>>();
+			var jobs = jobsJson.ToObject<List<Job>>();
 			jobs.ForEach(e => e.WorkerId = WorkerId);
 			RceJobRunner.State = new RunJobsState(this, jobs);
 		}

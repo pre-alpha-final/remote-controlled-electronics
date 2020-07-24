@@ -10,9 +10,9 @@ namespace RceSharpLib.States
 {
 	internal class RunJobsState : StateBase, IState
 	{
-		private List<RceJob> _jobs;
+		private List<Job> _jobs;
 
-		public RunJobsState(StateBase previousState, List<RceJob> jobs)
+		public RunJobsState(StateBase previousState, List<Job> jobs)
 			: base(previousState)
 		{
 			_jobs = jobs;
@@ -37,7 +37,7 @@ namespace RceSharpLib.States
 			return Task.CompletedTask;
 		}
 
-		private async Task FailJob(RceJob rceJob, string reason)
+		private async Task FailJob(Job rceJob, string reason)
 		{
 			Console.WriteLine($"Job failed: '{rceJob.JobName}' '{rceJob.JobId}' '{reason}'");
 

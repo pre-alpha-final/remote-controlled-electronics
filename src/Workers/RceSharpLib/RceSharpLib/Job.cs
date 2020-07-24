@@ -3,7 +3,7 @@ using System;
 
 namespace RceSharpLib
 {
-	public class RceJob
+	public class Job
 	{
 		public Guid WorkerId { get; set; }
 		public Guid JobId { get; set; }
