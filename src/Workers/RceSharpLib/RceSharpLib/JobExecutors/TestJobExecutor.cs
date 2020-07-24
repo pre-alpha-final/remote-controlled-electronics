@@ -6,8 +6,8 @@ namespace RceSharpLib.JobExecutors
 {
 	public class TestJobExecutor : JobExecutorBase
 	{
-		public TestJobExecutor(string baseUrl, Job rceJob)
-			: base(baseUrl, rceJob)
+		public TestJobExecutor(string baseUrl, Job job)
+			: base(baseUrl, job)
 		{
 		}
 

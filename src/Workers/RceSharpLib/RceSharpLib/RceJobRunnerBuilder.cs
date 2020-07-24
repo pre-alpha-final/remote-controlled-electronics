@@ -6,14 +6,20 @@ namespace RceSharpLib
 {
 	public class RceJobRunnerBuilder
 	{
+		private string _baseUrl;
 		private string _workerName;
 		private string _workerDescription;
 		private string _workerBase64Logo;
-		private string _baseUrl;
 		private List<string> _owners;
 		private List<Type> _jobExecutorTypes = new List<Type>();
 		private Dictionary<string, Type> _jobExecutorDictionary = new Dictionary<string, Type>();
 		private RegistrationModel _registrationModel;
+
+		public RceJobRunnerBuilder SetBaseUrl(string baseUrl)
+		{
+			_baseUrl = baseUrl;
+			return this;
+		}
 
 		public RceJobRunnerBuilder SetWorkerName(string workerName)
 		{
@@ -30,12 +36,6 @@ namespace RceSharpLib
 		public RceJobRunnerBuilder SetWorkerBase64Logo(string workerBase64Logo)
 		{
 			_workerBase64Logo = workerBase64Logo;
-			return this;
-		}
-
-		public RceJobRunnerBuilder SetBaseUrl(string baseUrl)
-		{
-			_baseUrl = baseUrl;
 			return this;
 		}
 

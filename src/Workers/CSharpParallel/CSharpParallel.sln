@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpParallel", "CSharpParallel\CSharpParallel.csproj", "{51D82839-70D4-46D0-B4F9-CABA6EC59A72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpParallel", "CSharpParallel\CSharpParallel.csproj", "{51D82839-70D4-46D0-B4F9-CABA6EC59A72}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceSharpLib", "..\RceSharpLib\RceSharpLib\RceSharpLib.csproj", "{CECA55DE-F7BA-4454-A482-64751C04AEF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{51D82839-70D4-46D0-B4F9-CABA6EC59A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51D82839-70D4-46D0-B4F9-CABA6EC59A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51D82839-70D4-46D0-B4F9-CABA6EC59A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CECA55DE-F7BA-4454-A482-64751C04AEF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CECA55DE-F7BA-4454-A482-64751C04AEF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CECA55DE-F7BA-4454-A482-64751C04AEF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CECA55DE-F7BA-4454-A482-64751C04AEF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,25 +9,25 @@ namespace RceSharpLib.JobExecutors
 	public abstract class JobExecutorBase
 	{
 		private string _baseUrl { get; set; }
-		protected Job RceJob { get; set; }
+		protected Job Job { get; set; }
 		public abstract JobDescription JobDescription { get; }
 		public abstract Task Execute();
 
-		public JobExecutorBase(string baseUrl, Job rceJob)
+		public JobExecutorBase(string baseUrl, Job job)
 		{
 			_baseUrl = baseUrl;
-			RceJob = rceJob;
+			Job = job;
 		}
 
 		protected async Task UpdateJob(object payload)
 		{
-			Console.WriteLine($"Updating job: '{RceJob.JobName}' '{RceJob.JobId}'");
+			Console.WriteLine($"Updating job: '{Job.JobName}' '{Job.JobId}'");
 
 			try
 			{
 				var updateJobAddressSuffix = Consts.UpdateJobAddressSuffix
-					.Replace("WORKER_ID", RceJob.WorkerId.ToString())
-					.Replace("JOB_ID", RceJob.JobId.ToString());
+					.Replace("WORKER_ID", Job.WorkerId.ToString())
+					.Replace("JOB_ID", Job.JobId.ToString());
 				var requestUri = $"{_baseUrl}{updateJobAddressSuffix}";
 
 				using (var client = new HttpClient())
@@ -40,19 +40,19 @@ namespace RceSharpLib.JobExecutors
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Updating job failed: '{RceJob?.JobName}' '{RceJob?.JobId}' '{e.Message}'");
+				Console.WriteLine($"Updating job failed: '{Job?.JobName}' '{Job?.JobId}' '{e.Message}'");
 			}
 		}
 
 		protected async Task CompleteJob(object payload)
 		{
-			Console.WriteLine($"Completing job: '{RceJob.JobName}' '{RceJob.JobId}'");
+			Console.WriteLine($"Completing job: '{Job.JobName}' '{Job.JobId}'");
 
 			try
 			{
 				var completeJobAddressSuffix = Consts.CompleteJobAddressSuffix
-					.Replace("WORKER_ID", RceJob.WorkerId.ToString())
-					.Replace("JOB_ID", RceJob.JobId.ToString());
+					.Replace("WORKER_ID", Job.WorkerId.ToString())
+					.Replace("JOB_ID", Job.JobId.ToString());
 				var requestUri = $"{_baseUrl}{completeJobAddressSuffix}";
 
 				using (var client = new HttpClient())
@@ -66,19 +66,19 @@ namespace RceSharpLib.JobExecutors
 			catch (Exception e)
 			{
 				await FailJob(e.Message);
-				Console.WriteLine($"Completing job failed: '{RceJob?.JobName}' '{RceJob?.JobId}' '{e.Message}'");
+				Console.WriteLine($"Completing job failed: '{Job?.JobName}' '{Job?.JobId}' '{e.Message}'");
 			}
 		}
 
 		protected async Task FailJob(string reason)
 		{
-			Console.WriteLine($"Job failed: '{RceJob.JobName}' '{RceJob.JobId}' '{reason}'");
+			Console.WriteLine($"Job failed: '{Job.JobName}' '{Job.JobId}' '{reason}'");
 
 			try
 			{
 				var completeJobAddressSuffix = Consts.CompleteJobAddressSuffix
-					.Replace("WORKER_ID", RceJob.WorkerId.ToString())
-					.Replace("JOB_ID", RceJob.JobId.ToString());
+					.Replace("WORKER_ID", Job.WorkerId.ToString())
+					.Replace("JOB_ID", Job.JobId.ToString());
 				var requestUri = $"{_baseUrl}{completeJobAddressSuffix}";
 
 				using (var client = new HttpClient())
@@ -95,7 +95,7 @@ namespace RceSharpLib.JobExecutors
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Reporting job failure failed: '{RceJob?.JobName}' '{RceJob?.JobId}' '{e.Message}'");
+				Console.WriteLine($"Reporting job failure failed: '{Job?.JobName}' '{Job?.JobId}' '{e.Message}'");
 			}
 		}
 	}

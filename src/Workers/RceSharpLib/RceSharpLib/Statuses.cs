@@ -1,6 +1,6 @@
 ﻿namespace RceSharpLib
 {
-	internal enum Statuses
+	public enum Statuses
 	{
 		Undefined,
 		Success,
