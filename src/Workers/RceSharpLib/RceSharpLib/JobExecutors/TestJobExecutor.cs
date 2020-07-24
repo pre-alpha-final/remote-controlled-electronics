@@ -11,7 +11,7 @@ namespace RceSharpLib.JobExecutors
 		{
 		}
 
-		protected override JobDescription JobDescription => new JobDescription
+		public override JobDescription JobDescription => new JobDescription
 		{
 			Name = "_TEST_JOB",
 			Description = new List<string>

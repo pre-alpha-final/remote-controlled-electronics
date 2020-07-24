@@ -8,14 +8,14 @@ namespace RceSharpLib.JobExecutors
 {
 	public abstract class JobExecutorBase
 	{
-		protected string BaseUrl { get; set; }
+		private string _baseUrl { get; set; }
 		protected Job RceJob { get; set; }
-		protected abstract JobDescription JobDescription { get; }
+		public abstract JobDescription JobDescription { get; }
 		public abstract Task Execute();
 
 		public JobExecutorBase(string baseUrl, Job rceJob)
 		{
-			BaseUrl = baseUrl;
+			_baseUrl = baseUrl;
 			RceJob = rceJob;
 		}
 
@@ -28,7 +28,7 @@ namespace RceSharpLib.JobExecutors
 				var updateJobAddressSuffix = Consts.UpdateJobAddressSuffix
 					.Replace("WORKER_ID", RceJob.WorkerId.ToString())
 					.Replace("JOB_ID", RceJob.JobId.ToString());
-				var requestUri = $"{BaseUrl}{updateJobAddressSuffix}";
+				var requestUri = $"{_baseUrl}{updateJobAddressSuffix}";
 
 				using (var client = new HttpClient())
 				using (await client.PostAsync(requestUri, new StringContent(
@@ -53,7 +53,7 @@ namespace RceSharpLib.JobExecutors
 				var completeJobAddressSuffix = Consts.CompleteJobAddressSuffix
 					.Replace("WORKER_ID", RceJob.WorkerId.ToString())
 					.Replace("JOB_ID", RceJob.JobId.ToString());
-				var requestUri = $"{BaseUrl}{completeJobAddressSuffix}";
+				var requestUri = $"{_baseUrl}{completeJobAddressSuffix}";
 
 				using (var client = new HttpClient())
 				using (await client.PostAsync(requestUri, new StringContent(
@@ -79,7 +79,7 @@ namespace RceSharpLib.JobExecutors
 				var completeJobAddressSuffix = Consts.CompleteJobAddressSuffix
 					.Replace("WORKER_ID", RceJob.WorkerId.ToString())
 					.Replace("JOB_ID", RceJob.JobId.ToString());
-				var requestUri = $"{BaseUrl}{completeJobAddressSuffix}";
+				var requestUri = $"{_baseUrl}{completeJobAddressSuffix}";
 
 				using (var client = new HttpClient())
 				using (await client.PostAsync(requestUri, new StringContent(

@@ -22,7 +22,7 @@ namespace RceSharpLib.States
 		{
 			foreach (var job in _jobs)
 			{
-				var jobExecutorType = RceJobRunner.JobRunnerContext.JobExecutorTypes[job.JobName];
+				var jobExecutorType = RceJobRunner.JobRunnerContext.JobExecutorDictionary[job.JobName];
 				if (jobExecutorType == null)
 				{
 					_ = Task.Run(() => FailJob(job, $"No job named {job.JobName}"));
