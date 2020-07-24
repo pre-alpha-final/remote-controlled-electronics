@@ -28,7 +28,7 @@ namespace CSharpParallel
 
 		public override async Task Execute()
 		{
-			Console.WriteLine($"Running job: '{Job.JobName}' '{Job.JobId}'");
+			Console.WriteLine($"Running job: '{Job?.JobName}' '{Job?.JobId}'");
 
 			try
 			{

@@ -21,7 +21,7 @@ namespace RceSharpLib.JobExecutors
 
 		protected async Task UpdateJob(object payload)
 		{
-			Console.WriteLine($"Updating job: '{Job.JobName}' '{Job.JobId}'");
+			Console.WriteLine($"Updating job: '{Job?.JobName}' '{Job?.JobId}'");
 
 			try
 			{
@@ -46,7 +46,7 @@ namespace RceSharpLib.JobExecutors
 
 		protected async Task CompleteJob(object payload)
 		{
-			Console.WriteLine($"Completing job: '{Job.JobName}' '{Job.JobId}'");
+			Console.WriteLine($"Completing job: '{Job?.JobName}' '{Job?.JobId}'");
 
 			try
 			{
@@ -72,7 +72,7 @@ namespace RceSharpLib.JobExecutors
 
 		protected async Task FailJob(string reason)
 		{
-			Console.WriteLine($"Job failed: '{Job.JobName}' '{Job.JobId}' '{reason}'");
+			Console.WriteLine($"Job failed: '{Job?.JobName}' '{Job?.JobId}' '{reason}'");
 
 			try
 			{

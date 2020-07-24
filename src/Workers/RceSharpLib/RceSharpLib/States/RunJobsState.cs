@@ -22,10 +22,10 @@ namespace RceSharpLib.States
 		{
 			foreach (var job in _jobs)
 			{
-				var jobExecutorType = RceJobRunner.JobRunnerContext.JobExecutorDictionary[job.JobName];
-				if (jobExecutorType == null)
+				if (RceJobRunner.JobRunnerContext.JobExecutorDictionary.TryGetValue(job.JobName, out var jobExecutorType) == false)
 				{
-					_ = Task.Run(() => FailJob(job, $"No job named {job.JobName}"));
+					_ = Task.Run(() => FailJob(job, $"No job named '{job?.JobName}'"));
+					continue;
 				}
 
 				var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
@@ -39,7 +39,7 @@ namespace RceSharpLib.States
 
 		private async Task FailJob(Job rceJob, string reason)
 		{
-			Console.WriteLine($"Job failed: '{rceJob.JobName}' '{rceJob.JobId}' '{reason}'");
+			Console.WriteLine($"Job failed: '{rceJob?.JobName}' '{rceJob?.JobId}' '{reason}'");
 
 			try
 			{

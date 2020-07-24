@@ -75,7 +75,8 @@ namespace RceSharpLib
 				Name = _workerName ?? throw new ArgumentException($"{nameof(RegistrationModel.Name)} must be set"),
 				Description = _workerDescription ?? throw new ArgumentException($"{nameof(RegistrationModel.Description)} must be set"),
 				Base64Logo = _workerBase64Logo ?? throw new ArgumentException($"{nameof(RegistrationModel.Base64Logo)} must be set"),
-				JobDescriptions = BuildJobDescriptions()
+				JobDescriptions = BuildJobDescriptions(),
+				Owners = _owners
 			};
 		}
 
@@ -84,7 +85,7 @@ namespace RceSharpLib
 			var jobDescriptions = new List<JobDescription>();
 			foreach (var jobExecutorType in _jobExecutorTypes)
 			{
-				if (jobExecutorType.IsAssignableFrom(typeof(JobExecutorBase)) == false)
+				if (typeof(JobExecutorBase).IsAssignableFrom(jobExecutorType) == false)
 				{
 					throw new ArgumentException($"'{jobExecutorType}' must derive from '{nameof(JobExecutorBase)}'");
 				}
@@ -100,13 +101,13 @@ namespace RceSharpLib
 		{
 			foreach (var jobExecutorType in _jobExecutorTypes)
 			{
-				if (jobExecutorType.IsAssignableFrom(typeof(JobExecutorBase)) == false)
+				if (typeof(JobExecutorBase).IsAssignableFrom(jobExecutorType) == false)
 				{
 					throw new ArgumentException($"'{jobExecutorType}' must derive from '{nameof(JobExecutorBase)}'");
 				}
 
-				var jobExecutor = Activator.CreateInstance(jobExecutorType, new object[] { null, null });
-				_jobExecutorDictionary.Add(jobExecutorType.Name, jobExecutorType);
+				var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { null, null });
+				_jobExecutorDictionary.Add(jobExecutor.JobDescription.Name, jobExecutorType);
 			}
 		}
 	}

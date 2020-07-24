@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace RceSharpLib.JobExecutors
 {
@@ -21,9 +22,16 @@ namespace RceSharpLib.JobExecutors
 			DefaultPayload = JObject.Parse("{}")
 		};
 
-		public override Task Execute()
+		public override async Task Execute()
 		{
-			throw new System.NotImplementedException();
+			try
+			{
+				await CompleteJob(new { jobStatus = Statuses.Success.ToString() });
+			}
+			catch (Exception e)
+			{
+				await FailJob(e.Message);
+			}
 		}
 	}
 }
