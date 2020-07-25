@@ -1,7 +1,7 @@
-﻿using System;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using System;
 
-namespace CSharpSequential
+namespace RceSharpLib
 {
 	public class Job
 	{

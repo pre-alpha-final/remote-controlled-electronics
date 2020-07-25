@@ -1,5 +1,5 @@
 # Remote controlled electronics
-Remote control any device that is programmable and supports HTTP connections. PC, laptop, console, mobile, TV and more. Here's an idea: remote control a raspberry pi in turn controlling an at home, local Wi-Fi internet of things.
+Remote control any device that is programmable and supports HTTP connections. PC, laptop, console, mobile, TV etc. Here's an idea: remote control a raspberry pi in turn controlling an at home, local Wi-Fi internet of things.
 
 ![](/docs/rceserver.png)
 
@@ -11,7 +11,7 @@ Remote control any device that is programmable and supports HTTP connections. PC
 	- are quick and easy to write
 	- can be written in any language that supports HTTP connections
 	- are minimalistic, they just connect to the server and get/update/complete jobs
-	- jobs can be run sequentially or in parallel, depending on worker capabilities
+	- jobs can be run sequentially or in parallel
 
 # Architecture
 There is no direct connection between server and workers. Server pushes new jobs to the cloud and workers pull them from the cloud. Also no connection is made to the workers at any point. All worker communication is done with http requests which they themselves initiate. This means that as long as the worker has internet access no NAT or firewall will interfere with the communication.
@@ -29,13 +29,14 @@ Example worker requests in postman: [Postman Collection](/src/Workers/Postman/po
 # Worker Examples
 There are a few worker examples included with the project:
 - Postman - postman collection with all requests required to simulate a worker
-- CSharpParallel - .net core 3.1 showing the parallel flow
-- CSharpSequential - .net core 3.1 showing the sequential flow
+- RceSharpLib - c# library for workers
+- CSharpParallel - c# example showing the parallel flow (using RceSharpLib)
+- CSharpSequential - c# example showing the sequential flow (using RceSharpLib)
 - JS - javascript easily embeddable in any webpage as iife
 - PowerShellHappyPath - simplified example in PowerShell without error checks and retries
 - BashHappyPath - (in development) simplified example in bash without error checks and retries
-- XamarinForms - (in development) Xamarin Forms android app example (based on CSharpParallel)
-- CSharpMono - (in development) C# app runnable with mono (based on CSharpParallel)
+- XamarinForms - (in development) Xamarin Forms android app example
+- CSharpMono - (in development) C# app runnable with mono
 
 # Demo environment
 For testing purposes log in here:  

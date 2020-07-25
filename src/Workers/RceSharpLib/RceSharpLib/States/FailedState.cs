@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CSharpSequential.States
+namespace RceSharpLib.States
 {
-	public class FailedState : IState
+	internal class FailedState : StateBase, IState
 	{
 		private const int RetryDelayMs = 5000;
 		private readonly string _failureReason;
 
-		public FailedState(string failureReason)
+		public FailedState(StateBase previousState, string failureReason)
+			: base(previousState)
 		{
 			_failureReason = failureReason;
 		}
 
-		public async Task Handle(JobRunnerStateMachine jobRunnerStateMachine)
+		public async Task Handle()
 		{
 			Console.WriteLine($"Problem encountered: '{_failureReason}'");
 
 			await Task.Delay(RetryDelayMs);
-			jobRunnerStateMachine.State = new RegistrationState();
+			RceJobRunner.State = new RegistrationState(RceJobRunner);
 		}
 	}
 }
