@@ -1,4 +1,4 @@
-﻿using RceSharpLib.JobExecutors;
+﻿using RceSharpLib.JobHandlers;
 using System;
 using System.Collections.Generic;
 
@@ -12,8 +12,8 @@ namespace RceSharpLib
 		private string _workerBase64Logo;
 		private bool _runInParallel = true;
 		private List<string> _owners;
-		private List<Type> _jobExecutorTypes = new List<Type>();
-		private Dictionary<string, Type> _jobExecutorDictionary = new Dictionary<string, Type>();
+		private List<Type> _jobHandlerTypes = new List<Type>();
+		private Dictionary<string, Type> _jobHandlerDictionary = new Dictionary<string, Type>();
 		private RegistrationModel _registrationModel;
 
 		public RceJobRunnerBuilder SetBaseUrl(string baseUrl)
@@ -52,16 +52,16 @@ namespace RceSharpLib
 			return this;
 		}
 
-		public RceJobRunnerBuilder AddJobExecutorType(Type jobExecutorType)
+		public RceJobRunnerBuilder AddJobHandlerType(Type jobHandlerType)
 		{
-			_jobExecutorTypes.Add(jobExecutorType);
+			_jobHandlerTypes.Add(jobHandlerType);
 			return this;
 		}
 
 		public RceJobRunner Build()
 		{
 			BuildRegistrationModel();
-			BuildJobExecutorDictionary();
+			BuildJobHandlerDictionary();
 
 			return new RceJobRunner
 			{
@@ -70,7 +70,7 @@ namespace RceSharpLib
 					BaseUrl = _baseUrl ?? throw new ArgumentException($"{nameof(JobRunnerContext.BaseUrl)} must be set"),
 					Owners = _owners ?? throw new ArgumentException($"{nameof(JobRunnerContext.Owners)} must be set"),
 					RunInParallel = _runInParallel,
-					JobExecutorDictionary = _jobExecutorDictionary ?? throw new ArgumentException($"{nameof(JobRunnerContext.JobExecutorDictionary)} must be set"),
+					JobHandlerDictionary = _jobHandlerDictionary ?? throw new ArgumentException($"{nameof(JobRunnerContext.JobHandlerDictionary)} must be set"),
 					RegistrationModel = _registrationModel ?? throw new ArgumentException($"{nameof(JobRunnerContext.RegistrationModel)} must be set"),
 				}
 			};
@@ -91,31 +91,31 @@ namespace RceSharpLib
 		private List<JobDescription> BuildJobDescriptions()
 		{
 			var jobDescriptions = new List<JobDescription>();
-			foreach (var jobExecutorType in _jobExecutorTypes)
+			foreach (var jobHandlerType in _jobHandlerTypes)
 			{
-				if (typeof(JobExecutorBase).IsAssignableFrom(jobExecutorType) == false)
+				if (typeof(JobHandlerBase).IsAssignableFrom(jobHandlerType) == false)
 				{
-					throw new ArgumentException($"'{jobExecutorType}' must derive from '{nameof(JobExecutorBase)}'");
+					throw new ArgumentException($"'{jobHandlerType}' must derive from '{nameof(JobHandlerBase)}'");
 				}
 
-				var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { null, null });
-				jobDescriptions.Add(jobExecutor.JobDescription);
+				var jobHandler = (JobHandlerBase)Activator.CreateInstance(jobHandlerType, new object[] { null, null });
+				jobDescriptions.Add(jobHandler.JobDescription);
 			}
 
 			return jobDescriptions;
 		}
 
-		private void BuildJobExecutorDictionary()
+		private void BuildJobHandlerDictionary()
 		{
-			foreach (var jobExecutorType in _jobExecutorTypes)
+			foreach (var jobHandlerType in _jobHandlerTypes)
 			{
-				if (typeof(JobExecutorBase).IsAssignableFrom(jobExecutorType) == false)
+				if (typeof(JobHandlerBase).IsAssignableFrom(jobHandlerType) == false)
 				{
-					throw new ArgumentException($"'{jobExecutorType}' must derive from '{nameof(JobExecutorBase)}'");
+					throw new ArgumentException($"'{jobHandlerType}' must derive from '{nameof(JobHandlerBase)}'");
 				}
 
-				var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { null, null });
-				_jobExecutorDictionary.Add(jobExecutor.JobDescription.Name, jobExecutorType);
+				var jobHandler = (JobHandlerBase)Activator.CreateInstance(jobHandlerType, new object[] { null, null });
+				_jobHandlerDictionary.Add(jobHandler.JobDescription.Name, jobHandlerType);
 			}
 		}
 	}

@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace RceSharpLib.JobExecutors
+namespace RceSharpLib.JobHandlers
 {
-	public class TestJobExecutor : JobExecutorBase
+	public class TestJobHandler : JobHandlerBase
 	{
-		public TestJobExecutor(string baseUrl, Job job)
+		public TestJobHandler(string baseUrl, Job job)
 			: base(baseUrl, job)
 		{
 		}
@@ -23,7 +23,7 @@ namespace RceSharpLib.JobExecutors
 			DefaultPayload = JObject.Parse("{}")
 		};
 
-		public override async Task Execute(CancellationToken cancellationToken)
+		public override async Task Handle(CancellationToken cancellationToken)
 		{
 			try
 			{

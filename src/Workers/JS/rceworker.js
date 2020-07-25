@@ -153,7 +153,7 @@ var rceWorker = {};
         for (let job of this.jobs) {
           switch (job.jobName) {
             case "Count":
-              new CountJobHandler(job).run();
+              new CountJobHandler(job).handle();
               break;
 
             default:
@@ -256,7 +256,7 @@ var rceWorker = {};
       this.job = job;
     }
 
-    async run() {
+    async handle() {
       console.log(`Running job: '${this.job.jobName}' '${this.job.jobId}'`);
       try {
         let from = this.job.payload.from;

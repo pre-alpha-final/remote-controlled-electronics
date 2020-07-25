@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using RceSharpLib.JobExecutors;
+using RceSharpLib.JobHandlers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -22,7 +22,7 @@ namespace RceSharpLib.States
 		{
 			foreach (var job in _jobs)
 			{
-				if (RceJobRunner.JobRunnerContext.JobExecutorDictionary.TryGetValue(job.JobName, out var jobExecutorType) == false)
+				if (RceJobRunner.JobRunnerContext.JobHandlerDictionary.TryGetValue(job.JobName, out var jobHandlerType) == false)
 				{
 					_ = Task.Run(() => FailJob(job, $"No job named '{job?.JobName}'"));
 					continue;
@@ -31,14 +31,14 @@ namespace RceSharpLib.States
 				Console.WriteLine($"Running job: '{job?.JobName}' '{job?.JobId}'");
 				try
 				{
-					var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
+					var jobHandler = (JobHandlerBase)Activator.CreateInstance(jobHandlerType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
 					if (RceJobRunner.JobRunnerContext.RunInParallel)
 					{
-						_ = Task.Run(() => jobExecutor.Execute(RceJobRunner.CancellationTokenSource.Token));
+						_ = Task.Run(() => jobHandler.Handle(RceJobRunner.CancellationTokenSource.Token));
 					}
 					else
 					{
-						await jobExecutor.Execute(RceJobRunner.CancellationTokenSource.Token);
+						await jobHandler.Handle(RceJobRunner.CancellationTokenSource.Token);
 					}
 				}
 				catch (Exception e)

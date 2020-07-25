@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RceSharpLib.JobExecutors
+namespace RceSharpLib.JobHandlers
 {
-	public abstract class JobExecutorBase
+	public abstract class JobHandlerBase
 	{
 		private readonly string _baseUrl;
 		protected Job Job { get; set; }
 		public abstract JobDescription JobDescription { get; }
-		public abstract Task Execute(CancellationToken cancellationToken);
+		public abstract Task Handle(CancellationToken cancellationToken);
 
-		public JobExecutorBase(string baseUrl, Job job)
+		public JobHandlerBase(string baseUrl, Job job)
 		{
 			_baseUrl = baseUrl;
 			Job = job;

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using RceSharpLib;
-using RceSharpLib.JobExecutors;
+using RceSharpLib.JobHandlers;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace CSharpSequential
 {
-	public class CounterJobExecutor : JobExecutorBase
+	public class CounterJobHandler : JobHandlerBase
 	{
-		public CounterJobExecutor(string baseUrl, Job job)
+		public CounterJobHandler(string baseUrl, Job job)
 			: base(baseUrl, job)
 		{
 		}
@@ -27,7 +27,7 @@ namespace CSharpSequential
 			DefaultPayload = JObject.Parse("{\"from\":0,\"to\":5}")
 		};
 
-		public override async Task Execute(CancellationToken cancellationToken)
+		public override async Task Handle(CancellationToken cancellationToken)
 		{
 			try
 			{
