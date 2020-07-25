@@ -26,13 +26,17 @@ namespace RceSharpLib
 			}
 
 			State = new FinalizationState(State as StateBase);
-			await State.Handle();
-			State = null;
 		}
 
-		public void Stop()
+		public async Task Stop()
 		{
 			Running = false;
+			while (State?.GetType() != typeof(FinalizationState))
+			{
+				await Task.Delay(100);
+			}
+			await State.Handle();
+			State = null;
 		}
 	}
 }

@@ -28,6 +28,7 @@ namespace RceSharpLib.States
 					continue;
 				}
 
+				Console.WriteLine($"Running job: '{job?.JobName}' '{job?.JobId}'");
 				var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
 				_ = Task.Run(() => jobExecutor.Execute());
 			}

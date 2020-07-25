@@ -28,8 +28,6 @@ namespace CSharpParallel
 
 		public override async Task Execute()
 		{
-			Console.WriteLine($"Running job: '{Job?.JobName}' '{Job?.JobId}'");
-
 			try
 			{
 				var from = Job.Payload.SelectToken("$.from").ToObject<int>();

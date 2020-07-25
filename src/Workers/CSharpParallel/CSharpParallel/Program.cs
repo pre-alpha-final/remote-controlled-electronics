@@ -26,7 +26,7 @@ namespace CSharpParallel
 			Console.ReadKey();
 			Console.WriteLine();
 			Console.WriteLine("Exiting...");
-			rceJobRunner.Stop();
+			await rceJobRunner.Stop();
 		}
 	}
 }

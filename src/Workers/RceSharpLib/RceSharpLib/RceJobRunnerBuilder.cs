@@ -74,7 +74,7 @@ namespace RceSharpLib
 			{
 				Name = _workerName ?? throw new ArgumentException($"{nameof(RegistrationModel.Name)} must be set"),
 				Description = _workerDescription ?? throw new ArgumentException($"{nameof(RegistrationModel.Description)} must be set"),
-				Base64Logo = _workerBase64Logo ?? throw new ArgumentException($"{nameof(RegistrationModel.Base64Logo)} must be set"),
+				Base64Logo = _workerBase64Logo,
 				JobDescriptions = BuildJobDescriptions(),
 				Owners = _owners
 			};
