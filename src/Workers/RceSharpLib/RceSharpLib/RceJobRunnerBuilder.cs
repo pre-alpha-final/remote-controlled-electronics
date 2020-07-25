@@ -10,6 +10,7 @@ namespace RceSharpLib
 		private string _workerName;
 		private string _workerDescription;
 		private string _workerBase64Logo;
+		private bool _runInParallel = true;
 		private List<string> _owners;
 		private List<Type> _jobExecutorTypes = new List<Type>();
 		private Dictionary<string, Type> _jobExecutorDictionary = new Dictionary<string, Type>();
@@ -39,6 +40,12 @@ namespace RceSharpLib
 			return this;
 		}
 
+		public RceJobRunnerBuilder SetRunInParallel(bool runInParallel)
+		{
+			_runInParallel = runInParallel;
+			return this;
+		}
+
 		public RceJobRunnerBuilder SetOwners(List<string> owners)
 		{
 			_owners = owners;
@@ -62,6 +69,7 @@ namespace RceSharpLib
 				{
 					BaseUrl = _baseUrl ?? throw new ArgumentException($"{nameof(JobRunnerContext.BaseUrl)} must be set"),
 					Owners = _owners ?? throw new ArgumentException($"{nameof(JobRunnerContext.Owners)} must be set"),
+					RunInParallel = _runInParallel,
 					JobExecutorDictionary = _jobExecutorDictionary ?? throw new ArgumentException($"{nameof(JobRunnerContext.JobExecutorDictionary)} must be set"),
 					RegistrationModel = _registrationModel ?? throw new ArgumentException($"{nameof(JobRunnerContext.RegistrationModel)} must be set"),
 				}

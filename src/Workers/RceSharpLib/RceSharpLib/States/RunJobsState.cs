@@ -18,7 +18,7 @@ namespace RceSharpLib.States
 			_jobs = jobs;
 		}
 
-		public Task Handle()
+		public async Task Handle()
 		{
 			foreach (var job in _jobs)
 			{
@@ -29,24 +29,36 @@ namespace RceSharpLib.States
 				}
 
 				Console.WriteLine($"Running job: '{job?.JobName}' '{job?.JobId}'");
-				var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
-				_ = Task.Run(() => jobExecutor.Execute());
+				try
+				{
+					var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
+					if (RceJobRunner.JobRunnerContext.RunInParallel)
+					{
+						_ = Task.Run(() => jobExecutor.Execute());
+					}
+					else
+					{
+						await jobExecutor.Execute();
+					}
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine($"Running job failed: '{job?.JobName}' '{job.JobId}' '{e.Message}'");
+				}
 			}
 
 			RceJobRunner.State = new GetJobsState(this);
-
-			return Task.CompletedTask;
 		}
 
-		private async Task FailJob(Job rceJob, string reason)
+		private async Task FailJob(Job job, string reason)
 		{
-			Console.WriteLine($"Job failed: '{rceJob?.JobName}' '{rceJob?.JobId}' '{reason}'");
+			Console.WriteLine($"Job failed: '{job?.JobName}' '{job?.JobId}' '{reason}'");
 
 			try
 			{
 				var completeJobAddressSuffix = Consts.CompleteJobAddressSuffix
-					.Replace("WORKER_ID", rceJob.WorkerId.ToString())
-					.Replace("JOB_ID", rceJob.JobId.ToString());
+					.Replace("WORKER_ID", job.WorkerId.ToString())
+					.Replace("JOB_ID", job.JobId.ToString());
 				var requestUri = $"{RceJobRunner.JobRunnerContext.BaseUrl}{completeJobAddressSuffix}";
 
 				using (var client = new HttpClient())
@@ -63,7 +75,7 @@ namespace RceSharpLib.States
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Reporting job failure failed: '{rceJob?.JobName}' '{rceJob?.JobId}' '{e.Message}'");
+				Console.WriteLine($"Reporting job failure failed: '{job?.JobName}' '{job?.JobId}' '{e.Message}'");
 			}
 		}
 	}
