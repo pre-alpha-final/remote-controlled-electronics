@@ -9,7 +9,7 @@ namespace RceSharpLib.JobExecutors
 {
 	public abstract class JobExecutorBase
 	{
-		private string _baseUrl { get; set; }
+		private readonly string _baseUrl;
 		protected Job Job { get; set; }
 		public abstract JobDescription JobDescription { get; }
 		public abstract Task Execute(CancellationToken cancellationToken);

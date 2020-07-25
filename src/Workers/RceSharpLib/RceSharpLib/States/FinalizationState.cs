@@ -21,6 +21,8 @@ namespace RceSharpLib.States
 					.Replace("WORKER_ID", WorkerId.ToString());
 				var requestUri = $"{RceJobRunner.JobRunnerContext.BaseUrl}{closeWorkerAddressSuffix}";
 
+				// Since jobs are running in the background in parallel mode
+				// you might want to delay this if you want to let them finish/report failure
 				using (var client = new HttpClient())
 				using (await client.PostAsync(requestUri, new StringContent(string.Empty)))
 				{
