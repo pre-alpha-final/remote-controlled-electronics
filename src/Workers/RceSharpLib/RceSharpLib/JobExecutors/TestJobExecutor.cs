@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -22,7 +23,7 @@ namespace RceSharpLib.JobExecutors
 			DefaultPayload = JObject.Parse("{}")
 		};
 
-		public override async Task Execute()
+		public override async Task Execute(CancellationToken cancellationToken)
 		{
 			try
 			{

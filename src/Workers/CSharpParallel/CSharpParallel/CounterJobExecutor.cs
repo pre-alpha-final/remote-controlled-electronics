@@ -3,6 +3,7 @@ using RceSharpLib;
 using RceSharpLib.JobExecutors;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CSharpParallel
@@ -26,7 +27,7 @@ namespace CSharpParallel
 			DefaultPayload = JObject.Parse("{\"from\":0,\"to\":5}")
 		};
 
-		public override async Task Execute()
+		public override async Task Execute(CancellationToken cancellationToken)
 		{
 			try
 			{

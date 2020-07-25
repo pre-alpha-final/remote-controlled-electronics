@@ -34,11 +34,11 @@ namespace RceSharpLib.States
 					var jobExecutor = (JobExecutorBase)Activator.CreateInstance(jobExecutorType, new object[] { RceJobRunner.JobRunnerContext.BaseUrl, job });
 					if (RceJobRunner.JobRunnerContext.RunInParallel)
 					{
-						_ = Task.Run(() => jobExecutor.Execute());
+						_ = Task.Run(() => jobExecutor.Execute(RceJobRunner.CancellationTokenSource.Token));
 					}
 					else
 					{
-						await jobExecutor.Execute();
+						await jobExecutor.Execute(RceJobRunner.CancellationTokenSource.Token);
 					}
 				}
 				catch (Exception e)

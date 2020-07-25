@@ -2,6 +2,7 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RceSharpLib.JobExecutors
@@ -11,7 +12,7 @@ namespace RceSharpLib.JobExecutors
 		private string _baseUrl { get; set; }
 		protected Job Job { get; set; }
 		public abstract JobDescription JobDescription { get; }
-		public abstract Task Execute();
+		public abstract Task Execute(CancellationToken cancellationToken);
 
 		public JobExecutorBase(string baseUrl, Job job)
 		{
