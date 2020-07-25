@@ -23,7 +23,7 @@ namespace RceSharpLib.States
 				var getJobAddressSuffix = Consts.GetJobsAddressSuffix.Replace("WORKER_ID", WorkerId.ToString());
 				var requestUri = $"{RceJobRunner.JobRunnerContext.BaseUrl}{getJobAddressSuffix}";
 				using var client = new HttpClient();
-				using var response = await client.GetAsync(requestUri);
+				using var response = await client.GetAsync(requestUri, RceJobRunner.CancellationTokenSource.Token);
 				await HandleResponse(response);
 			}
 			catch (Exception e)

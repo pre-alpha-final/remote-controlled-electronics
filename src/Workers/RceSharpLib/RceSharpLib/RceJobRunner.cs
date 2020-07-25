@@ -1,5 +1,6 @@
 ﻿using RceSharpLib.States;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RceSharpLib
@@ -8,6 +9,7 @@ namespace RceSharpLib
 	{
 		public IState State { get; set; }
 		public bool Running { get; set; }
+		public CancellationTokenSource CancellationTokenSource { get; set; }
 		public JobRunnerContext JobRunnerContext { get; set; }
 
 		public async Task Start()
@@ -17,6 +19,7 @@ namespace RceSharpLib
 				throw new InvalidOperationException("Still running");
 			}
 
+			CancellationTokenSource = new CancellationTokenSource();
 			State = new RegistrationState(this);
 
 			Running = true;
@@ -31,6 +34,7 @@ namespace RceSharpLib
 		public async Task Stop()
 		{
 			Running = false;
+			CancellationTokenSource.Cancel();
 			while (State?.GetType() != typeof(FinalizationState))
 			{
 				await Task.Delay(100);
