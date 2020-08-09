@@ -1,0 +1,44 @@
+﻿@inject AuthService AuthService
+@implements IDisposable
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light m-1">
+	<a class="navbar-brand" href="#"><span class="mb-0 h2">RceServer</span></a>
+	<button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="@NavMenuCssClass">
+		<ul class="navbar-nav ml-auto">
+			@if (AuthService.UserAuthenticated)
+			{
+				<li class="nav-item"><a class="nav-link" (click)="logOut()" href="javascript:void(0);">Log out</a></li>
+			}
+			else
+			{
+				<li class="nav-item"><a class="nav-link" routerLink="/auth/register">Register</a></li>
+				<li class="nav-item"><a class="nav-link" routerLink="/auth/login">Log in</a></li>
+			}
+		</ul>
+	</div>
+</nav>
+
+@code {
+	private Func<Task> Redraw;
+	private bool _collapseNavMenu = true;
+	private string NavMenuCssClass => _collapseNavMenu ? "collapse navbar-collapse" : "navbar-collapse";
+
+	protected override void OnInitialized()
+	{
+		Redraw = () => InvokeAsync(StateHasChanged);
+		AuthService.OnChanged += Redraw;
+	}
+
+	public void Dispose()
+	{
+		AuthService.OnChanged -= Redraw;
+	}
+
+	private void ToggleNavMenu()
+	{
+		_collapseNavMenu = !_collapseNavMenu;
+	}
+}
