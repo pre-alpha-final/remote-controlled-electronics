@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Data", "RceServer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Tests", "RceServer.Tests\RceServer.Tests.csproj", "{C018A667-2FCA-408B-918B-4D613436317E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RceServer.Front.Blazor", "RceServer.Front.Blazor\RceServer.Front.Blazor.csproj", "{ADD1F1B8-8ECE-437B-9823-CEBF7E71E9E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceServer.Front.Blazor", "RceServer.Front.Blazor\RceServer.Front.Blazor.csproj", "{ADD1F1B8-8ECE-437B-9823-CEBF7E71E9E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

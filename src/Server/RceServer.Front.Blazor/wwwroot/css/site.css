@@ -16,3 +16,7 @@
 	right: 0.75rem;
 	top: 0.5rem;
 }
+
+.text-red, .validation-message {
+	color: red;
+}

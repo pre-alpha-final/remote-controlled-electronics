@@ -1,0 +1,45 @@
+﻿@page "/auth/login"
+
+<div class="container mt-3">
+	<h2>Log in</h2>
+	<hr />
+	<div class="col-md-4 align-self-center">
+		<EditForm Model="_logInModel" OnSubmit=@FormSubmitted>
+			<DataAnnotationsValidator />
+			<div class="form-group">
+				<label for="email">Email</label>
+				<InputText id="email" class="form-control" @bind-Value="_logInModel.Email" />
+				<ValidationMessage class="text-red" For="@(() => _logInModel.Email)" />
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<InputText id="password" type="password" class="form-control" @bind-Value="_logInModel.Password" />
+				<ValidationMessage class="text-red" For="@(() => _logInModel.Password)" />
+			</div>
+			<div class="form-group">
+				<div class="text-red"> @_logInError </div>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">Log in</button>
+			</div>
+			<div>
+				<p>
+					<a href="/auth/forgotpassword">Forgot your password?</a>
+				</p>
+				<p>
+					<a href="/auth/register">Register as a new user</a>
+				</p>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private LogInModel _logInModel = new LogInModel();
+	private string _logInError = string.Empty;
+
+	async Task FormSubmitted(EditContext editContext)
+	{
+		_logInError = "Failure - form was invalid";
+	}
+}

@@ -10,7 +10,8 @@ namespace RceServer.Front.Blazor.Data
 
 		public AuthService()
 		{
-			Task.Run(Test);
+			//Task.Run(Test);
+			//UserAuthenticated = true;
 		}
 
 		public async Task Test()
