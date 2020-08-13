@@ -50,7 +50,7 @@ namespace RceServer.Front.Blazor
 			services.AddTransient<IServerService, ServerService>();
 			services.AddTransient<IWorkerService, WorkerService>();
 			services.AddTransient<IMessageRepository, MessageRepository>();
-			services.AddSingleton<WeatherForecastService>();
+
 			services.AddScoped<AuthService>();
 
 			services.AddDbContext<UsersDbContext>();
