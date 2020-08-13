@@ -1,5 +1,8 @@
 ﻿@page "/auth/login"
 
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
 <div class="container mt-3">
 	<h2>Log in</h2>
 	<hr />
@@ -40,6 +43,11 @@
 
 	async Task FormSubmitted(EditContext editContext)
 	{
-		_logInError = "Failure - form was invalid";
+		_logInError = string.Empty;
+		_logInError = await AuthService.LogIn(_logInModel);
+		if (string.IsNullOrWhiteSpace(_logInError))
+		{
+			NavigationManager.NavigateTo("/");
+		}
 	}
 }

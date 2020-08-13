@@ -1,5 +1,4 @@
-﻿using RceServer.Front.Blazor.DataAnnotations;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RceServer.Front.Blazor.Models
 {
