@@ -7,7 +7,7 @@
 	<h2>Log in</h2>
 	<hr />
 	<div class="col-md-4 align-self-center">
-		<EditForm Model="_logInModel" OnSubmit=@FormSubmitted>
+		<EditForm Model="_logInModel" OnValidSubmit=@OnValidSubmit>
 			<DataAnnotationsValidator />
 			<div class="form-group">
 				<label for="email">Email</label>
@@ -41,9 +41,9 @@
 	private LogInModel _logInModel = new LogInModel();
 	private string _logInError = string.Empty;
 
-	async Task FormSubmitted(EditContext editContext)
+	private async Task OnValidSubmit(EditContext editContext)
 	{
-		_logInError = string.Empty;
+		_logInError = null;
 		_logInError = await AuthService.LogIn(_logInModel);
 		if (string.IsNullOrWhiteSpace(_logInError))
 		{

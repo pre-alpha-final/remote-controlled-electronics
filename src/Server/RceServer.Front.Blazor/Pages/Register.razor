@@ -1,0 +1,65 @@
+﻿@page "/auth/register"
+
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<div class="container">
+	<h2>Register</h2>
+	<hr />
+	@if (_registrationSubmitted == false || string.IsNullOrWhiteSpace(_registerError) == false)
+	{
+		<div class="col-md-4 align-self-center">
+			<EditForm Model="_registerModel" OnValidSubmit=@OnValidSubmit>
+				<DataAnnotationsValidator />
+				<div class="form-group">
+					<label for="email">Email</label>
+					<InputText id="email" class="form-control" @bind-Value="_registerModel.Email" />
+					<ValidationMessage class="text-red" For="@(() => _registerModel.Email)" />
+				</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<InputText id="password" type="password" class="form-control" @bind-Value="_registerModel.Password" />
+					<ValidationMessage class="text-red" For="@(() => _registerModel.Password)" />
+				</div>
+				<div class="form-group">
+					<label for="password2">Confirm password</label>
+					<InputText id="password2" type="password" class="form-control" @bind-Value="_registerModel.Password2" />
+					<ValidationMessage class="text-red" For="@(() => _registerModel.Password2)" />
+				</div>
+				<div class="form-group">
+					<div class="text-red"> @_registerError </div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">Register</button>
+				</div>
+			</EditForm>
+		</div>
+	}
+	else
+	{
+		<div class="col-md-4 align-self-center" *ngIf="registerResponse && registerResponse.error == null">
+			Thank you for registering
+		</div>
+	}
+</div>
+
+@code {
+	private RegisterModel _registerModel = new RegisterModel();
+	private bool _registrationSubmitted = false;
+	private string _registerError = string.Empty;
+
+	private async Task OnValidSubmit(EditContext editContext)
+	{
+		if (_registerModel.Password != _registerModel.Password2)
+		{
+			_registerError = "Passwords don't match";
+			return;
+		}
+
+		_registerError = null;
+		_registrationSubmitted = false;
+
+		_registerError = await AuthService.Register(_registerModel);
+		_registrationSubmitted = true;
+	}
+}

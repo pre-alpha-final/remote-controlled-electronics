@@ -50,5 +50,21 @@ namespace RceServer.Front.Blazor.Services
 				OnChanged?.Invoke();
 			}
 		}
+
+		public async Task<string> Register(RegisterModel registerModel)
+		{
+			try
+			{
+				return "no";
+			}
+			catch (Exception e)
+			{
+				return e.Message;
+			}
+			finally
+			{
+				OnChanged?.Invoke();
+			}
+		}
 	}
 }
