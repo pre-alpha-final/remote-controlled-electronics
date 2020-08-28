@@ -1,0 +1,52 @@
+﻿@page "/auth/emailconfirmation"
+
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavManager
+@inject AuthService AuthService
+
+<div class="container">
+	<h2>Email Confirmation</h2>
+	<hr />
+	<div class="col-md-4 align-self-center">
+		<div>
+			@_emailConfirmationStatus
+		</div>
+		@if (string.IsNullOrWhiteSpace(_emailConfirmationError) == false)
+		{
+			<div class="text-danger">
+				@_emailConfirmationError
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	private string _emailConfirmationStatus = "Confirming email...";
+	private string _emailConfirmationError = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+		if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("userId", out var userId) == false)
+		{
+			_emailConfirmationStatus = "Error";
+			_emailConfirmationError = "Invalid query";
+			return;
+		}
+		if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var code) == false)
+		{
+			_emailConfirmationStatus = "Error";
+			_emailConfirmationError = "Invalid query";
+			return;
+		}
+
+		_ = Task.Run(async () =>
+		{
+			_emailConfirmationError = await AuthService.ConfirmEmail(userId, code);
+			_emailConfirmationStatus = string.IsNullOrWhiteSpace(_emailConfirmationError)
+				? "Thank you for confirming your email"
+				: "Error";
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+}
