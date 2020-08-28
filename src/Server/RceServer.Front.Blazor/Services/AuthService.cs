@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RceServer.Core.Services;
 using RceServer.Front.Blazor.Models;
@@ -14,14 +15,41 @@ namespace RceServer.Front.Blazor.Services
 	{
 		private readonly IConfiguration _configuration;
 		private readonly IHttpClientService _httpClientService;
+		private readonly NavigationManager _navigationManager;
 
 		public event Func<Task> OnChanged;
-		public bool UserAuthenticated { get; set; }
+		private bool _userAuthenticated;
+		public bool UserAuthenticated
+		{
+			get { return _userAuthenticated; }
+			set
+			{
+				_userAuthenticated = value;
+				OnChanged?.Invoke();
+				if (_userAuthenticated == false)
+				{
+					_navigationManager.NavigateTo("/auth/login");
+				}
+			}
+		}
 
-		public AuthService(IConfiguration configuration, IHttpClientService httpClientService)
+		public AuthService(IConfiguration configuration, IHttpClientService httpClientService, NavigationManager navigationManager)
 		{
 			_configuration = configuration;
 			_httpClientService = httpClientService;
+			_navigationManager = navigationManager;
+		}
+
+		public async Task<string> Register(RegisterModel registerModel)
+		{
+			try
+			{
+				return "no";
+			}
+			catch (Exception e)
+			{
+				return e.Message;
+			}
 		}
 
 		public async Task<string> LogIn(LogInModel logInModel)
@@ -45,25 +73,26 @@ namespace RceServer.Front.Blazor.Services
 				UserAuthenticated = false;
 				return e.Message;
 			}
-			finally
-			{
-				OnChanged?.Invoke();
-			}
 		}
 
-		public async Task<string> Register(RegisterModel registerModel)
+		public async Task<string> ConfirmEmail(string userId, string code)
 		{
 			try
 			{
-				return "no";
+				var response = await _httpClientService.Get($@"{_configuration["Domain"]}/api/auth/checkemail?userId={userId}&code={code}");
+				if (response.IsSuccessStatusCode == false)
+				{
+					return response.ReasonPhrase;
+				}
+				var responseContent = await response.Content.ReadAsStringAsync();
+
+				return responseContent.Contains("error")
+					? responseContent
+					: string.Empty;
 			}
 			catch (Exception e)
 			{
 				return e.Message;
-			}
-			finally
-			{
-				OnChanged?.Invoke();
 			}
 		}
 	}

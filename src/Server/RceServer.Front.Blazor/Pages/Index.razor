@@ -1,11 +1,20 @@
 ﻿@page "/"
 
-<AuthValidator />
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+@if (AuthService.UserAuthenticated)
+{
+	<h1>Hello, world!</h1>
+	<div>Welcome to your new app.</div>
+}
 
 @code {
-
+	protected override void OnInitialized()
+	{
+		if (AuthService.UserAuthenticated == false)
+		{
+			NavigationManager.NavigateTo("/auth/login");
+		}
+	}
 }
