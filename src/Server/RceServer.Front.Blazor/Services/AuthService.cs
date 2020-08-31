@@ -44,7 +44,7 @@ namespace RceServer.Front.Blazor.Services
 		{
 			try
 			{
-				return "no";
+				throw new NotImplementedException();
 			}
 			catch (Exception e)
 			{
@@ -89,6 +89,30 @@ namespace RceServer.Front.Blazor.Services
 				return responseContent.Contains("error")
 					? responseContent
 					: string.Empty;
+			}
+			catch (Exception e)
+			{
+				return e.Message;
+			}
+		}
+
+		public async Task<string> ForgotPassword(ForgotPasswordModel forgotPasswordModel)
+		{
+			try
+			{
+				throw new NotImplementedException();
+			}
+			catch (Exception e)
+			{
+				return e.Message;
+			}
+		}
+
+		public async Task<string> ResetPassword(ResetPasswordModel resetPasswordModel)
+		{
+			try
+			{
+				throw new NotImplementedException();
 			}
 			catch (Exception e)
 			{

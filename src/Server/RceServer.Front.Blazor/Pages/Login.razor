@@ -7,20 +7,20 @@
 	<h2>Log in</h2>
 	<hr />
 	<div class="col-md-4 align-self-center">
-		<EditForm Model="_logInModel" OnValidSubmit=@OnValidSubmit>
+		<EditForm Model="_model" OnValidSubmit=@OnValidSubmit>
 			<DataAnnotationsValidator />
 			<div class="form-group">
 				<label for="email">Email</label>
-				<InputText id="email" class="form-control" @bind-Value="_logInModel.Email" />
-				<ValidationMessage class="text-red" For="@(() => _logInModel.Email)" />
+				<InputText id="email" class="form-control" @bind-Value="_model.Email" />
+				<ValidationMessage class="text-red" For="@(() => _model.Email)" />
 			</div>
 			<div class="form-group">
 				<label for="password">Password</label>
-				<InputText id="password" type="password" class="form-control" @bind-Value="_logInModel.Password" />
-				<ValidationMessage class="text-red" For="@(() => _logInModel.Password)" />
+				<InputText id="password" type="password" class="form-control" @bind-Value="_model.Password" />
+				<ValidationMessage class="text-red" For="@(() => _model.Password)" />
 			</div>
 			<div class="form-group">
-				<div class="text-red"> @_logInError </div>
+				<div class="text-red"> @_error </div>
 			</div>
 			<div class="form-group">
 				<button type="submit" class="btn btn-primary">Log in</button>
@@ -38,14 +38,14 @@
 </div>
 
 @code {
-	private LogInModel _logInModel = new LogInModel();
-	private string _logInError = string.Empty;
+	private LogInModel _model = new LogInModel();
+	private string _error = string.Empty;
 
 	private async Task OnValidSubmit(EditContext editContext)
 	{
-		_logInError = null;
-		_logInError = await AuthService.LogIn(_logInModel);
-		if (string.IsNullOrWhiteSpace(_logInError))
+		_error = null;
+		_error = await AuthService.LogIn(_model);
+		if (string.IsNullOrWhiteSpace(_error))
 		{
 			NavigationManager.NavigateTo("/");
 		}

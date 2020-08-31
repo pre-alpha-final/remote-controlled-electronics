@@ -1,7 +1,7 @@
 ﻿@page "/auth/emailconfirmation"
 
 @using Microsoft.AspNetCore.WebUtilities
-@inject NavigationManager NavManager
+@inject NavigationManager NavigationManager
 @inject AuthService AuthService
 
 <div class="container">
@@ -9,41 +9,41 @@
 	<hr />
 	<div class="col-md-4 align-self-center">
 		<div>
-			@_emailConfirmationStatus
+			@_status
 		</div>
-		@if (string.IsNullOrWhiteSpace(_emailConfirmationError) == false)
+		@if (string.IsNullOrWhiteSpace(_error) == false)
 		{
 			<div class="text-danger">
-				@_emailConfirmationError
+				@_error
 			</div>
 		}
 	</div>
 </div>
 
 @code {
-	private string _emailConfirmationStatus = "Confirming email...";
-	private string _emailConfirmationError = string.Empty;
+	private string _status = "Confirming email...";
+	private string _error = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
-		var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+		var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
 		if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("userId", out var userId) == false)
 		{
-			_emailConfirmationStatus = "Error";
-			_emailConfirmationError = "Invalid query";
+			_status = "Error";
+			_error = "Invalid query";
 			return;
 		}
 		if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var code) == false)
 		{
-			_emailConfirmationStatus = "Error";
-			_emailConfirmationError = "Invalid query";
+			_status = "Error";
+			_error = "Invalid query";
 			return;
 		}
 
 		_ = Task.Run(async () =>
 		{
-			_emailConfirmationError = await AuthService.ConfirmEmail(userId, code);
-			_emailConfirmationStatus = string.IsNullOrWhiteSpace(_emailConfirmationError)
+			_error = await AuthService.ConfirmEmail(userId, code);
+			_status = string.IsNullOrWhiteSpace(_error)
 				? "Thank you for confirming your email"
 				: "Error";
 			await InvokeAsync(StateHasChanged);
