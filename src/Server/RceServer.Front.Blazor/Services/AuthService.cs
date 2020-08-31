@@ -26,10 +26,6 @@ namespace RceServer.Front.Blazor.Services
 			{
 				_userAuthenticated = value;
 				OnChanged?.Invoke();
-				if (_userAuthenticated == false)
-				{
-					_navigationManager.NavigateTo("/auth/login");
-				}
 			}
 		}
 
@@ -38,6 +34,13 @@ namespace RceServer.Front.Blazor.Services
 			_configuration = configuration;
 			_httpClientService = httpClientService;
 			_navigationManager = navigationManager;
+			OnChanged += async () =>
+			{
+				if (_userAuthenticated == false)
+				{
+					_navigationManager.NavigateTo("/auth/login");
+				}
+			};
 		}
 
 		public async Task<string> Register(RegisterModel registerModel)
@@ -72,6 +75,19 @@ namespace RceServer.Front.Blazor.Services
 			{
 				UserAuthenticated = false;
 				return e.Message;
+			}
+		}
+
+		public async Task LogOut()
+		{
+			try
+			{
+				await _httpClientService.Get($@"{_configuration["Domain"]}/api/auth/logout");
+				UserAuthenticated = false;
+			}
+			catch (Exception e)
+			{
+				// ignore
 			}
 		}
 

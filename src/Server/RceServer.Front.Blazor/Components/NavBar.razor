@@ -10,7 +10,7 @@
 		<ul class="navbar-nav ml-auto">
 			@if (AuthService.UserAuthenticated)
 			{
-				<li class="nav-item"><a class="nav-link" (click)="logOut()" href="javascript:void(0);">Log out</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:void(0)" @onclick="LogOut">Log out</a></li>
 			}
 			else
 			{
@@ -40,5 +40,10 @@
 	private void ToggleNavMenu()
 	{
 		_collapseNavMenu = !_collapseNavMenu;
+	}
+
+	private async Task LogOut()
+	{
+		await AuthService.LogOut();
 	}
 }
