@@ -10,10 +10,13 @@
 	<div>Welcome to your new app.</div>
 	<div class="container-fluid">
 		<div class="grid">
-			@for (int i = 0; i < _masonryList.Count; i++)
+			@if (_masonryInitialized)
 			{
-				var locali = i;
-				<div id="item@(i)" class="grid-item addtomasonry" style="height: @(_masonryList[locali])px;" @ref="_masonryListRef[locali]" @onclick="OnClick">@_masonryList[i]</div>
+				@for (int i = 0; i < _masonryList.Count; i++)
+				{
+					var locali = i;
+					<div id="item@(i)" class="grid-item addtomasonry" style="height: @(_masonryList[locali])px;" @ref="_masonryListRef[locali]" @onclick="OnClick">@_masonryList[i]</div>
+				}
 			}
 		</div>
 	</div>
@@ -34,7 +37,13 @@
 		{
 			for (int i = 0; i < 30; i++)
 			{
-				await Task.Delay(100);
+				_masonryList.Add(new Random().Next(100, 300));
+				_masonryListRef.Add(null);
+				await InvokeAsync(StateHasChanged);
+			}
+			await Task.Delay(5000);
+			for (int i = 0; i < 30; i++)
+			{
 				_masonryList.Add(new Random().Next(100, 300));
 				_masonryListRef.Add(null);
 				await InvokeAsync(StateHasChanged);
@@ -42,12 +51,16 @@
 		});
 	}
 
+	private bool _masonryInitialized;
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
 			await JSRuntime.InvokeVoidAsync("masonryReinitialize");
+			_masonryInitialized = true;
+			await InvokeAsync(StateHasChanged);
 		}
+
 		await JSRuntime.InvokeVoidAsync("masonryRedraw");
 	}
 
