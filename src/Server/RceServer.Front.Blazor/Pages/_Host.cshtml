@@ -12,10 +12,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Remote Controlled Electronics</title>
 	<base href="~/" />
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+	<script src="masonryJSInterop.js"></script>
+	<link rel="stylesheet" href="css/masonry.css" />
 	<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
 	<link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
+	<div class="fa fa-home" style="position:fixed;top:-100px;">Preload font awesome</div>
 	<app>
 		<component type="typeof(App)" render-mode="Server" />
 	</app>

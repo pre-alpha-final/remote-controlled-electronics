@@ -2,19 +2,58 @@
 
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
+@inject IJSRuntime JSRuntime
 
-@if (AuthService.UserAuthenticated)
+@if (!AuthService.UserAuthenticated)
 {
 	<h1>Hello, world!</h1>
 	<div>Welcome to your new app.</div>
+	<div class="container-fluid">
+		<div class="grid">
+			@for (int i = 0; i < _masonryList.Count; i++)
+			{
+				var locali = i;
+				<div id="item@(i)" class="grid-item addtomasonry" style="height: @(_masonryList[locali])px;" @ref="_masonryListRef[locali]" @onclick="OnClick">@_masonryList[i]</div>
+			}
+		</div>
+	</div>
 }
 
 @code {
+	private List<int> _masonryList = new List<int>();
+	private List<ElementReference?> _masonryListRef = new List<ElementReference?>();
+
 	protected override void OnInitialized()
 	{
 		if (AuthService.UserAuthenticated == false)
 		{
-			NavigationManager.NavigateTo("/auth/login");
+			//NavigationManager.NavigateTo("/auth/login");
 		}
+
+		Task.Run(async () =>
+		{
+			for (int i = 0; i < 30; i++)
+			{
+				await Task.Delay(100);
+				_masonryList.Add(new Random().Next(100, 300));
+				_masonryListRef.Add(null);
+				await InvokeAsync(StateHasChanged);
+			}
+		});
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await JSRuntime.InvokeVoidAsync("masonryReinitialize");
+		}
+		await JSRuntime.InvokeVoidAsync("masonryRedraw");
+	}
+
+	private async Task OnClick()
+	{
+		_masonryList[0] = _masonryList.First() == 300 ? 600 : 300;
+		await JSRuntime.InvokeVoidAsync("masonryRedraw");
 	}
 }
