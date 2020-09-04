@@ -1,0 +1,69 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div style="@_style" @ref="_elementReference">
+	@ChildContent
+</div>
+
+@code {
+	private const string _baseStyle = "overflow: hidden; transition: height 0.35s;";
+
+	private int _scrollHeight;
+	private string _style = string.Empty;
+	private ElementReference _elementReference;
+
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+
+	private bool _collapsed;
+	[Parameter]
+	public bool Collapsed
+	{
+		get { return _collapsed; }
+		set
+		{
+			if (_collapsed == false && value == true)
+			{
+				Hide();
+			}
+			if (_collapsed == true && value == false)
+			{
+				Show();
+			}
+			_collapsed = value;
+		}
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			_scrollHeight = await JSRuntime.InvokeAsync<int>("getScrollHeight", _elementReference);
+			if (Collapsed)
+			{
+				Hide();
+			}
+			else
+			{
+				Show();
+			}
+		}
+	}
+
+	private void Hide()
+	{
+		_ = Task.Run(async () =>
+		{
+			_style = _baseStyle + " height: 0;";
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+
+	private void Show()
+	{
+		_ = Task.Run(async () =>
+		{
+			_style = _baseStyle + $" height: {_scrollHeight}px;";
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+}

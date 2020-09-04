@@ -12,7 +12,11 @@
 		@foreach (var item in _masonryList)
 		{
 			<MasonryItem>
-				<div class="masonry-test" style="height: @(item)px;" @onclick="OnClick" />
+				<div class="masonry-test" @onclick="OnClick">
+					<Collapsible Collapsed="_collapsed">
+						<div style="background-color: aliceblue;">Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br /></div>
+					</Collapsible>
+				</div>
 			</MasonryItem>
 		}
 	</MasonryContainer>
@@ -22,6 +26,7 @@
 	private List<int> _masonryList = new List<int>();
 	private List<ElementReference?> _masonryListRef = new List<ElementReference?>();
 	private bool _masonryRefreshToggle;
+	private bool _collapsed;
 
 	protected override void OnInitialized()
 	{
@@ -44,7 +49,13 @@
 
 	private async Task OnClick()
 	{
-		_masonryList[0] = _masonryList.First() == 300 ? 600 : 300;
-		_masonryRefreshToggle = !_masonryRefreshToggle;
+		_collapsed = !_collapsed;
+		_ = Task.Run(async () =>
+		{
+			await Task.Delay(300);
+			await InvokeAsync(StateHasChanged);
+			await Task.Delay(300);
+			await InvokeAsync(StateHasChanged);
+		});
 	}
 }
