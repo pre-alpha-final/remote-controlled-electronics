@@ -1,15 +1,18 @@
-﻿function masonryReinitialize() {
-	m = new Masonry('.grid', { fitWidth: true });
+﻿masonryDict = {}
+
+function masonryInitialize(id, options) {
+	masonryDict[id] = new Masonry('#' + id, options);
 }
 
-function masonryRedraw() {
+function masonryUpdate(id) {
 	do {
-		var x = document.getElementsByClassName("addtomasonry");
-		if (x.length != 0) {
-			let x0 = x[0];
-			m.appended([x0]);
-			x0.classList.remove("addtomasonry");
+		let masonryElement = document.getElementById(id);
+		var elements = masonryElement.getElementsByClassName("addtomasonry");
+		if (elements.length != 0) {
+			let element = elements[0];
+			masonryDict[id].appended([element]);
+			element.classList.remove("addtomasonry");
 		}
-		m.layout();
-	} while (x.length != 0);
+	} while (elements.length != 0);
+	masonryDict[id].layout();
 }
