@@ -10,12 +10,12 @@
 	z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-	cursor: pointer;
-	position: absolute;
-	right: 0.75rem;
-	top: 0.5rem;
-}
+	#blazor-error-ui .dismiss {
+		cursor: pointer;
+		position: absolute;
+		right: 0.75rem;
+		top: 0.5rem;
+	}
 
 .text-red, .validation-message {
 	color: red;
@@ -30,33 +30,33 @@
 	border-radius: 5px;
 }
 
-.scene {
+.flippable {
 	perspective: 600px;
 }
 
-.card {
-	width: 100%;
-	height: 100%;
-	transition: transform 0.3s;
-	transform-style: preserve-3d;
-}
+	.flippable .is-flipped {
+		transform: rotateY(180deg);
+	}
 
-.card__face {
-	height: 100%;
-	width: 100%;
-	backface-visibility: hidden;
-}
+	.flippable .card {
+		width: 100%;
+		height: 100%;
+		transition: transform 0.3s;
+		transform-style: preserve-3d;
+	}
 
-.card__face--front {
-	background: red;
-}
+		.flippable .card .face {
+			height: 100%;
+			width: 100%;
+			backface-visibility: hidden;
+		}
 
-.card__face--back {
-	background: blue;
-	transform: rotateY( 180deg );
-	position: absolute; /* Position is absolute to place it on top of front face, but this means that front face dictates size for both.*/
-}
+		.flippable .card.front {
+			background: red;
+		}
 
-.card.is-flipped {
-	transform: rotateY(180deg);
-}
+		.flippable .card .back {
+			background: blue;
+			transform: rotateY( 180deg );
+			position: absolute; /* Position is absolute to place it on top of front face, but this means that front face dictates size for both.*/
+		}

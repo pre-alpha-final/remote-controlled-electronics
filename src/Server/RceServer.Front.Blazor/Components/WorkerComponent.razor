@@ -1,0 +1,44 @@
+﻿@using RceServer.Domain.Models
+
+<div class="flippable">
+	<div class="card @(_flipped ? "is-flipped" : "")">
+		<div class="face front" @onclick="OnClick" @onclick:stopPropagation="true" style="background-color: aliceblue;">
+			<div class="masonry-test">
+				<div @onclick="OnClick2" @onclick:stopPropagation="true">@Worker.Name</div>
+				<Collapsible Collapsed="_collapsed">
+					Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />
+				</Collapsible>
+			</div>
+		</div>
+		<div class="face back">
+			<div @onclick="OnClick2" @onclick:stopPropagation="true">bar</div>
+			back
+		</div>
+	</div>
+</div>
+
+@code {
+	private bool _flipped;
+	private bool _collapsed;
+
+	[Parameter]
+	public Worker Worker { get; set; }
+
+	private async Task OnClick()
+	{
+		_collapsed = !_collapsed;
+		_ = Task.Run(async () =>
+		{
+			await Task.Delay(350);
+			await InvokeAsync(StateHasChanged);
+			await Task.Delay(250);
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+
+	private async Task OnClick2()
+	{
+		_flipped = !_flipped;
+		await InvokeAsync(StateHasChanged);
+	}
+}

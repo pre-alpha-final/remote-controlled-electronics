@@ -41,8 +41,8 @@ namespace RceServer.Front
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddHttpContextAccessor();
-			services.AddControllersWithViews().AddNewtonsoftJson(); ;
-			services.AddRazorPages().AddNewtonsoftJson(); ;
+			services.AddControllersWithViews().AddNewtonsoftJson();
+			services.AddRazorPages().AddNewtonsoftJson();
 
 			services.AddSingleton<IHttpClientService, HttpClientService>();
 			services.AddSingleton<IAzureKicker, AzureKicker>();

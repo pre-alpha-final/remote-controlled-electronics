@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using RceServer.Core.Hubs;
 using RceServer.Core.Services;
 using RceServer.Core.Services.Implementation;
 using RceServer.Data;
@@ -40,7 +41,7 @@ namespace RceServer.Front.Blazor
 		{
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
-			services.AddControllersWithViews().AddNewtonsoftJson(); ;
+			services.AddControllersWithViews().AddNewtonsoftJson();
 			services.AddRazorPages().AddNewtonsoftJson();
 
 			services.AddSingleton<IHttpClientService, HttpClientService>();
@@ -52,6 +53,7 @@ namespace RceServer.Front.Blazor
 			services.AddTransient<IMessageRepository, MessageRepository>();
 
 			services.AddScoped<AuthService>();
+			services.AddScoped<RceDataService>();
 
 			services.AddDbContext<UsersDbContext>();
 			services.AddIdentity<IdentityUser, IdentityRole>()
@@ -163,6 +165,7 @@ namespace RceServer.Front.Blazor
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapHub<RceHub>("/rce");
 				endpoints.MapControllers();
 				endpoints.MapBlazorHub();
 				endpoints.MapFallbackToPage("/_Host");
