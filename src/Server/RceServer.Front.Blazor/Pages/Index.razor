@@ -6,22 +6,29 @@
 
 @if (!AuthService.UserAuthenticated)
 {
-	<MasonryContainer Options=@(new { fitWidth = true })>
+	<MasonryContainer Options=@(new { fitWidth = true }) @ref="MasonryContainer">
 		@foreach (var worker in RceDataService.Workers)
 		{
 			<MasonryItem>
-				<WorkerComponent Worker="worker" />
+				<WorkerComponent Worker="worker" OnUpdate="OnWorkerUpdate" />
 			</MasonryItem>
 		}
 	</MasonryContainer>
 }
 
 @code {
+	private MasonryContainer MasonryContainer;
+
 	protected override void OnInitialized()
 	{
 		if (AuthService.UserAuthenticated == false)
 		{
 			//NavigationManager.NavigateTo("/auth/login");
 		}
+	}
+
+	private async Task OnWorkerUpdate()
+	{
+		await MasonryContainer.Refresh();
 	}
 }

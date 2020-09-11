@@ -21,15 +21,6 @@
 	color: red;
 }
 
-.masonry-test {
-	width: 160px;
-	float: left;
-	background: #D26;
-	border: 2px solid #333;
-	border-color: hsla(0, 0%, 0%, 0.5);
-	border-radius: 5px;
-}
-
 .flippable {
 	perspective: 600px;
 }
@@ -45,18 +36,29 @@
 		transform-style: preserve-3d;
 	}
 
-		.flippable .card .face {
-			height: 100%;
-			width: 100%;
-			backface-visibility: hidden;
+		.flippable .card .view {
+			position: relative;
+			display: flex;
+			margin: 3px;
 		}
 
-		.flippable .card.front {
-			background: red;
-		}
+			.flippable .card .view .face {
+				height: 100%;
+				width: 100%;
+				backface-visibility: hidden;
+			}
 
-		.flippable .card .back {
-			background: blue;
-			transform: rotateY( 180deg );
-			position: absolute; /* Position is absolute to place it on top of front face, but this means that front face dictates size for both.*/
-		}
+			.flippable .card .view .front {
+				background: red;
+			}
+
+			.flippable .card .view .back {
+				background: blue;
+				transform: rotateY( 180deg );
+				position: absolute; /* Position is absolute to place it on top of front face, but this means that front face dictates size for both.*/
+			}
+
+.worker {
+	min-width: 300px;
+	user-select: none;
+}

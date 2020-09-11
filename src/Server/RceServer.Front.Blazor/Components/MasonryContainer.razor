@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
 
 <div class="container-fluid">
-	<div id="@_masonryId" class="grid">
+	<div id="@_masonryId" class="grid justify-content-center my-0 mx-auto">
 		@if (_masonryInitialized)
 		{
 			@ChildContent
@@ -35,5 +35,10 @@
 		{
 			await JSRuntime.InvokeVoidAsync("masonryUpdate", _masonryId);
 		}
+	}
+
+	public async Task Refresh()
+	{
+		await JSRuntime.InvokeVoidAsync("masonryUpdate", _masonryId);
 	}
 }
