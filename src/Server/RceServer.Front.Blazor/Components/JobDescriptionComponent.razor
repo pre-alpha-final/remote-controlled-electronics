@@ -1,0 +1,76 @@
+﻿@using RceServer.Domain.Models
+
+<div class="job mx-1 mx-sm-3 mt-4 flippable">
+	<div class="card @(_flipped ? "is-flipped" : "")">
+		<div class="view">
+			<div class="face front" @onclick="FlipCard1" @onclick:stopPropagation="true">
+				<div>@JobDescription.Name</div>
+				<div>
+					<div @onclick="ToggleCollapsible1" @onclick:stopPropagation="true"><i class="fas fa-angle-double-down"></i> Show logs <i class="fas fa-angle-double-down"></i></div>
+					<Collapsible Collapsed="_collapsed">
+						front<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />
+					</Collapsible>
+				</div>
+			</div>
+			<div class="face back" @onclick="FlipCard2" @onclick:stopPropagation="true">
+				<div>@JobDescription.Name</div>
+				<div>
+					<div @onclick="ToggleCollapsible2" @onclick:stopPropagation="true"><i class="fas fa-angle-double-down"></i> Show logs <i class="fas fa-angle-double-down"></i></div>
+					<Collapsible Collapsed="_collapsed">
+						back<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />
+					</Collapsible>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private bool _flipped;
+	private bool _collapsed = true;
+
+	[Parameter]
+	public JobDescription JobDescription { get; set; }
+	[Parameter]
+	public EventCallback OnUpdate { get; set; }
+
+	private void ToggleCollapsible1()
+	{
+		_collapsed = !_collapsed;
+		_ = Task.Run(async () =>
+		{
+			await Task.Delay(350);
+			await OnUpdate.InvokeAsync(null);
+			await InvokeAsync(StateHasChanged);
+			await Task.Delay(250);
+			await OnUpdate.InvokeAsync(null);
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+
+	private async Task FlipCard1()
+	{
+		_flipped = !_flipped;
+		await InvokeAsync(StateHasChanged);
+	}
+
+	private void ToggleCollapsible2()
+	{
+		_collapsed = !_collapsed;
+		_ = Task.Run(async () =>
+		{
+			await Task.Delay(350);
+			await OnUpdate.InvokeAsync(null);
+			await InvokeAsync(StateHasChanged);
+			await Task.Delay(250);
+			await OnUpdate.InvokeAsync(null);
+			await InvokeAsync(StateHasChanged);
+		});
+	}
+
+	private async Task FlipCard2()
+	{
+		_flipped = !_flipped;
+		await InvokeAsync(StateHasChanged);
+	}
+}

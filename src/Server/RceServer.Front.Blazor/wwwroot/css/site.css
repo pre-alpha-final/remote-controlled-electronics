@@ -21,6 +21,21 @@
 	color: red;
 }
 
+.worker {
+	min-width: 400px;
+	user-select: none;
+}
+
+.worker .logo {
+	max-height: 75px;
+	max-width: 75px;
+}
+
+.job {
+	min-width: 200px;
+	user-select: none;
+}
+
 .flippable {
 	perspective: 600px;
 }
@@ -57,8 +72,3 @@
 				transform: rotateY( 180deg );
 				position: absolute; /* Position is absolute to place it on top of front face, but this means that front face dictates size for both.*/
 			}
-
-.worker {
-	min-width: 300px;
-	user-select: none;
-}
