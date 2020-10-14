@@ -1,76 +1,42 @@
 ﻿@using RceServer.Domain.Models
 
-<div class="job mx-1 mx-sm-3 mt-4 flippable">
-	<div class="card @(_flipped ? "is-flipped" : "")">
-		<div class="view">
-			<div class="face front" @onclick="FlipCard1" @onclick:stopPropagation="true">
-				<div>@JobDescription.Name</div>
-				<div>
-					<div @onclick="ToggleCollapsible1" @onclick:stopPropagation="true"><i class="fas fa-angle-double-down"></i> Show logs <i class="fas fa-angle-double-down"></i></div>
-					<Collapsible Collapsed="_collapsed">
-						front<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />
-					</Collapsible>
-				</div>
-			</div>
-			<div class="face back" @onclick="FlipCard2" @onclick:stopPropagation="true">
-				<div>@JobDescription.Name</div>
-				<div>
-					<div @onclick="ToggleCollapsible2" @onclick:stopPropagation="true"><i class="fas fa-angle-double-down"></i> Show logs <i class="fas fa-angle-double-down"></i></div>
-					<Collapsible Collapsed="_collapsed">
-						back<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />
-					</Collapsible>
-				</div>
+<div class="job mx-0 mx-sm-1 mt-3">
+	<div class="card pt-3 px-3">
+		<div><h4>@JobDescription.Name</h4></div>
+		@foreach (var jobDescriptionLine in JobDescription.Description)
+		{
+			<div class="ml-3"><h6>@jobDescriptionLine</h6></div>
+		}
+		<div class="d-flex justify-content-center py-3">
+			<button type="button" class="btn btn-lg btn-success mr-3">Run Default</button>
+			<button type="button" class="btn btn-lg btn-info">Run Custom</button>
+		</div>
+		<div class="d-flex justify-content-center p-1">
+			<div>
+				<div @onclick="ToggleLog"><i class="fas fa-angle-double-down"></i> Show logs <i class="fas fa-angle-double-down"></i></div>
+				<Collapsible Collapsed="_isLogCollapsed">
+					front<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />Lorem ipsum<br />
+				</Collapsible>
 			</div>
 		</div>
 	</div>
 </div>
 
 @code {
-	private bool _flipped;
-	private bool _collapsed = true;
+	private bool _isLogCollapsed = true;
 
 	[Parameter]
 	public JobDescription JobDescription { get; set; }
 	[Parameter]
 	public EventCallback OnUpdate { get; set; }
 
-	private void ToggleCollapsible1()
+	private void ToggleLog()
 	{
-		_collapsed = !_collapsed;
-		_ = Task.Run(async () =>
-		{
-			await Task.Delay(350);
-			await OnUpdate.InvokeAsync(null);
-			await InvokeAsync(StateHasChanged);
-			await Task.Delay(250);
-			await OnUpdate.InvokeAsync(null);
-			await InvokeAsync(StateHasChanged);
-		});
+		_isLogCollapsed = !_isLogCollapsed;
 	}
 
-	private async Task FlipCard1()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		_flipped = !_flipped;
-		await InvokeAsync(StateHasChanged);
-	}
-
-	private void ToggleCollapsible2()
-	{
-		_collapsed = !_collapsed;
-		_ = Task.Run(async () =>
-		{
-			await Task.Delay(350);
-			await OnUpdate.InvokeAsync(null);
-			await InvokeAsync(StateHasChanged);
-			await Task.Delay(250);
-			await OnUpdate.InvokeAsync(null);
-			await InvokeAsync(StateHasChanged);
-		});
-	}
-
-	private async Task FlipCard2()
-	{
-		_flipped = !_flipped;
-		await InvokeAsync(StateHasChanged);
+		await OnUpdate.InvokeAsync(null);
 	}
 }
