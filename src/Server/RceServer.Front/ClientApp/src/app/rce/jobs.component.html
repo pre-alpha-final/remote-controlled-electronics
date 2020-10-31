@@ -25,6 +25,7 @@
   </div>
   <div id="jobs-{{workerId}}" class="collapse">
     <div class="card-body p-0">
+      <div class="p-2" *ngIf='jobs == null || jobs.length == 0'></div>
       <div class="position-relative jumbotron p-3 m-2" *ngFor='let job of jobs' [ngClass]="{
         'bg-rce-added': job.jobState == 'Added',
         'bg-rce-picked-up': job.jobState == 'PickedUp',

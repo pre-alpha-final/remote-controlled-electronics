@@ -19,7 +19,7 @@
 <div class="card white pt-3 px-3 mb-2" *ngFor='let jobDescription of jobDescriptions'>
   <div><h4>{{jobDescription.name}}</h4></div>
   <div class="ml-3" *ngFor='let descriptionLine of jobDescription.description'>
-    <h6>{{jobDescription.name}}</h6>
+    <h6>{{descriptionLine}}</h6>
   </div>
   <div class="d-flex justify-content-center pt-1 pb-3">
     <button type="button" class="btn btn-lg btn-success mr-3" (click)="runJobWithDefaults(jobDescription)">&nbsp;&nbsp;&nbsp;Run Default&nbsp;&nbsp;&nbsp;</button>
