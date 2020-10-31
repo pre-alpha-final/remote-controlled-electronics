@@ -1,9 +1,9 @@
 <div>
   <div *ngIf="rceDataService.forbidden">
-    <h5>You don't have access to this resource</h5>
+    <h5 class="ml-3">You don't have access to this resource</h5>
   </div>
   <div *ngIf="rceDataService.forbidden === false && rceDataService.queueEmpty">
-    <h5>No workers available</h5>
+    <h5 class="ml-3">No workers available</h5>
   </div>
   <ngx-masonry id="masonry" [options]="{fitWidth: true}" [updateLayout]="updateMasonryLayout">
     <div ngxMasonryItem *ngFor='let worker of rceDataService.workers'>
