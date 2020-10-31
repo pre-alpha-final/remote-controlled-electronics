@@ -16,33 +16,13 @@
   </div>
 </div>
 
-<div class="card m-1">
-  <div class="card-header">
-    <a data-toggle="collapse" href="#jobDescriptions-{{workerId}}">
-      <h5 class="mb-0">Available jobs</h5>
-    </a>
+<div class="card white pt-3 px-3 mb-2" *ngFor='let jobDescription of jobDescriptions'>
+  <div><h4>{{jobDescription.name}}</h4></div>
+  <div class="ml-3" *ngFor='let descriptionLine of jobDescription.description'>
+    <h6>{{jobDescription.name}}</h6>
   </div>
-  <div id="jobDescriptions-{{workerId}}" class="collapse">
-    <div class="card-body p-2">
-      <div class="jumbotron d-flex p-3 m-2" *ngFor='let jobDescription of jobDescriptions'>
-        <div class="d-flex flex-column col-5">
-          <div class="m-1">
-            <p class="m-0">{{jobDescription.name}}</p>
-            <p class="m-0" *ngFor='let descriptionLine of jobDescription.description'>
-              <small>{{descriptionLine}}</small>
-            </p>
-          </div>
-          <button type="button" class="btn btn-info m-1" data-toggle="modal" [attr.data-target]="'#runJob-'+workerId"
-            (click)="fillModal(jobDescription)">Run&nbsp;Custom</button>
-          <button type="button" class="btn btn-success m-1"
-            (click)="runJobWithDefaults(jobDescription)">&nbsp;&nbsp;&nbsp;Run&nbsp;Default&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-right fa-lg" aria-hidden="true"></i></button>
-        </div>
-        <div class="d-flex col-7">
-          <div class="d-flex alert alert-secondary m-0 full-size">
-            <pre class="align-self-center">{{jobDescription.defaultPayload | json}}</pre>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="d-flex justify-content-center pt-1 pb-3">
+    <button type="button" class="btn btn-lg btn-success mr-3" (click)="runJobWithDefaults(jobDescription)">&nbsp;&nbsp;&nbsp;Run Default&nbsp;&nbsp;&nbsp;</button>
+    <button type="button" class="btn btn-lg btn-info" data-toggle="modal" [attr.data-target]="'#runJob-'+workerId" (click)="fillModal(jobDescription)">&nbsp;&nbsp;&nbsp;Run Custom&nbsp;&nbsp;&nbsp;</button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div>
   <div *ngIf="rceDataService.forbidden">
     <h5>You don't have access to this resource</h5>
   </div>
@@ -7,16 +7,16 @@
   </div>
   <ngx-masonry id="masonry" [options]="{fitWidth: true}" [updateLayout]="updateMasonryLayout">
     <div ngxMasonryItem *ngFor='let worker of rceDataService.workers'>
-      <div id="worker" class="card border-primary m-3">
+      <div class="worker card border-primary m-2 mx-sm-3 mt-sm-4">
         <div class="card-header" [ngClass]="{'red-background': worker.error != null}">
           <span><img class="logo" [src]="getBase64Image(worker.base64Logo)" /></span>
-          <span class="inline-grid">
-            <h3 class="ml-3">{{worker.name}}</h3>
-            <h5 class="ml-3" *ngIf="worker.error != null">({{worker.error}})</h5>
+          <span class="title inline-grid align-middle">
+            <h1 class="overflow-auto ml-3 mb-0">{{worker.name}}</h1>
+            <h6 class="overflow-auto ml-3 mt-0 mb-1">{{worker.description}}</h6>
+            <h6 class="overflow-auto ml-3 mt-0 mb-0" *ngIf="worker.error != null">({{worker.error}})</h6>
           </span>
         </div>
-        <div class="card-body" [ngClass]="{'red-background': worker.error != null}">
-          <p class="text-primary">{{worker.description}}</p>
+        <div class="p-2" [ngClass]="{'red-background': worker.error != null}">
           <app-job-descriptions [jobDescriptions]="worker.jobDescriptions" [workerId]="worker.workerId" (redrawMasonryRequested)="redrawMasonry()">
           </app-job-descriptions>
           <app-jobs [jobs]="worker.jobs" [workerId]="worker.workerId" (redrawMasonryRequested)="redrawMasonry()"></app-jobs>

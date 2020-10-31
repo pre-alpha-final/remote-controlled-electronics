@@ -16,3 +16,7 @@ pre {
     width: 100%;
     min-height: 10rem;
 }
+
+.white {
+    background: white;
+}
