@@ -37,6 +37,7 @@ There are a few worker examples included with the project:
 - BashHappyPath - (in development) simplified example in bash without error checks and retries
 - XamarinForms - (in development) Xamarin Forms android app example
 - CSharpMono - (in development) C# app runnable with mono
+- RpzwTimer - Raspberry Pi Zero W Timer
 
 # Demo environment
 For testing purposes log in here:  
