@@ -4,6 +4,11 @@ a, button:focus {
 }
 
 /* Better look witch sketchy bootstrap */
+button:active {
+    transform: scale(.96);
+}
+
+/* Better look witch sketchy bootstrap */
 input[type=checkbox] {
     outline: none;
 }
