@@ -22,9 +22,13 @@ namespace RceSharpLib.States
 			{
 				var getJobAddressSuffix = Consts.GetJobsAddressSuffix.Replace("WORKER_ID", WorkerId.ToString());
 				var requestUri = $"{RceJobRunner.JobRunnerContext.BaseUrl}{getJobAddressSuffix}";
-				using var client = new HttpClient();
-				using var response = await client.GetAsync(requestUri, RceJobRunner.CancellationTokenSource.Token);
-				await HandleResponse(response);
+				using (var client = new HttpClient())
+				{
+					using (var response = await client.GetAsync(requestUri, RceJobRunner.CancellationTokenSource.Token))
+					{
+						await HandleResponse(response);
+					}
+				}
 			}
 			catch (Exception e)
 			{
@@ -35,24 +39,26 @@ namespace RceSharpLib.States
 
 		private async Task HandleResponse(HttpResponseMessage httpResponseMessage)
 		{
-			using var content = httpResponseMessage.Content;
-			var result = await content.ReadAsStringAsync();
-			if (httpResponseMessage.StatusCode == HttpStatusCode.InternalServerError)
+			using (var content = httpResponseMessage.Content)
 			{
-				RceJobRunner.State = new FailedState(this, result);
-				return;
-			}
+				var result = await content.ReadAsStringAsync();
+				if (httpResponseMessage.StatusCode == HttpStatusCode.InternalServerError)
+				{
+					RceJobRunner.State = new FailedState(this, result);
+					return;
+				}
 
-			var jobsJson = JArray.Parse(result);
-			if (jobsJson.Count == 0)
-			{
-				RceJobRunner.State = new GetJobsState(this);
-				return;
-			}
+				var jobsJson = JArray.Parse(result);
+				if (jobsJson.Count == 0)
+				{
+					RceJobRunner.State = new GetJobsState(this);
+					return;
+				}
 
-			var jobs = jobsJson.ToObject<List<Job>>();
-			jobs.ForEach(e => e.WorkerId = WorkerId);
-			RceJobRunner.State = new RunJobsState(this, jobs);
+				var jobs = jobsJson.ToObject<List<Job>>();
+				jobs.ForEach(e => e.WorkerId = WorkerId);
+				RceJobRunner.State = new RunJobsState(this, jobs);
+			}
 		}
 	}
 }
