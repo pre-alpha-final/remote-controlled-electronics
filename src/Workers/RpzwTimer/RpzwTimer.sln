@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpzwTimer", "RpzwTimer\RpzwTimer.csproj", "{0188AE2B-34BF-4243-884A-11F26B8E3820}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceSharpLib", "RceSharpLib\RceSharpLib.csproj", "{40BCFC2F-A22D-4D93-B1A1-BA3B515B0CF6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0188AE2B-34BF-4243-884A-11F26B8E3820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0188AE2B-34BF-4243-884A-11F26B8E3820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0188AE2B-34BF-4243-884A-11F26B8E3820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0188AE2B-34BF-4243-884A-11F26B8E3820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40BCFC2F-A22D-4D93-B1A1-BA3B515B0CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40BCFC2F-A22D-4D93-B1A1-BA3B515B0CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40BCFC2F-A22D-4D93-B1A1-BA3B515B0CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40BCFC2F-A22D-4D93-B1A1-BA3B515B0CF6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C97BC359-8891-4272-A753-E4FD71FEC528}
+	EndGlobalSection
+EndGlobal
