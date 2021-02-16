@@ -2,7 +2,7 @@
 
 namespace RpzwNeopixels.Neopixel
 {
-	public static class NeopixelController
+	public static class NeopixelCompiler
 	{
 		public static void SetPixels(IEnumerable<Pixel> pixels)
 		{
@@ -23,7 +23,7 @@ namespace RpzwNeopixels.Neopixel
 		{
 			var commands = new List<string>
 			{
-				$"pixels = neopixel.NeoPixel({Consts.ControlPin}, {Consts.PixelCount}, pixel_order = {Consts.PixelOrder})",
+				$"pixels = neopixel.NeoPixel({Consts.ControlPin}, {Consts.PixelCount}, pixel_order = {Consts.PixelOrder}, auto_write = False)",
 			};
 
 			foreach (var pixelSet in pixelTransition)
@@ -32,6 +32,7 @@ namespace RpzwNeopixels.Neopixel
 				{
 					commands.Add($"pixels[{pixel.Index}] = ({pixel.Red}, {pixel.Green}, {pixel.Blue})");
 				}
+				commands.Add("pixels.show()");
 				commands.Add($"sleep({secondsDelay})");
 			}
 

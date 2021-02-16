@@ -21,7 +21,7 @@ namespace RpzwNeopixels.Handlers
 			{
 				"Run the snake pattern"
 			},
-			DefaultPayload = JObject.Parse(@"{ ""length"": 3, ""red"": 0, ""green"": 255, ""blue"": 255 }")
+			DefaultPayload = JObject.Parse(@"{ ""length"": 30, ""red"": 0, ""green"": 255, ""blue"": 0 }")
 		};
 
 		public override async Task Handle(CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ namespace RpzwNeopixels.Handlers
 				pixelSet.Pixels.AddRange(GetPixels(leadPixelIndex, red, green, blue, length));
 				pixelTransition.Add(pixelSet);
 			}
-			NeopixelController.RunPixelTransition(0, pixelTransition);
+			NeopixelCompiler.RunPixelTransition(0, pixelTransition);
 
 			await CompleteJob(new { jobStatus = Statuses.Success.ToString() });
 		}

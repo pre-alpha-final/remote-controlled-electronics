@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Consts.cs" />
     <Compile Include="Handlers\SnakeJobHandler.cs" />
-    <Compile Include="Neopixel\NeopixelController.cs" />
+    <Compile Include="Neopixel\NeopixelCompiler.cs" />
     <Compile Include="Neopixel\Pixel.cs" />
     <Compile Include="Neopixel\PixelSet.cs" />
     <Compile Include="Neopixel\PythonRunner.cs" />
