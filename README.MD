@@ -38,6 +38,7 @@ There are a few worker examples included with the project:
 - XamarinForms - (in development) Xamarin Forms android app example
 - CSharpMono - (in development) C# app runnable with mono
 - RpzwTimer - Raspberry Pi Zero W Timer
+- RpzwNeopixels - Raspberry Pi Zero W Neopixel demo
 
 # Demo environment
 For testing purposes log in here:  
