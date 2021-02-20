@@ -35,6 +35,7 @@ namespace RpzwNeopixels.Neopixel
 				commands.Add("pixels.show()");
 				commands.Add($"sleep({secondsDelay})");
 			}
+			commands.RemoveAt(commands.Count - 1);
 
 			PythonRunner.Run(commands);
 		}
