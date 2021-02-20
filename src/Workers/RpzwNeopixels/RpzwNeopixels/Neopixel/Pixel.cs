@@ -34,5 +34,23 @@
 			}
 			set => _blue = value;
 		}
+
+		public Pixel()
+		{
+		}
+
+		public Pixel(int index, int red, int green, int blue)
+			: this(index, red, green, blue, 1)
+		{
+		}
+
+		public Pixel(int index, int red, int green, int blue, double brightness)
+		{
+			Index = index;
+			Red = red;
+			Green = green;
+			Blue = blue;
+			Brightness = brightness;
+		}
 	}
 }

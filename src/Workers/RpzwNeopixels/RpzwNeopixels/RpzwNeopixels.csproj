@@ -47,6 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consts.cs" />
+    <Compile Include="Handlers\PixelTestJobHandler.cs" />
+    <Compile Include="Handlers\KillTheLightsJobHandler.cs" />
+    <Compile Include="Handlers\RainbowJobHandler.cs" />
+    <Compile Include="Handlers\RandomColorsJobHandler.cs" />
+    <Compile Include="Handlers\RandomColorJobHandler.cs" />
     <Compile Include="Handlers\SnakeJobHandler.cs" />
     <Compile Include="Neopixel\NeopixelCompiler.cs" />
     <Compile Include="Neopixel\Pixel.cs" />

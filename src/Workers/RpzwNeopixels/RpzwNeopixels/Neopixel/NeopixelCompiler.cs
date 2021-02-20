@@ -8,7 +8,7 @@ namespace RpzwNeopixels.Neopixel
 		{
 			var commands = new List<string>
 			{
-				$"pixels = neopixel.Neoixel({Consts.ControlPin}, {Consts.PixelCount}, pixel_order = {Consts.PixelOrder})",
+				$"pixels = neopixel.NeoPixel({Consts.ControlPin}, {Consts.PixelCount}, pixel_order = {Consts.PixelOrder})",
 			};
 
 			foreach (var pixel in pixels)

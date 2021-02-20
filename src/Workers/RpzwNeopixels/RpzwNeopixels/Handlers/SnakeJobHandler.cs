@@ -26,15 +26,15 @@ namespace RpzwNeopixels.Handlers
 
 		public override async Task Handle(CancellationToken cancellationToken)
 		{
-			var length = Job.Payload.SelectToken("$.length").ToObject<int>();
-			var red = Job.Payload.SelectToken("$.red").ToObject<int>();
-			var green = Job.Payload.SelectToken("$.green").ToObject<int>();
-			var blue = Job.Payload.SelectToken("$.blue").ToObject<int>();
+			var length = Job.Payload.SelectToken("$.length")?.ToObject<int>();
+			var red = Job.Payload.SelectToken("$.red")?.ToObject<int>();
+			var green = Job.Payload.SelectToken("$.green")?.ToObject<int>();
+			var blue = Job.Payload.SelectToken("$.blue")?.ToObject<int>();
 			var pixelTransition = new List<PixelSet>();
 			for (var leadPixelIndex = 0; leadPixelIndex < Consts.PixelCount + length; leadPixelIndex++)
 			{
 				var pixelSet = new PixelSet();
-				pixelSet.Pixels.AddRange(GetPixels(leadPixelIndex, red, green, blue, length));
+				pixelSet.Pixels.AddRange(GetPixels(leadPixelIndex, red ?? 0, green ?? 0, blue ?? 0, length ?? 5));
 				pixelTransition.Add(pixelSet);
 			}
 			NeopixelCompiler.RunPixelTransition(0, pixelTransition);
