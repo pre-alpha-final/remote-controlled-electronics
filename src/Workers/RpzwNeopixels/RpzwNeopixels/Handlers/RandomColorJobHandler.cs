@@ -14,6 +14,8 @@ namespace RpzwNeopixels.Handlers
 	 */
 	public class RandomColorJobHandler : JobHandlerBase
 	{
+		private readonly int[] possiblePixelValues = { 0, 10, 20 };
+
 		public RandomColorJobHandler(string baseUrl, Job job) : base(baseUrl, job)
 		{
 		}
@@ -34,9 +36,13 @@ namespace RpzwNeopixels.Handlers
 			var zeroPixelSet = new PixelSet();
 			var pixelSet = new PixelSet();
 			var random = new Random();
-			var red = random.Next(21);
-			var green = random.Next(21);
-			var blue = random.Next(21);
+			int red, green, blue;
+			do
+			{
+				red = possiblePixelValues[random.Next(3)];
+				green = possiblePixelValues[random.Next(3)];
+				blue = possiblePixelValues[random.Next(3)];
+			} while ((red == 0 && green == 0 && blue == 0) || (red == 20 && green == 20 && blue == 20));
 
 			for (var i = 0; i < Consts.PixelCount; i++)
 			{
