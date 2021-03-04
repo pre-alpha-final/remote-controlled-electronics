@@ -23,6 +23,7 @@ namespace RpzwNeopixels
 				.AddJobHandlerType(typeof(RandomColorJobHandler))
 				.AddJobHandlerType(typeof(RandomColorsJobHandler))
 				.AddJobHandlerType(typeof(KillTheLightsJobHandler))
+				.AddJobHandlerType(typeof(TurnOffPiHandler))
 				.Build();
 			_ = Task.Run(rceJobRunner.Start);
 

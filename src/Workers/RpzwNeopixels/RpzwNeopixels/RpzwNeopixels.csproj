@@ -53,6 +53,7 @@
     <Compile Include="Handlers\RandomColorsJobHandler.cs" />
     <Compile Include="Handlers\RandomColorJobHandler.cs" />
     <Compile Include="Handlers\SnakeJobHandler.cs" />
+    <Compile Include="Handlers\TurnOffPiHandler.cs" />
     <Compile Include="Neopixel\NeopixelCompiler.cs" />
     <Compile Include="Neopixel\Pixel.cs" />
     <Compile Include="Neopixel\PixelSet.cs" />
