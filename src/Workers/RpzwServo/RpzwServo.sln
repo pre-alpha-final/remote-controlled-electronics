@@ -1,11 +1,10 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpzwServo", "RpzwServo.csproj", "{DDE28674-B320-4A68-BCC1-D92613881DE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpzwServo", "RpzwServo\RpzwServo.csproj", "{DDE28674-B320-4A68-BCC1-D92613881DE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceSharpLib", "..\..\RpzwTimer\RceSharpLib\RceSharpLib.csproj", "{12727B69-84E9-4F28-8806-D7D7BF407210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RceSharpLib", "RceSharpLib\RceSharpLib.csproj", "{12727B69-84E9-4F28-8806-D7D7BF407210}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
