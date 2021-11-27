@@ -8,3 +8,7 @@ Code for controlling the Feetech FS90 servo.
 - servo pins
 
 ![](/docs/servo-pins.png)
+
+# Example usage
+
+![](/docs/the-homer.jpg)
