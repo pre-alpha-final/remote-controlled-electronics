@@ -1,6 +1,7 @@
 ﻿using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using RceRemoteSharpLib.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -28,6 +29,11 @@ namespace RceRemoteSharpLib
 				},
 			};
 			var logInResponse = await _client.SendAsync(httpRequestMessage);
+			if (logInResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+			{
+				throw new Exception("Unauthorized");
+			}
+
 			var content = await logInResponse.Content.ReadAsStringAsync();
 			var workers = JsonConvert.DeserializeObject<List<Worker>>(content);
 

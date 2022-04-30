@@ -30,11 +30,28 @@ namespace RpzwRemote
 						var user = Console.ReadLine();
 						Console.Write("Password: ");
 						var password = ReadLineHidden();
+						Console.WriteLine();
 						await _logInService.LogIn(Settings.LoginUrl, user, password);
 						break;
 					case 'i':
 					case 'I':
-						var workers = await _controlService.GetList(Settings.GetMessagesUrl);
+						try
+						{
+							var workers = await _controlService.GetList(Settings.GetMessagesUrl);
+							foreach (var worker in workers)
+							{
+								Console.WriteLine($"{worker.Name}, ({worker.WorkerId})");
+								foreach (var jobDescription in worker.JobDescriptions)
+								{
+									Console.WriteLine($"   {jobDescription.Name}");
+								}
+								Console.WriteLine();
+							}
+						}
+						catch (Exception e) when (e.Message == "Unauthorized")
+						{
+							Console.WriteLine("Unauthorized");
+						}
 						break;
 					case 'r':
 					case 'R':
