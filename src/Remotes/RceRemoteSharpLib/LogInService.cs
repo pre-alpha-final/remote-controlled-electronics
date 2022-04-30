@@ -28,11 +28,6 @@ namespace RceRemoteSharpLib
 
 			var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, LogInUrl)
 			{
-				//Headers =
-				//{
-				//	{ HeaderNames.Accept, "application/vnd.github.v3+json" },
-				//	{ HeaderNames.UserAgent, "HttpRequestsSample" }
-				//},
 				Content = new StringContent($"{{\"login\":\"{User}\",\"password\":\"{Password}\"}}",
 					Encoding.UTF8, "application/json")
 			};

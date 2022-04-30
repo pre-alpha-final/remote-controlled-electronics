@@ -11,6 +11,7 @@ namespace RpzwRemote
 			var serviceCollection = new ServiceCollection();
 			serviceCollection.AddSingleton<App>();
 			serviceCollection.AddSingleton<LogInService>();
+			serviceCollection.AddSingleton<ControlService>();
 			var serviceProvider = serviceCollection.BuildServiceProvider();
 
 			await serviceProvider.GetService<App>().Run();

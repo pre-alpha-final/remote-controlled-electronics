@@ -8,10 +8,12 @@ namespace RpzwRemote
 	internal class App
 	{
 		private readonly LogInService _logInService;
+		private readonly ControlService _controlService;
 
-		public App(LogInService logInService)
+		public App(LogInService logInService, ControlService controlService)
 		{
 			_logInService = logInService;
+			_controlService = controlService;
 		}
 
 		public async Task Run()
@@ -32,6 +34,7 @@ namespace RpzwRemote
 						break;
 					case 'i':
 					case 'I':
+						var workers = await _controlService.GetList(Settings.GetMessagesUrl);
 						break;
 					case 'r':
 					case 'R':
