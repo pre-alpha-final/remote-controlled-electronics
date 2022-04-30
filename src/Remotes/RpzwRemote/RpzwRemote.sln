@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpzwRemote", "RpzwRemote\RpzwRemote.csproj", "{AE840363-46D0-4E77-A1A8-82752FB4C41A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RceRemoteSharpLib", "..\RceRemoteSharpLib\RceRemoteSharpLib.csproj", "{80BAAD57-3118-45FE-91C2-3C2403C66561}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE840363-46D0-4E77-A1A8-82752FB4C41A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE840363-46D0-4E77-A1A8-82752FB4C41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE840363-46D0-4E77-A1A8-82752FB4C41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE840363-46D0-4E77-A1A8-82752FB4C41A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80BAAD57-3118-45FE-91C2-3C2403C66561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80BAAD57-3118-45FE-91C2-3C2403C66561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80BAAD57-3118-45FE-91C2-3C2403C66561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80BAAD57-3118-45FE-91C2-3C2403C66561}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D242725-75D3-4D31-AC9A-ED1DEA8EBBED}
+	EndGlobalSection
+EndGlobal
