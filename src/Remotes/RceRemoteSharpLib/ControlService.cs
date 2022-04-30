@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RceRemoteSharpLib
@@ -19,7 +20,7 @@ namespace RceRemoteSharpLib
 			_logInService = logInService;
 		}
 
-		public async Task<List<Worker>> GetList(string getMessagesUrl)
+		public async Task<List<Message>> GetWorkerList(string getMessagesUrl)
 		{
 			var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, getMessagesUrl)
 			{
@@ -28,16 +29,34 @@ namespace RceRemoteSharpLib
 					{ HeaderNames.Authorization, $"Bearer {_logInService.GetBearerToken()}" },
 				},
 			};
-			var logInResponse = await _client.SendAsync(httpRequestMessage);
-			if (logInResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+			var getListResponse = await _client.SendAsync(httpRequestMessage);
+			if (getListResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
 			{
 				throw new Exception("Unauthorized");
 			}
 
-			var content = await logInResponse.Content.ReadAsStringAsync();
-			var workers = JsonConvert.DeserializeObject<List<Worker>>(content);
+			var content = await getListResponse.Content.ReadAsStringAsync();
+			var messages = JsonConvert.DeserializeObject<List<Message>>(content);
 
-			return workers.Where(e => e.Name != null).ToList();
+			return messages.Where(e => e.MessageType == "WorkerAddedMessage").ToList();
+		}
+
+		public async Task RunJob(string runJobUrl, string jobName, string jobPayload)
+		{
+			var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, runJobUrl)
+			{
+				Headers =
+				{
+					{ HeaderNames.Authorization, $"Bearer {_logInService.GetBearerToken()}" },
+				},
+				Content = new StringContent(JsonConvert.SerializeObject(new JobBody { JobName = jobName, JobPayload = jobPayload }),
+					Encoding.UTF8, "application/json")
+			};
+			var runJobResponse = await _client.SendAsync(httpRequestMessage);
+			if (runJobResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+			{
+				throw new Exception("Unauthorized");
+			}
 		}
 	}
 }

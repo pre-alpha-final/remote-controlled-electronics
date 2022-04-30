@@ -37,7 +37,7 @@ namespace RpzwRemote
 					case 'I':
 						try
 						{
-							var workers = await _controlService.GetList(Settings.GetMessagesUrl);
+							var workers = await _controlService.GetWorkerList(Settings.GetMessagesUrl);
 							foreach (var worker in workers)
 							{
 								Console.WriteLine($"{worker.Name}, ({worker.WorkerId})");
@@ -55,6 +55,22 @@ namespace RpzwRemote
 						break;
 					case 'r':
 					case 'R':
+						Console.Write("Worker id: ");
+						var workerId = Console.ReadLine();
+						Console.Write("Job name: ");
+						var jobName = Console.ReadLine();
+						Console.Write("Job payload: ");
+						var jobPayload = Console.ReadLine();
+						try
+						{
+							jobPayload = jobPayload == "" ? "{}" : jobPayload;
+							await _controlService.RunJob(Settings.RunJobUrl(workerId), jobName, jobPayload);
+						}
+						catch (Exception e) when (e.Message == "Unauthorized")
+						{
+							Console.WriteLine("Unauthorized");
+						}
+						Console.WriteLine();
 						break;
 					case 'q':
 					case 'Q':

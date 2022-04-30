@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace RceRemoteSharpLib.Dtos
 {
-	public class Worker
+	public class Message
 	{
+		public string MessageType { get; set; }
 		public Guid WorkerId { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
