@@ -12,6 +12,7 @@ namespace RpzwRemote
 			serviceCollection.AddSingleton<App>();
 			serviceCollection.AddSingleton<LogInService>();
 			serviceCollection.AddSingleton<ControlService>();
+			serviceCollection.AddSingleton<GpioService>();
 			var serviceProvider = serviceCollection.BuildServiceProvider();
 
 			await serviceProvider.GetService<App>().Run();

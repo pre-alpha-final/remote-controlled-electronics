@@ -9,18 +9,20 @@ namespace RpzwRemote
 	{
 		private readonly LogInService _logInService;
 		private readonly ControlService _controlService;
+		private readonly GpioService _gpioService;
 
-		public App(LogInService logInService, ControlService controlService)
+		public App(LogInService logInService, ControlService controlService, GpioService gpioService)
 		{
 			_logInService = logInService;
 			_controlService = controlService;
+			_gpioService = gpioService;
 		}
 
 		public async Task Run()
 		{
 			while (true)
 			{
-				Console.WriteLine("Menu: [L]ogIn L[i]st [R]un [Q]uit");
+				Console.WriteLine("Menu: [L]ogIn L[i]st [R]un [P]in test [Q]uit");
 				var key = Console.ReadKey(true);
 				switch (key.KeyChar)
 				{
@@ -71,6 +73,13 @@ namespace RpzwRemote
 							Console.WriteLine("Unauthorized");
 						}
 						Console.WriteLine();
+						break;
+					case 'p':
+					case 'P':
+						Console.WriteLine("Testing pins: 23, 24, 5, 6, 13");
+						Console.WriteLine(" OOOOOOOXXOOOOOOOOOOO");
+						Console.WriteLine("|OOOOOOOOOOOOOOXXXOOO");
+						_gpioService.Run();
 						break;
 					case 'q':
 					case 'Q':
