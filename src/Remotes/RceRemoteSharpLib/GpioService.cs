@@ -17,25 +17,22 @@ namespace RceRemoteSharpLib
 
 		public void Run()
 		{
-			GpioController.OpenPin(23, PinMode.InputPullDown);
-			GpioController.RegisterCallbackForPinValueChangedEvent(23, PinEventTypes.Rising, OnPinValueChanged);
-			GpioController.RegisterCallbackForPinValueChangedEvent(23, PinEventTypes.Falling, OnPinValueChanged);
+			OpenPin(23);
+			OpenPin(24);
+			OpenPin(5);
+			OpenPin(6);
+			OpenPin(13);
+		}
 
-			GpioController.OpenPin(24, PinMode.InputPullDown);
-			GpioController.RegisterCallbackForPinValueChangedEvent(24, PinEventTypes.Rising, OnPinValueChanged);
-			GpioController.RegisterCallbackForPinValueChangedEvent(24, PinEventTypes.Falling, OnPinValueChanged);
-
-			GpioController.OpenPin(5, PinMode.InputPullDown);
-			GpioController.RegisterCallbackForPinValueChangedEvent(5, PinEventTypes.Rising, OnPinValueChanged);
-			GpioController.RegisterCallbackForPinValueChangedEvent(5, PinEventTypes.Falling, OnPinValueChanged);
-
-			GpioController.OpenPin(6, PinMode.InputPullDown);
-			GpioController.RegisterCallbackForPinValueChangedEvent(6, PinEventTypes.Rising, OnPinValueChanged);
-			GpioController.RegisterCallbackForPinValueChangedEvent(6, PinEventTypes.Falling, OnPinValueChanged);
-
-			GpioController.OpenPin(13, PinMode.InputPullDown);
-			GpioController.RegisterCallbackForPinValueChangedEvent(13, PinEventTypes.Rising, OnPinValueChanged);
-			GpioController.RegisterCallbackForPinValueChangedEvent(13, PinEventTypes.Falling, OnPinValueChanged);
+		private void OpenPin(int pin)
+		{
+			if (GpioController.IsPinOpen(pin))
+			{
+				GpioController.ClosePin(pin);
+			}
+			GpioController.OpenPin(pin, PinMode.InputPullDown);
+			GpioController.RegisterCallbackForPinValueChangedEvent(pin, PinEventTypes.Rising, OnPinValueChanged);
+			GpioController.RegisterCallbackForPinValueChangedEvent(pin, PinEventTypes.Falling, OnPinValueChanged);
 		}
 
 		private void OnPinValueChanged(object sender, PinValueChangedEventArgs pinValueChangedEventArgs)
