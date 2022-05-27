@@ -5,4 +5,4 @@ Relay controlled power supply on a timer. E.g. charge the phone for a limited ti
 
 # Example usage
 
-![](/docs/phone-charging.jpg)
+![](/docs/light-relay.jpg)
