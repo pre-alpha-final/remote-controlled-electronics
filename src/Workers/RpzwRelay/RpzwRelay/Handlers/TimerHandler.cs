@@ -24,7 +24,7 @@ namespace RpzwRelay.Handlers
 			{
 				"Turn on for a certain amount of time"
 			},
-			DefaultPayload = JObject.Parse(@"{}")
+			DefaultPayload = JObject.Parse(@"{""hours"":0,""minutes"":0,""seconds"":5}")
 		};
 
 		public override async Task Handle(CancellationToken cancellationToken)

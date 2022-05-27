@@ -31,12 +31,14 @@ namespace RpzwRelay.Services
 
 		public Task TurnOn()
 		{
+			_timerCts?.Cancel();
 			GpioController.Write(18, PinValue.High);
 			return Task.CompletedTask;
 		}
 
 		public Task TurnOff()
 		{
+			_timerCts?.Cancel();
 			GpioController.Write(18, PinValue.Low);
 			return Task.CompletedTask;
 		}
@@ -52,7 +54,7 @@ namespace RpzwRelay.Services
 			while (true)
 			{
 				await Task.Delay(1000);
-				if (startTime + TimeSpan.FromSeconds(seconds) > DateTimeOffset.Now)
+				if (DateTimeOffset.Now > startTime + TimeSpan.FromSeconds(seconds))
 				{
 					break;
 				}
