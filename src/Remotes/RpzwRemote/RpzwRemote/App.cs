@@ -79,7 +79,7 @@ namespace RpzwRemote
 						Console.WriteLine("Testing pins: 23, 24, 5, 6, 13");
 						Console.WriteLine(" OOOOOOOXXOOOOOOOOOOO");
 						Console.WriteLine("|OOOOOOOOOOOOOOXXXOOO");
-						_gpioService.Run();
+						_gpioService.Run((pin, rising) => {});
 						break;
 					case 'q':
 					case 'Q':
