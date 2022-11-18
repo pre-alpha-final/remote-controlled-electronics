@@ -15,5 +15,6 @@ namespace RceServer.Domain.Services
 		Task RemoveMessages(IEnumerable<Guid> messageIds);
 		Task RemoveOwnership(IEnumerable<Guid> workerIds);
 		Task<bool> IsDisconnected(Guid workerId);
+		Task GetNewJobNotification();
 	}
 }
