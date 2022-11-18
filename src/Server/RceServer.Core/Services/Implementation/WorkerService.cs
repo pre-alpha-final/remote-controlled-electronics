@@ -11,7 +11,6 @@ namespace RceServer.Core.Services.Implementation
 {
 	public class WorkerService : IWorkerService
 	{
-		private const int GetJobInterval = 500;
 		private const int GetJobTime = 30000;
 		private readonly IMessageRepository _messageRepository;
 
@@ -48,9 +47,21 @@ namespace RceServer.Core.Services.Implementation
 				Reason = KeepAliveSentMessage.Reasons.GetJobs
 			});
 
-			for (var i = 0; i < GetJobTime / GetJobInterval; i++)
+			var finishAt = DateTime.UtcNow + TimeSpan.FromMilliseconds(GetJobTime);
+			while (true)
 			{
+				if (DateTime.UtcNow > finishAt)
+				{
+					break;
+				}
+
+				var newJobNotification = _messageRepository.GetNewJobNotification();
 				var workerMessages = await _messageRepository.GetWorkerMessages(workerId);
+				if (workerMessages.Where(e => e.MessageType == $"{typeof(JobAddedMessage)}" || e.MessageType == $"{typeof(WorkerRemovedMessage)}").Any() == false)
+				{
+					await Task.WhenAny(newJobNotification, Task.Delay(finishAt - DateTime.UtcNow));
+					workerMessages = await _messageRepository.GetWorkerMessages(workerId);
+				}
 
 				if (workerMessages.Any(e => e is WorkerRemovedMessage))
 				{
@@ -82,8 +93,6 @@ namespace RceServer.Core.Services.Implementation
 				{
 					return jobs;
 				}
-
-				await Task.Delay(GetJobInterval);
 			}
 
 			return new List<JobAddedMessage>();

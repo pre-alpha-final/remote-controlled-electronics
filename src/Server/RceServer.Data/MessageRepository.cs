@@ -28,6 +28,8 @@ namespace RceServer.Data
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly IHubContext<RceHub, IRceHub> _rceHubContext;
 
+		private static TaskCompletionSource<bool> _newJobTcs = new TaskCompletionSource<bool>();
+
 		public MessageRepository(IMongoClient mongoClient, IHttpContextAccessor httpContextAccessor,
 			IHubContext<RceHub, IRceHub> rceHubContext)
 		{
@@ -70,6 +72,11 @@ namespace RceServer.Data
 
 			var messagesCollection = database.GetCollection<dynamic>(MessagesCollectionName);
 			await messagesCollection.InsertOneAsync(message.ToExpandoObject());
+			if (message is JobAddedMessage jobAddedMessage)
+			{
+				_newJobTcs.SetResult(true);
+				_newJobTcs = new TaskCompletionSource<bool>();
+			}
 		}
 
 		public async Task<IList<IRceMessage>> GetMyMessages()
@@ -207,6 +214,11 @@ namespace RceServer.Data
 				default:
 					return null;
 			}
+		}
+
+		public Task GetNewJobNotification()
+		{
+			return _newJobTcs.Task;
 		}
 	}
 }
