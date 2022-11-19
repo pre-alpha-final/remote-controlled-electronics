@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -76,13 +77,27 @@ namespace RceRemoteSharpLib
 					_pinStateLastChangeUp[index] + TimeSpan.FromSeconds(1) < DateTimeOffset.UtcNow)
 				{
 					_pinStateLastChangeUp[index] = DateTimeOffset.UtcNow;
-					_risen(pinValueChangedEventArgs.PinNumber, true);
+					Task.Run(async () =>
+					{
+						await Task.Delay(33);
+						if (GpioController.Read(pinValueChangedEventArgs.PinNumber) == PinValue.High)
+						{
+							_risen(pinValueChangedEventArgs.PinNumber, true);
+						}
+					});
 				}
 				if (pinValueChangedEventArgs.ChangeType == PinEventTypes.Falling &&
 					_pinStateLastChangeDown[index] + TimeSpan.FromSeconds(1) < DateTimeOffset.UtcNow)
 				{
 					_pinStateLastChangeDown[index] = DateTimeOffset.UtcNow;
-					_risen(pinValueChangedEventArgs.PinNumber, false);
+					Task.Run(async () =>
+					{
+						await Task.Delay(33);
+						if (GpioController.Read(pinValueChangedEventArgs.PinNumber) == PinValue.Low)
+						{
+							_risen(pinValueChangedEventArgs.PinNumber, false);
+						}
+					});
 				}
 			}
 		}
