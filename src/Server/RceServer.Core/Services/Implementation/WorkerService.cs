@@ -59,7 +59,8 @@ namespace RceServer.Core.Services.Implementation
 				var workerMessages = await _messageRepository.GetWorkerMessages(workerId);
 				if (workerMessages.Where(e => e.MessageType == $"{typeof(JobAddedMessage)}" || e.MessageType == $"{typeof(WorkerRemovedMessage)}").Any() == false)
 				{
-					await Task.WhenAny(newJobNotification, Task.Delay(finishAt - DateTime.UtcNow));
+					var delay = finishAt - DateTime.UtcNow;
+					await Task.WhenAny(newJobNotification, Task.Delay(delay.TotalMilliseconds < 0 ? TimeSpan.Zero : delay));
 					workerMessages = await _messageRepository.GetWorkerMessages(workerId);
 				}
 
