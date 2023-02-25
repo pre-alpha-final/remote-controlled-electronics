@@ -1,5 +1,8 @@
+# Next version available
+--- Next version at: [Remote Controlled Electronics v2](https://github.com/pre-alpha-final/rce2 "Remote Controlled Electronics v2") ---  
+
 # Remote controlled electronics
-Remote control any device that is programmable and supports HTTP connections. PC, laptop, console, mobile, TV etc. Here's an idea: remote control a raspberry pi in turn controlling an at home, local Wi-Fi internet of things.
+Remote control any device that is programmable and supports HTTP connections. PC, laptop, console, mobile, TV etc. Here's an idea: remote control a raspberry pi in turn controlling an at home, local Wi-Fi internet of things.  
 
 ![](/docs/rceserver.png)
 
